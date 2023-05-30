@@ -1,5 +1,4 @@
 package Controladora;
-
 import Contable.Factura;
 import Habitaciones.Habitacion;
 import Personas.Empleado;
@@ -7,9 +6,10 @@ import Personas.Gerenciamiento;
 import Personas.Pasajero;
 import Servicios.Cochera;
 import Servicios.Consumibles;
-
 import java.util.ArrayList;
 import java.util.HashMap;
+
+
 
 public class Hotel <T> {
 
@@ -20,7 +20,7 @@ public class Hotel <T> {
     private Cochera cochera;
     public ArrayList<Pasajero> listaPasajeros = new ArrayList<>();
     public ArrayList<Empleado> listaEmpleados = new ArrayList<>();
-    //public ArrayList<T implements Gerenciamiento> listaGerentes = new ArrayList<>();
+    public ArrayList<Gerenciamiento> listaGerentes = new ArrayList<>();
     public HashMap<Integer, Habitacion> mapHabitaciones = new HashMap<>();
     public HashMap<String, Factura> mapFacturas = new HashMap<>();
     public ArrayList<Consumibles> listaConsumibles = new ArrayList<>();
