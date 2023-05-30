@@ -11,7 +11,7 @@ import java.util.HashMap;
 
 
 
-public class Hotel <T> {
+public class Hotel{
 
     public String nombre;
     public String direccion;

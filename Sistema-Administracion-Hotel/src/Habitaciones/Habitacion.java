@@ -19,7 +19,7 @@ public abstract class Habitacion {
         this.ocupada = ocupada;
         this.capacidad = capacidad;
         this.terraza = terraza;
-        this.serviciosBasicos = serviciosBasicos; //texto con servicios basicos
+        this.serviciosBasicos = ""; //texto con servicios basicos
     }
 
     public int getNumero() {
