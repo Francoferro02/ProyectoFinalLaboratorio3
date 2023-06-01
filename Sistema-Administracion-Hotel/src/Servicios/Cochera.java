@@ -27,4 +27,13 @@ public class Cochera {
     public void setEspacioDisponible(int espacioDisponible) {
         this.espacioDisponible = espacioDisponible;
     }
+
+    @Override
+    public String toString() {
+        return "Cochera{" +
+                "espacioTotal=" + espacioTotal +
+                ", espacioDisponible=" + espacioDisponible +
+                ", precioDia=" + precioDia +
+                '}';
+    }
 }

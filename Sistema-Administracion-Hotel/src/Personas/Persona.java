@@ -3,11 +3,13 @@ package Personas;
 public abstract class Persona {
     protected String nombre;
     protected String apellido;
-    protected int DNI;
+    protected String DNI;
 
+    public Persona() {
 
+    }
 
-    public Persona(String nombre, String apellido, int DNI) {
+    public Persona(String nombre, String apellido, String DNI) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.DNI = DNI;
@@ -22,5 +24,17 @@ public abstract class Persona {
                 ", apellido='" + apellido + '\'' +
                 ", DNI=" + DNI +
                 '}';
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public void setApellido(String apellido) {
+        this.apellido = apellido;
+    }
+
+    public void setDNI(String DNI) {
+        this.DNI = DNI;
     }
 }

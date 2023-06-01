@@ -8,7 +8,7 @@ public  abstract class Empleado extends Persona{
 
     protected Usuario usuario;
 
-    public Empleado(String nombre, String apellido, int DNI, double sueldo, int diasVacaciones, int antiguedad) {
+    public Empleado(String nombre, String apellido, String DNI, double sueldo, int diasVacaciones, int antiguedad) {
         super(nombre, apellido, DNI);
         this.sueldo = sueldo;
         this.diasVacaciones = diasVacaciones;

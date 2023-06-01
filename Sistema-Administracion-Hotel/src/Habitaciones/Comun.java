@@ -4,8 +4,8 @@ public class Comun extends Habitacion{
 
     private double precio;
 
-    public Comun(int numero, boolean ocupada, int capacidad, boolean terraza, double precio) {
-        super(numero, ocupada, capacidad, terraza);
+    public Comun(int numero, int capacidad, boolean terraza, double precio) {
+        super(numero, capacidad, terraza);
         this.precio = precio;
     }
 
@@ -16,8 +16,6 @@ public class Comun extends Habitacion{
                 ", numero=" + numero +
                 ", capacidad=" + capacidad +
                 ", terraza=" + terraza +
-                ", consumibles=" + consumibles +
-                ", serviciosBasicos='" + serviciosBasicos + '\'' +
                 '}';
     }
 }

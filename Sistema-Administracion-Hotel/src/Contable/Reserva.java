@@ -4,6 +4,7 @@ import Habitaciones.Habitacion;
 import Personas.Pasajero;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.UUID;
 
 public class Reserva {
@@ -11,18 +12,18 @@ public class Reserva {
     public Boolean reservada;
     public LocalDate fechaEntrada;
     public LocalDate fechaSalida;
-    public Pasajero pasajero;
+    public ArrayList<Pasajero> pasajeros;
     public Habitacion habitacion;
     public String identificador;
 
     public Reserva() {
     }
 
-    public Reserva(Boolean reservada, LocalDate fechaEntrada, LocalDate fechaSalida, Pasajero pasajero, Habitacion habitacion) {
+    public Reserva(Boolean reservada, LocalDate fechaEntrada, LocalDate fechaSalida, Habitacion habitacion) {
         this.reservada = reservada;
         this.fechaEntrada = fechaEntrada;
         this.fechaSalida = fechaSalida;
-        this.pasajero = pasajero;
+        this.pasajeros = new ArrayList<>();
         this.habitacion = habitacion;
         this.identificador = (UUID.randomUUID().toString().toUpperCase());
     }
@@ -39,8 +40,8 @@ public class Reserva {
         return fechaSalida;
     }
 
-    public Pasajero getPasajero() {
-        return pasajero;
+    public ArrayList<Pasajero> getPasajeros() {
+        return pasajeros;
     }
 
     public Habitacion getHabitacion() {
@@ -57,7 +58,7 @@ public class Reserva {
                 "reservada=" + reservada +
                 ", fechaEntrada=" + fechaEntrada +
                 ", fechaSalida=" + fechaSalida +
-                ", pasajero=" + pasajero +
+                ", pasajero=" + pasajeros +
                 ", habitacion=" + habitacion +
                 ", identificador='" + identificador + '\'' +
                 '}';

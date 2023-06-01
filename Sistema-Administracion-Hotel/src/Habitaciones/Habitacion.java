@@ -1,6 +1,6 @@
 package Habitaciones;
 
-import Servicios.Consumibles;
+import Servicios.Consumible;
 
 public abstract class Habitacion {
 
@@ -8,18 +8,17 @@ public abstract class Habitacion {
     private boolean ocupada;
     public int capacidad;
     public boolean terraza;
-    public Consumibles consumibles; //ingresar al archivo de consumibles y mostrarlo
-    public String serviciosBasicos;
+    public Consumible consumibles; //ingresar al archivo de consumibles y mostrarlo
+
 
     public Habitacion() {
     }
 
-    public Habitacion(int numero, boolean ocupada, int capacidad, boolean terraza) {
+    public Habitacion(int numero, int capacidad, boolean terraza) {
         this.numero = numero;
-        this.ocupada = ocupada;
+        this.ocupada = false;
         this.capacidad = capacidad;
         this.terraza = terraza;
-        this.serviciosBasicos = ""; //texto con servicios basicos
     }
 
     public int getNumero() {
@@ -36,13 +35,11 @@ public abstract class Habitacion {
 
     @Override
     public String toString() {
-        return "Habitacion{" +
+        return "\nHabitacion{" +
                 "numero=" + numero +
                 ", ocupada=" + ocupada +
                 ", capacidad=" + capacidad +
                 ", terraza=" + terraza +
-                ", consumibles=" + consumibles +
-                ", serviciosBasicos='" + serviciosBasicos + '\'' +
                 '}';
     }
 }

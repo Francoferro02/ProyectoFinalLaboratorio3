@@ -2,7 +2,7 @@ package Personas;
 
 public class Administrador extends Empleado implements Gerenciamiento{
 
- public Administrador(String nombre, String apellido, int DNI, double sueldo, int diasVacaciones, int antiguedad) {
+ public Administrador(String nombre, String apellido, String DNI, double sueldo, int diasVacaciones, int antiguedad) {
   super(nombre, apellido, DNI, sueldo, diasVacaciones, antiguedad);
   this.usuario = new Usuario();
  }

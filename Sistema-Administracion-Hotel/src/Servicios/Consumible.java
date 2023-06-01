@@ -1,15 +1,15 @@
 package Servicios;
 
-public class Consumibles {
+public class Consumible {
 
     private double precio;
     public String nombre;
     public String descripcion;
 
-    public Consumibles() {
+    public Consumible() {
     }
 
-    public Consumibles(double precio, String nombre, String descripcion) {
+    public Consumible(double precio, String nombre, String descripcion) {
         this.precio = precio;
         this.nombre = nombre;
         this.descripcion = descripcion;

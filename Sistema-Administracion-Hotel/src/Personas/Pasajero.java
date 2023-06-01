@@ -13,13 +13,17 @@ public class Pasajero extends Persona {
     private boolean cochera;
 
     public Pasajero() {
+
     }
 
-    public Pasajero(String origen, String domicilioOrigen, String historia) {
+    public Pasajero(String nombre, String apellido, String DNI, String origen, String domicilioOrigen, String historia, Boolean registrado, int cantDias, boolean cochera) {
+        super(nombre, apellido, DNI);
         this.origen = origen;
         this.domicilioOrigen = domicilioOrigen;
         this.historia = historia;
-        this.registrado = true;
+        this.registrado = registrado;
+        this.cantDias = cantDias;
+        this.cochera = cochera;
     }
 
     public String getOrigen() {
@@ -61,5 +65,17 @@ public class Pasajero extends Persona {
     @Override
     public void realizarAcción() {
 
+    }
+
+    public void setOrigen(String origen) {
+        this.origen = origen;
+    }
+
+    public void setDomicilioOrigen(String domicilioOrigen) {
+        this.domicilioOrigen = domicilioOrigen;
+    }
+
+    public void setHistoria(String historia) {
+        this.historia = historia;
     }
 }

@@ -6,8 +6,8 @@ public class Suite extends Habitacion{
    public String serviciosAdicionales;
 
 
-    public Suite(int numero, boolean ocupada, int capacidad, boolean terraza, double precio) {
-        super(numero, ocupada, capacidad, terraza);
+    public Suite(int numero, int capacidad, boolean terraza, double precio) {
+        super(numero, capacidad, terraza);
         this.precio = precio;
         this.serviciosAdicionales = "";
     }
@@ -24,8 +24,6 @@ public class Suite extends Habitacion{
                 ", numero=" + numero +
                 ", capacidad=" + capacidad +
                 ", terraza=" + terraza +
-                ", consumibles=" + consumibles +
-                ", serviciosBasicos='" + serviciosBasicos + '\'' +
                 '}';
     }
 }

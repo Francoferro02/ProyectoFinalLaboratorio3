@@ -1,10 +1,10 @@
 package Personas;
 
-public class Servicios extends Empleado{
+public class Servicio extends Empleado{
 
     Trabajadores trabajadores;
 
-    public Servicios(String nombre, String apellido, int DNI, double sueldo, int diasVacaciones, int antiguedad,Trabajadores rol) {
+    public Servicio(String nombre, String apellido, String DNI, double sueldo, int diasVacaciones, int antiguedad, Trabajadores rol) {
         super(nombre, apellido, DNI, sueldo, diasVacaciones, antiguedad);
         this.usuario = new Usuario();
         this.trabajadores = rol;
