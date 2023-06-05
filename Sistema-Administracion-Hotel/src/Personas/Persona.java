@@ -15,6 +15,7 @@ public abstract class Persona {
         this.DNI = DNI;
     }
 
+
     public abstract void realizarAcción();
 
     @Override

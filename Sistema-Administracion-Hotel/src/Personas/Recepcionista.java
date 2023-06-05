@@ -32,43 +32,7 @@ public class Recepcionista extends Empleado implements Gerenciamiento{
         super.mostrarDatosUsuario();
     }
 
-    public ArrayList<Pasajero> registrarPasajero(){
-        ArrayList<Pasajero> pasajeros = new ArrayList<>();
 
-        char control = 's';
-
-        while (control == 's') {
-            Pasajero nuevo = new Pasajero();
-            System.out.printf("\nPrimer nombre: ");
-            nuevo.setNombre(teclado.next());
-            System.out.printf("\nApellido: ");
-            nuevo.setApellido(teclado.next());
-            System.out.printf("\nDNI: ");
-            nuevo.setDNI(teclado.next());
-            System.out.printf("\nNacionalidad: ");
-            nuevo.setOrigen(teclado.next());
-            System.out.printf("\nDomicilio: ");
-            nuevo.setDomicilioOrigen(teclado.next());
-            System.out.printf("\nHistoria (Opcional): ");
-            nuevo.setHistoria(teclado.next());
-            nuevo.setRegistrado(true);
-            System.out.printf("\nQuiere cochera? s/n: ");
-            char a = teclado.next().toLowerCase().charAt(0);
-            if (a == 's') {
-                nuevo.setCochera(true);
-                //falta en este caso descontar un espacio de cochera del total
-            } else {
-                nuevo.setCochera(false);
-            }
-            pasajeros.add(nuevo);
-
-            System.out.printf("\nQuiere registrar a otro pasajero?: ");
-            control = teclado.next().toLowerCase().charAt(0);
-        }
-
-        return pasajeros;
-
-    }
 
     public void informarCheckIn(){
         ArrayList<Pasajero> pasajeros = new ArrayList<>();//registrarPasajero();

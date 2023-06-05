@@ -2,8 +2,8 @@ package Habitaciones;
 
 public class Suite extends Habitacion{
 
-   private double precio;
-   public String serviciosAdicionales;
+    private double precio;
+    public String serviciosAdicionales;
 
 
     public Suite(int numero, int capacidad, boolean terraza, double precio) {

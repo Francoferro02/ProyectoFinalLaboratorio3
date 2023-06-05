@@ -10,20 +10,20 @@ public class Pasajero extends Persona {
     private String historia; //opcional
     private Boolean registrado;
     private int cantDias;
-    private boolean cochera;
 
-    public Pasajero() {
 
-    }
-
-    public Pasajero(String nombre, String apellido, String DNI, String origen, String domicilioOrigen, String historia, Boolean registrado, int cantDias, boolean cochera) {
+    public Pasajero(String nombre, String apellido, String DNI, String origen, String domicilioOrigen, String historia, Boolean registrado, int cantDias) {
         super(nombre, apellido, DNI);
         this.origen = origen;
         this.domicilioOrigen = domicilioOrigen;
         this.historia = historia;
         this.registrado = registrado;
         this.cantDias = cantDias;
-        this.cochera = cochera;
+
+    }
+
+    public Pasajero() {
+        super();
     }
 
     public String getOrigen() {
@@ -46,9 +46,6 @@ public class Pasajero extends Persona {
         return cantDias;
     }
 
-    public boolean isCochera() {
-        return cochera;
-    }
 
     public void setRegistrado(Boolean registrado) {
         this.registrado = registrado;
@@ -58,14 +55,6 @@ public class Pasajero extends Persona {
         this.cantDias = cantDias;
     }
 
-    public void setCochera(boolean cochera) {
-        this.cochera = cochera;
-    }
-
-    @Override
-    public void realizarAcción() {
-
-    }
 
     public void setOrigen(String origen) {
         this.origen = origen;
@@ -77,5 +66,10 @@ public class Pasajero extends Persona {
 
     public void setHistoria(String historia) {
         this.historia = historia;
+    }
+
+    @Override
+    public void realizarAcción() {
+
     }
 }

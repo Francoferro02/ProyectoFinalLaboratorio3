@@ -8,19 +8,21 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 public class Reserva {
-
-    public Boolean reservada;
-    public LocalDate fechaEntrada;
+    public LocalDate fechaEntrada; //Revisar que hacer con esto
     public LocalDate fechaSalida;
     public ArrayList<Pasajero> pasajeros;
-    public Habitacion habitacion;
+    public ArrayList<Habitacion> habitacion;
+
+    private boolean cochera;
+
+    private int espaciosCochera;
     public String identificador;
 
     public Reserva() {
+        this.identificador = (UUID.randomUUID().toString().toUpperCase());
     }
 
-    public Reserva(Boolean reservada, LocalDate fechaEntrada, LocalDate fechaSalida, Habitacion habitacion) {
-        this.reservada = reservada;
+    public Reserva( LocalDate fechaEntrada, LocalDate fechaSalida, ArrayList<Habitacion> habitacion) {
         this.fechaEntrada = fechaEntrada;
         this.fechaSalida = fechaSalida;
         this.pasajeros = new ArrayList<>();
@@ -28,9 +30,6 @@ public class Reserva {
         this.identificador = (UUID.randomUUID().toString().toUpperCase());
     }
 
-    public Boolean getReservada() {
-        return reservada;
-    }
 
     public LocalDate getFechaEntrada() {
         return fechaEntrada;
@@ -44,18 +43,34 @@ public class Reserva {
         return pasajeros;
     }
 
-    public Habitacion getHabitacion() {
+    public ArrayList<Habitacion> getHabitacion() {
         return habitacion;
     }
+
 
     public String getIdentificador() {
         return identificador;
     }
 
+    public boolean isCochera() {
+        return cochera;
+    }
+
+    public void setCochera(boolean cochera) {
+        this.cochera = cochera;
+    }
+
+    public int getEspaciosCochera() {
+        return espaciosCochera;
+    }
+
+    public void setEspaciosCochera(int espaciosCochera) {
+        this.espaciosCochera = espaciosCochera;
+    }
+
     @Override
     public String toString() {
         return "Contable.Reserva{" +
-                "reservada=" + reservada +
                 ", fechaEntrada=" + fechaEntrada +
                 ", fechaSalida=" + fechaSalida +
                 ", pasajero=" + pasajeros +
@@ -64,7 +79,7 @@ public class Reserva {
                 '}';
     }
 
-    public void marcarReserva(){
+    public void marcarReserva() {
 
     }
 }

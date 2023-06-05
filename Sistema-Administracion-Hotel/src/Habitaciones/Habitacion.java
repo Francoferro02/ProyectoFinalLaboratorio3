@@ -2,14 +2,15 @@ package Habitaciones;
 
 import Servicios.Consumible;
 
+
 public abstract class Habitacion {
 
     public int numero;
     private boolean ocupada;
     public int capacidad;
     public boolean terraza;
-    public Consumible consumibles; //ingresar al archivo de consumibles y mostrarlo
 
+    public Consumible consumibles; //ingresar al archivo de consumibles y mostrarlo
 
     public Habitacion() {
     }
@@ -27,6 +28,10 @@ public abstract class Habitacion {
 
     public boolean isOcupada() {
         return ocupada;
+    }
+
+    public void setOcupada(boolean ocupada) {
+        this.ocupada = ocupada;
     }
 
     public int getCapacidad() {

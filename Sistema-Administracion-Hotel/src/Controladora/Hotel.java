@@ -1,5 +1,7 @@
 package Controladora;
+
 import Contable.Factura;
+import Contable.Reserva;
 import Habitaciones.Comun;
 import Habitaciones.Habitacion;
 import Habitaciones.Suite;
@@ -8,18 +10,21 @@ import Personas.Gerenciamiento;
 import Personas.Pasajero;
 import Servicios.Cochera;
 import Servicios.Consumible;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Scanner;
 
 
+public class Hotel {
 
-public class Hotel{
-
+    private String serviciosIncluidos;
     public String nombre;
     public String direccion;
     public String ciudad;
     public int cantidadEstrellas;
-    public String serviciosIncluidos;
+
+    private double dineroTotal;
     private Cochera cochera;
     public ArrayList<Pasajero> listaPasajeros = new ArrayList<>();
     public ArrayList<Empleado> listaEmpleados = new ArrayList<>();
@@ -28,6 +33,9 @@ public class Hotel{
     public HashMap<String, Factura> mapFacturas = new HashMap<>();
     public ArrayList<Consumible> listaConsumibles = new ArrayList<>();
     private HashMap<String, String> nombreYcontrasena = new HashMap<>();
+    public HashMap<String, Reserva> listaReservas = new HashMap<>();
+
+    Scanner teclado = new Scanner(System.in);
 
     public Hotel() {
     }
@@ -41,6 +49,7 @@ public class Hotel{
         this.serviciosIncluidos = "Cochera, Caja fuerte, tu vieja, Wi-Fi";
     }
 
+
     public void login() {
 
     }
@@ -52,30 +61,111 @@ public class Hotel{
     private void menuAdministrador() {
     }
 
-    public void menuCliente(){
-
-    }
-    private void registrarUsuario(){
+    public void menuCliente() {
 
     }
 
-    private boolean verificarNombre(){
+    private void registrarUsuario() {
+
+    }
+
+    private boolean verificarNombre() {
         return false;
     }
 
-    private boolean verificarContrasena(){
+    private boolean verificarContrasena() {
         return false;
     }
 
-    public void reservarHabitacion(){
+    public void realizarReserva() {
+        Reserva reserva = new Reserva();
+        System.out.println("Bienvenido/a al sistema de reservas de habitaciones del hotel Lester, a continuacion le solicitaremos los datos de los hospedantes");
+        reserva.pasajeros = registrarPasajero();
+        if (cochera.getEspacioDisponible() > 0) {
+            registrarCochera(reserva);
+        } else {
+            System.out.println("En este momento nuestra cochera se encuentra ocupada, lamentamos el inconveniente");
+        }
+        System.out.println("Nuestras habitaciones disponibles son las siguientes...");
+        registrarHabitacion(reserva);
+        //Agregar sistema de facturacion
+        Factura factura = new Factura();
+    }
+
+    public ArrayList<Pasajero> registrarPasajero() {
+        ArrayList<Pasajero> pasajeros = new ArrayList<>();
+        char control = 's';
+        while (control == 's') {
+            Pasajero nuevo = new Pasajero();
+            System.out.printf("\nPrimer nombre: ");
+            nuevo.setNombre(teclado.next());
+            System.out.printf("\nApellido: ");
+            nuevo.setApellido(teclado.next());
+            System.out.printf("\nDNI: ");
+            nuevo.setDNI(teclado.next());
+            System.out.printf("\nNacionalidad: ");
+            nuevo.setOrigen(teclado.next());
+            System.out.printf("\nDomicilio: ");
+            nuevo.setDomicilioOrigen(teclado.next());
+            System.out.printf("\nHistoria (Opcional): ");
+            nuevo.setHistoria(teclado.next());
+            nuevo.setRegistrado(true);
+
+            pasajeros.add(nuevo);
+            listaPasajeros.add(nuevo);
+            System.out.printf("\nQuiere registrar a otro pasajero?: ");
+            control = teclado.next().toLowerCase().charAt(0);
+        }
+        return pasajeros;
 
     }
 
-    public void solicitarConsumo(){
+    public void registrarCochera(Reserva reserva) {
+        int espacios = 0;
+        System.out.printf("\nQuiere cochera? s/n: ");
+        char a = teclado.next().toLowerCase().charAt(0);
+        if (a == 's') {
+            reserva.setCochera(true);
+            do {
+                System.out.println("Cuantos vehiculos quiere almacenar? Quedan disponibles " + cochera.getEspacioDisponible());
+                espacios = teclado.nextInt();
+                if (espacios > cochera.getEspacioDisponible()) {
+                    System.out.println("No tenemos suficiente espacio disponible en nuestra cochera, el MAXIMO es: " + cochera.getEspacioDisponible());
+                } else {
+                    cochera.setEspacioDisponible(cochera.getEspacioDisponible() - espacios);
+                    reserva.setEspaciosCochera(espacios);
+                    System.out.println("Su cochera se encuentra reservada");
+                }
+            } while (espacios > cochera.getEspacioDisponible());
+        } else {
+            reserva.setCochera(false);
+        }
+    }
+
+    public void registrarHabitacion(Reserva reserva) {
+        char continuar = 's';
+        int numero=0;
+        do {
+            for (Integer number : mapHabitaciones.keySet()) {
+                if (mapHabitaciones.get(number).isOcupada() == false) {
+                    System.out.println(mapHabitaciones.get(number));
+                }
+            }
+            System.out.println("Ingrese el numero de habitacion que quiere reservar");
+            numero = teclado.nextInt();
+            mapHabitaciones.get(numero).setOcupada(true);
+            reserva.habitacion.add(mapHabitaciones.get(numero));
+            System.out.println("Quiere reservar otra habitacion mas?");
+            continuar = teclado.next().charAt(0);
+        }while (continuar == 's');
 
     }
 
-    public void cargarHabitaciones(){
+    public void solicitarConsumo() {
+
+    }
+
+    public void cargarHabitaciones() {
         Comun comun1 = new Comun(101, 4, false, 30000);
         Comun comun2 = new Comun(102, 2, true, 16000);
         Comun comun3 = new Comun(103, 3, false, 22000);
@@ -117,7 +207,7 @@ public class Hotel{
 
     }
 
-    public void cargarConsumibles(){
+    public void cargarConsumibles() {
         Consumible consu1 = new Consumible(800, "Agua mineral", "Villavicencio 500ml");
         Consumible consu2 = new Consumible(1000, "Gaseosa", "Coca-Cola, Sprite, Fanta 600ml");
         Consumible consu3 = new Consumible(1600, "Papas fritas", "Lay's 300gr");
@@ -142,14 +232,14 @@ public class Hotel{
 
     }
 
-    public void mostrarHabitaciones(){
-        for (int habitacion: mapHabitaciones.keySet()) {
+    public void mostrarHabitaciones() {
+        for (int habitacion : mapHabitaciones.keySet()) {
             System.out.println(mapHabitaciones.get(habitacion));
         }
     }
 
-    public void mostrarConsumibles(){
-        for (Consumible consumible: listaConsumibles) {
+    public void mostrarConsumibles() {
+        for (Consumible consumible : listaConsumibles) {
             System.out.println(consumible);
         }
     }
@@ -165,4 +255,5 @@ public class Hotel{
                 '}';
     }
 }
+
 
