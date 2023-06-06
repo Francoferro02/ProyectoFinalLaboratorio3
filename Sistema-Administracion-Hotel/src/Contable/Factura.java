@@ -2,27 +2,30 @@ package Contable;
 
 import Habitaciones.Habitacion;
 import Personas.Pasajero;
+import Servicios.Cochera;
 
 import java.time.LocalDate;
-import java.util.UUID;
+import java.util.ArrayList;
 
 public class Factura {
 
     private double precioTotal;
-    Pasajero pasajero;
-    Habitacion habitacion;
-    LocalDate fecha;
-    String codigoIdentificador;
+    private Pasajero pasajero;
+    public ArrayList<Habitacion> habitaciones;
+
+    private LocalDate fechaDeEmision;
+    private String codigoIdentificador;
 
     public Factura() {
+        this.habitaciones = new ArrayList<>();
     }
 
-    public Factura(double precioTotal, Pasajero pasajero, Habitacion habitacion, LocalDate fecha) {
+    public Factura(double precioTotal, Pasajero pasajero, Habitacion habitacion, LocalDate fechaDeEmision, String codigoIdentificador) {
         this.precioTotal = precioTotal;
         this.pasajero = pasajero;
-        this.habitacion = habitacion;
-        this.fecha = fecha;
-        this.codigoIdentificador = (UUID.randomUUID().toString().toUpperCase());
+        this.habitaciones = new ArrayList<>();
+        this.fechaDeEmision = fechaDeEmision;
+        this.codigoIdentificador = codigoIdentificador;
     }
 
     public double getPrecioTotal() {
@@ -33,34 +36,52 @@ public class Factura {
         return pasajero;
     }
 
-    public Habitacion getHabitacion() {
-        return habitacion;
+    public ArrayList<Habitacion> getHabitacion() {
+        return habitaciones;
     }
 
-    public LocalDate getFecha() {
-        return fecha;
+    public LocalDate getfechaDeEmision() {
+        return fechaDeEmision;
     }
 
     public String getCodigoIdentificador() {
         return codigoIdentificador;
     }
 
+    public void setPasajero(Pasajero pasajero) {
+        this.pasajero = pasajero;
+    }
+
+    public void setFechaDeEmision(LocalDate fechaDeEmision) {
+        this.fechaDeEmision = fechaDeEmision;
+    }
+
+    public void setCodigoIdentificador(String codigoIdentificador) {
+        this.codigoIdentificador = codigoIdentificador;
+    }
+
     public void setPrecioTotal(double precioTotal) {
         this.precioTotal = precioTotal;
     }
 
-    public void calcularPrecio(){
+    public void calcularPrecio(int dias,Reserva reserva,double precioCochera){
 
+        for (Habitacion h: reserva.habitaciones) {
+            precioTotal += h.precio * dias;
+        }
+        if (reserva.isCochera() == true){
+        precioTotal += ((precioCochera * reserva.getEspaciosCochera()) * dias);
+        }
     }
 
     @Override
     public String toString() {
-        return "Contable.Factura{" +
-                "precioTotal=" + precioTotal +
+        return "Factura{" +
+                "precio Total=" + precioTotal +
                 ", pasajero=" + pasajero +
-                ", habitacion=" + habitacion +
-                ", fecha=" + fecha +
-                ", codigoIdentificador='" + codigoIdentificador + '\'' +
+                ", habitacion=" + habitaciones +
+                ", fecha de emision=" + fechaDeEmision +
+                ", codigo Identificador='" + codigoIdentificador + '\'' +
                 '}';
     }
 }

@@ -11,7 +11,11 @@ import Personas.Pasajero;
 import Servicios.Cochera;
 import Servicios.Consumible;
 
+import java.io.File;
+import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -33,7 +37,8 @@ public class Hotel {
     public HashMap<String, Factura> mapFacturas = new HashMap<>();
     public ArrayList<Consumible> listaConsumibles = new ArrayList<>();
     private HashMap<String, String> nombreYcontrasena = new HashMap<>();
-    public HashMap<String, Reserva> listaReservas = new HashMap<>();
+    public HashMap<String, Reserva> mapReservas = new HashMap<>();
+
 
     Scanner teclado = new Scanner(System.in);
 
@@ -81,46 +86,107 @@ public class Hotel {
         Reserva reserva = new Reserva();
         System.out.println("Bienvenido/a al sistema de reservas de habitaciones del hotel Lester, a continuacion le solicitaremos los datos de los hospedantes");
         reserva.pasajeros = registrarPasajero();
+        System.out.println("Ingrese la fecha de entrada(Dia/Mes/Anio): ");
+        Date fechaEntrada = new Date();
+        System.out.println("Ingrese dia:");
+        fechaEntrada.setDate(teclado.nextInt());
+        System.out.println("Ingrese mes:");
+        fechaEntrada.setMonth(teclado.nextInt() - 1);
+        System.out.println("Ingrese anio:");
+        fechaEntrada.setYear(teclado.nextInt() - 1900);
+        reserva.fechaEntrada = fechaEntrada;
+        System.out.println("Ingrese la fecha de salida(Dia/Mes/Anio): ");
+        Date fechaSalida = new Date();
+        System.out.println("Ingrese dia:");
+        fechaSalida.setDate(teclado.nextInt());
+        System.out.println("Ingrese mes:");
+        fechaSalida.setMonth(teclado.nextInt() - 1);
+        System.out.println("Ingrese anio:");
+        fechaSalida.setYear(teclado.nextInt() - 1900);
+        reserva.fechaSalida = fechaSalida;
         if (cochera.getEspacioDisponible() > 0) {
             registrarCochera(reserva);
         } else {
             System.out.println("En este momento nuestra cochera se encuentra ocupada, lamentamos el inconveniente");
         }
         System.out.println("Nuestras habitaciones disponibles son las siguientes...");
-        registrarHabitacion(reserva);
-        //Agregar sistema de facturacion
+        registrarHabitacion(reserva, fechaEntrada);
+        mapReservas.put(reserva.identificador, reserva);
+        //Sistema de facturacion
+        System.out.println("A continuacion se imprimira la factura de su reserva. ACLARACION IMPORTANTE: El precio final incluye la estadia y la cochera. LOS CONSUMIBLES SE PAGAN AL MOMENTO DE ORDENARLO");
         Factura factura = new Factura();
+        generarFactura(factura,reserva);
+        System.out.println("Felicitaciones ya realizaste tu reserva en Lester Hotel. Te esperamos pronto");
+        System.out.println(factura);
     }
 
-    public ArrayList<Pasajero> registrarPasajero() {
+    private void generarFactura(Factura factura,Reserva reserva){
+        factura.setCodigoIdentificador(reserva.getIdentificador());
+        factura.calcularPrecio(calcularDias(reserva), reserva,cochera.precioDia);
+        factura.habitaciones = reserva.habitaciones;
+        factura.setPasajero(reserva.getPasajeros().get(0));
+        LocalDate ahora = LocalDate.now();
+        factura.setFechaDeEmision(ahora);
+        dineroTotal += factura.getPrecioTotal();
+        if (mapFacturas != null)
+            for (String clave: mapFacturas.keySet()) {
+                try {
+                    if (factura.getCodigoIdentificador().equals(mapFacturas.get(clave).getCodigoIdentificador())){
+                         throw new IOException();
+                    }
+                }catch (IOException e){
+                    System.out.println("Esa factura ya se encuentra en la lista,revise correctamente los datos");
+                }
+            }
+    }
+
+
+
+    private int calcularDias(Reserva reserva){
+        long dias = (reserva.fechaSalida.getTime() - reserva.fechaEntrada.getTime());
+        dias = dias/(1000*60*60*24);
+        return (int) dias;
+    }
+    private ArrayList<Pasajero> registrarPasajero() {
         ArrayList<Pasajero> pasajeros = new ArrayList<>();
+        boolean excepcionLanzada = false;
         char control = 's';
         while (control == 's') {
             Pasajero nuevo = new Pasajero();
-            System.out.printf("\nPrimer nombre: ");
-            nuevo.setNombre(teclado.next());
-            System.out.printf("\nApellido: ");
-            nuevo.setApellido(teclado.next());
-            System.out.printf("\nDNI: ");
-            nuevo.setDNI(teclado.next());
-            System.out.printf("\nNacionalidad: ");
-            nuevo.setOrigen(teclado.next());
-            System.out.printf("\nDomicilio: ");
-            nuevo.setDomicilioOrigen(teclado.next());
-            System.out.printf("\nHistoria (Opcional): ");
-            nuevo.setHistoria(teclado.next());
+            do {
+                System.out.printf("\nPrimer nombre: ");
+                nuevo.setNombre(teclado.next());
+                System.out.printf("\nApellido: ");
+                nuevo.setApellido(teclado.next());
+                System.out.printf("\nDNI: ");
+                nuevo.setDNI(teclado.next());
+                try {
+                    for (Pasajero p : listaPasajeros) {
+                        if (p.getDNI().equals(nuevo.getDNI())) {
+                            throw new IOException();
+                        }
+                    }
+                } catch (IOException e) {
+                    System.out.println("El DNI ingresado ya se encuentra registrado, porfavor intente con un nuevo pasajero");
+                    excepcionLanzada = true;
+                }
+                System.out.printf("\nNacionalidad: ");
+                nuevo.setOrigen(teclado.next());
+                System.out.printf("\nDomicilio: ");
+                nuevo.setDomicilioOrigen(teclado.next());
+                System.out.printf("\nHistoria (Opcional): ");
+                nuevo.setHistoria(teclado.next());
+            } while (excepcionLanzada == true);
             nuevo.setRegistrado(true);
-
             pasajeros.add(nuevo);
             listaPasajeros.add(nuevo);
-            System.out.printf("\nQuiere registrar a otro pasajero?: ");
-            control = teclado.next().toLowerCase().charAt(0);
+            System.out.printf("\nQuiere registrar a otro pasajero? s/n: ");
+            control = teclado.next().charAt(0);
         }
         return pasajeros;
-
     }
 
-    public void registrarCochera(Reserva reserva) {
+    private void registrarCochera(Reserva reserva) {
         int espacios = 0;
         System.out.printf("\nQuiere cochera? s/n: ");
         char a = teclado.next().toLowerCase().charAt(0);
@@ -142,23 +208,50 @@ public class Hotel {
         }
     }
 
-    public void registrarHabitacion(Reserva reserva) {
+    private void registrarHabitacion(Reserva reserva, Date fechaEntrada) {
         char continuar = 's';
-        int numero=0;
+        int numero = 0;
+        boolean ocupacion;
         do {
             for (Integer number : mapHabitaciones.keySet()) {
-                if (mapHabitaciones.get(number).isOcupada() == false) {
-                    System.out.println(mapHabitaciones.get(number));
-                }
+                System.out.println(mapHabitaciones.get(number));
             }
-            System.out.println("Ingrese el numero de habitacion que quiere reservar");
-            numero = teclado.nextInt();
-            mapHabitaciones.get(numero).setOcupada(true);
-            reserva.habitacion.add(mapHabitaciones.get(numero));
+            do {
+                System.out.println("Ingrese el numero de habitacion que quiere reservar");
+                numero = teclado.nextInt();
+                ocupacion = verificarOcupacion(numero, fechaEntrada);
+                if (!ocupacion) {
+                    System.out.println("La habitacion que selecciono se encuentra reservada hasta una fecha posterior a su fecha de entrada.");
+                } else {
+                    System.out.println("Gran eleccion!!");
+                    reserva.habitaciones.add(mapHabitaciones.get(numero));
+                }
+            } while (!ocupacion);
             System.out.println("Quiere reservar otra habitacion mas?");
             continuar = teclado.next().charAt(0);
-        }while (continuar == 's');
+        } while (continuar == 's');
+    }
 
+    private boolean verificarOcupacion(int habitacion, Date fechaEntrada) {
+        int cont = 0;
+        for (String reserva1 : mapReservas.keySet()) {
+            if (mapReservas.get(reserva1).habitaciones.get(cont).numero == habitacion) {
+                if (mapReservas.get(reserva1).fechaSalida.compareTo(fechaEntrada) == 1 || mapReservas.get(reserva1).fechaSalida.compareTo(fechaEntrada) == 0) {
+                    return false;
+                } else if (mapReservas.get(reserva1).fechaSalida.compareTo(fechaEntrada) < 0) {
+                    return true;
+                }
+            }
+            cont++;
+        }
+        return true;
+    }
+
+    public void mostrarReservas() {
+        System.out.println("holaaaa");
+        for (String clave : mapReservas.keySet()) {
+            System.out.println(mapReservas.get(clave));
+        }
     }
 
     public void solicitarConsumo() {

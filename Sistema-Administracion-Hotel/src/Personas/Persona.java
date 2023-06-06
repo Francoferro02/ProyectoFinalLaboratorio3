@@ -38,4 +38,16 @@ public abstract class Persona {
     public void setDNI(String DNI) {
         this.DNI = DNI;
     }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public String getApellido() {
+        return apellido;
+    }
+
+    public String getDNI() {
+        return DNI;
+    }
 }

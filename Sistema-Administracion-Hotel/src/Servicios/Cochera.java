@@ -4,12 +4,14 @@ public class Cochera {
 
     private int espacioTotal;
     private int espacioDisponible;
-    private int precioDia;
+    public final double precioDia = 2500;
+
+    public Cochera() {
+    }
 
     public Cochera(int espacioTotal, int espacioDisponible, int precioDia) {
         this.espacioTotal = espacioTotal;
         this.espacioDisponible = espacioDisponible;
-        this.precioDia = precioDia;
     }
 
     public int getEspacioTotal() {
@@ -20,20 +22,19 @@ public class Cochera {
         return espacioDisponible;
     }
 
-    public int getPrecioDia() {
-        return precioDia;
-    }
 
     public void setEspacioDisponible(int espacioDisponible) {
         this.espacioDisponible = espacioDisponible;
     }
+
+
 
     @Override
     public String toString() {
         return "Cochera{" +
                 "espacioTotal=" + espacioTotal +
                 ", espacioDisponible=" + espacioDisponible +
-                ", precioDia=" + precioDia +
+                ", precio por Dia=" + precioDia +
                 '}';
     }
 }

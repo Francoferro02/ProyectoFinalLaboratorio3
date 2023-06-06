@@ -5,13 +5,14 @@ import Personas.Pasajero;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.UUID;
 
 public class Reserva {
-    public LocalDate fechaEntrada; //Revisar que hacer con esto
-    public LocalDate fechaSalida;
+    public Date fechaEntrada; //Revisar que hacer con esto
+    public Date fechaSalida;
     public ArrayList<Pasajero> pasajeros;
-    public ArrayList<Habitacion> habitacion;
+    public ArrayList<Habitacion> habitaciones;
 
     private boolean cochera;
 
@@ -20,22 +21,25 @@ public class Reserva {
 
     public Reserva() {
         this.identificador = (UUID.randomUUID().toString().toUpperCase());
+        this.pasajeros = new ArrayList<>();
+        this.habitaciones = new ArrayList<>();
     }
 
-    public Reserva( LocalDate fechaEntrada, LocalDate fechaSalida, ArrayList<Habitacion> habitacion) {
+    public Reserva( Date fechaEntrada, Date fechaSalida) {
         this.fechaEntrada = fechaEntrada;
         this.fechaSalida = fechaSalida;
-        this.pasajeros = new ArrayList<>();
-        this.habitacion = habitacion;
         this.identificador = (UUID.randomUUID().toString().toUpperCase());
+        this.habitaciones = new ArrayList<>();
+        this.pasajeros = new ArrayList<>();
+
     }
 
 
-    public LocalDate getFechaEntrada() {
+    public Date getFechaEntrada() {
         return fechaEntrada;
     }
 
-    public LocalDate getFechaSalida() {
+    public Date getFechaSalida() {
         return fechaSalida;
     }
 
@@ -44,7 +48,7 @@ public class Reserva {
     }
 
     public ArrayList<Habitacion> getHabitacion() {
-        return habitacion;
+        return habitaciones;
     }
 
 
@@ -70,11 +74,11 @@ public class Reserva {
 
     @Override
     public String toString() {
-        return "Contable.Reserva{" +
+        return "Reserva{" +
                 ", fechaEntrada=" + fechaEntrada +
                 ", fechaSalida=" + fechaSalida +
                 ", pasajero=" + pasajeros +
-                ", habitacion=" + habitacion +
+                ", habitacion=" + habitaciones +
                 ", identificador='" + identificador + '\'' +
                 '}';
     }

@@ -9,8 +9,8 @@ public class Main {
         System.out.println(lester);
         lester.mostrarHabitaciones();
         lester.mostrarConsumibles();
-
-
+        lester.realizarReserva();
+        lester.mostrarReservas();
 
     }
 
