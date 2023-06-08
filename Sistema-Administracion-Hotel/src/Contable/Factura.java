@@ -5,6 +5,7 @@ import Personas.Pasajero;
 import Servicios.Cochera;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class Factura {
@@ -13,7 +14,7 @@ public class Factura {
     private Pasajero pasajero;
     public ArrayList<Habitacion> habitaciones;
 
-    private LocalDate fechaDeEmision;
+    private LocalDateTime fechaDeEmision;
     private String codigoIdentificador;
 
     public Factura() {
@@ -40,7 +41,7 @@ public class Factura {
         return habitaciones;
     }
 
-    public LocalDate getfechaDeEmision() {
+    public LocalDateTime getfechaDeEmision() {
         return fechaDeEmision;
     }
 
@@ -52,7 +53,7 @@ public class Factura {
         this.pasajero = pasajero;
     }
 
-    public void setFechaDeEmision(LocalDate fechaDeEmision) {
+    public void setFechaDeEmision(LocalDateTime fechaDeEmision) {
         this.fechaDeEmision = fechaDeEmision;
     }
 

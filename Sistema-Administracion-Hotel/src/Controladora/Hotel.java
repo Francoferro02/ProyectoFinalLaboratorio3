@@ -13,11 +13,9 @@ import Servicios.Consumible;
 
 import java.io.File;
 import java.io.IOException;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Scanner;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.*;
 
 
 public class Hotel {
@@ -87,22 +85,22 @@ public class Hotel {
         System.out.println("Bienvenido/a al sistema de reservas de habitaciones del hotel Lester, a continuacion le solicitaremos los datos de los hospedantes");
         reserva.pasajeros = registrarPasajero();
         System.out.println("Ingrese la fecha de entrada(Dia/Mes/Anio): ");
-        Date fechaEntrada = new Date();
         System.out.println("Ingrese dia:");
-        fechaEntrada.setDate(teclado.nextInt());
+        int dia = teclado.nextInt();
         System.out.println("Ingrese mes:");
-        fechaEntrada.setMonth(teclado.nextInt() - 1);
+        int mes = teclado.nextInt();
         System.out.println("Ingrese anio:");
-        fechaEntrada.setYear(teclado.nextInt() - 1900);
+        int anio = teclado.nextInt();
+        LocalDateTime fechaEntrada = LocalDateTime.of(anio, mes, dia, 18, 00);
         reserva.fechaEntrada = fechaEntrada;
         System.out.println("Ingrese la fecha de salida(Dia/Mes/Anio): ");
-        Date fechaSalida = new Date();
         System.out.println("Ingrese dia:");
-        fechaSalida.setDate(teclado.nextInt());
+        dia = teclado.nextInt();
         System.out.println("Ingrese mes:");
-        fechaSalida.setMonth(teclado.nextInt() - 1);
+        mes = teclado.nextInt();
         System.out.println("Ingrese anio:");
-        fechaSalida.setYear(teclado.nextInt() - 1900);
+        anio = teclado.nextInt();
+        LocalDateTime fechaSalida = LocalDateTime.of(anio, mes, dia, 10,00);
         reserva.fechaSalida = fechaSalida;
         if (cochera.getEspacioDisponible() > 0) {
             registrarCochera(reserva);
@@ -120,12 +118,12 @@ public class Hotel {
         System.out.println(factura);
     }
 
-    private void generarFactura(Factura factura,Reserva reserva){
+    private void generarFactura(Factura factura, Reserva reserva){
         factura.setCodigoIdentificador(reserva.getIdentificador());
         factura.calcularPrecio(calcularDias(reserva), reserva,cochera.precioDia);
         factura.habitaciones = reserva.habitaciones;
         factura.setPasajero(reserva.getPasajeros().get(0));
-        LocalDate ahora = LocalDate.now();
+        LocalDateTime ahora = LocalDateTime.now();
         factura.setFechaDeEmision(ahora);
         dineroTotal += factura.getPrecioTotal();
         if (mapFacturas != null)
@@ -143,7 +141,7 @@ public class Hotel {
 
 
     private int calcularDias(Reserva reserva){
-        long dias = (reserva.fechaSalida.getTime() - reserva.fechaEntrada.getTime());
+        long dias = (reserva.fechaSalida.toEpochSecond(ZoneOffset.UTC) - reserva.fechaEntrada.toEpochSecond(ZoneOffset.UTC));
         dias = dias/(1000*60*60*24);
         return (int) dias;
     }
@@ -208,7 +206,7 @@ public class Hotel {
         }
     }
 
-    private void registrarHabitacion(Reserva reserva, Date fechaEntrada) {
+    private void registrarHabitacion(Reserva reserva, LocalDateTime fechaEntrada) {
         char continuar = 's';
         int numero = 0;
         boolean ocupacion;
@@ -232,7 +230,7 @@ public class Hotel {
         } while (continuar == 's');
     }
 
-    private boolean verificarOcupacion(int habitacion, Date fechaEntrada) {
+    private boolean verificarOcupacion(int habitacion, LocalDateTime fechaEntrada) {
         int cont = 0;
         for (String reserva1 : mapReservas.keySet()) {
             if (mapReservas.get(reserva1).habitaciones.get(cont).numero == habitacion) {

@@ -4,13 +4,14 @@ import Habitaciones.Habitacion;
 import Personas.Pasajero;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
 
 public class Reserva {
-    public Date fechaEntrada; //Revisar que hacer con esto
-    public Date fechaSalida;
+    public LocalDateTime fechaEntrada; //Revisar que hacer con esto
+    public LocalDateTime fechaSalida;
     public ArrayList<Pasajero> pasajeros;
     public ArrayList<Habitacion> habitaciones;
 
@@ -25,7 +26,7 @@ public class Reserva {
         this.habitaciones = new ArrayList<>();
     }
 
-    public Reserva( Date fechaEntrada, Date fechaSalida) {
+    public Reserva( LocalDateTime fechaEntrada, LocalDateTime fechaSalida) {
         this.fechaEntrada = fechaEntrada;
         this.fechaSalida = fechaSalida;
         this.identificador = (UUID.randomUUID().toString().toUpperCase());
@@ -35,11 +36,11 @@ public class Reserva {
     }
 
 
-    public Date getFechaEntrada() {
+    public LocalDateTime getFechaEntrada() {
         return fechaEntrada;
     }
 
-    public Date getFechaSalida() {
+    public LocalDateTime getFechaSalida() {
         return fechaSalida;
     }
 
