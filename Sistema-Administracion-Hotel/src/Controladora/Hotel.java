@@ -8,17 +8,20 @@ import Habitaciones.Suite;
 import Personas.Empleado;
 import Personas.Gerenciamiento;
 import Personas.Pasajero;
+import Personas.Usuario;
 import Servicios.Cochera;
 import Servicios.Consumible;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
 
-
-public class Hotel {
+public class Hotel <K,T>{
 
     private String serviciosIncluidos;
     public String nombre;
@@ -29,15 +32,22 @@ public class Hotel {
     private double dineroTotal;
     private Cochera cochera;
     public ArrayList<Pasajero> listaPasajeros = new ArrayList<>();
-    public ArrayList<Empleado> listaEmpleados = new ArrayList<>();
-    public ArrayList<Gerenciamiento> listaGerentes = new ArrayList<>();
     public HashMap<Integer, Habitacion> mapHabitaciones = new HashMap<>();
     public HashMap<String, Factura> mapFacturas = new HashMap<>();
     public ArrayList<Consumible> listaConsumibles = new ArrayList<>();
-    private HashMap<String, String> nombreYcontrasena = new HashMap<>();
+    private HashMap<String, Empleado> mapEmpleados = new HashMap<>();//clave=DNI
     public HashMap<String, Reserva> mapReservas = new HashMap<>();
 
+    static final String ruta = "D:\\Documents\\Facultad\\Programación y Laboratorio III\\TP Final\\ProyectoFinalLaboratorio3\\Sistema-Administracion-Hotel\\src\\Files\\";
+    public File archivoHotel = new File(ruta+"Hotel.json");//SOLO GUARDA EL HOTEL
+    public File archivoHabitaciones = new File(ruta+"Habitaciones.json");
+    public File archivoFacturas = new File(ruta+"Facturas.json");
+    public File archivoEmpleados = new File(ruta+"Empleados.json");
+    public File archivoReservas = new File(ruta+"Reservas.json");
+    public File archivoPasajeros = new File(ruta+"Pasajeros.json");
+    public File archivoConsumibles = new File(ruta+"Consumibles.json");
 
+    ObjectMapper mapper = new ObjectMapper();
     Scanner teclado = new Scanner(System.in);
 
     public Hotel() {
@@ -255,8 +265,8 @@ public class Hotel {
     public void solicitarConsumo() {
 
     }
-
-    public void cargarHabitaciones() {
+/*
+    public void cargarHabitaciones(){
         Comun comun1 = new Comun(101, 4, false, 30000);
         Comun comun2 = new Comun(102, 2, true, 16000);
         Comun comun3 = new Comun(103, 3, false, 22000);
@@ -295,9 +305,10 @@ public class Hotel {
         this.mapHabitaciones.put(suite2.numero, suite2);
         this.mapHabitaciones.put(suite3.numero, suite3);
 
+        this.escribirArchivoMap(this.archivoHabitaciones, (HashMap<K, T>) this.mapHabitaciones);
 
     }
-
+*/
     public void cargarConsumibles() {
         Consumible consu1 = new Consumible(800, "Agua mineral", "Villavicencio 500ml");
         Consumible consu2 = new Consumible(1000, "Gaseosa", "Coca-Cola, Sprite, Fanta 600ml");
@@ -324,8 +335,8 @@ public class Hotel {
     }
 
     public void mostrarHabitaciones() {
-        for (int habitacion : mapHabitaciones.keySet()) {
-            System.out.println(mapHabitaciones.get(habitacion));
+        for(int clave : mapHabitaciones.keySet()){
+            System.out.println(mapHabitaciones.get(clave));
         }
     }
 
@@ -344,6 +355,33 @@ public class Hotel {
                 ", cantidadEstrellas=" + cantidadEstrellas +
                 ", cochera=" + cochera +
                 '}';
+    }
+
+    public void escribirArchivoMap(File archivo, HashMap<K,T> mapa){
+        try{
+            if(archivo!=null) {
+                this.mapper.writeValue(archivo, mapa);
+            }else {
+                throw new IOException();
+            }
+        }catch (IOException e){
+            System.out.println("ERROR al escribir el archivo.");
+        }
+
+    }
+
+    public HashMap<K,T> leerArchivoMap(File archivo){
+        HashMap<K,T> mapa = new HashMap<K,T>();
+        try{
+            if(archivo!=null) {
+                mapa = this.mapper.readValue(archivo, mapa.getClass());
+            }else {
+                throw new IOException();
+            }
+        }catch (IOException e){
+            System.out.println("ERROR al leer el archivo.");
+        }
+        return mapa;
     }
 }
 

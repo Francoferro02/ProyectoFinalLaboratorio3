@@ -1,11 +1,12 @@
 package Personas;
 
+import Controladora.Rol;
+
 public  abstract class Empleado extends Persona{
 
     protected double sueldo;
     protected  int diasVacaciones;
     protected  int antiguedad;
-
     protected Usuario usuario;
 
     public Empleado(String nombre, String apellido, String DNI, double sueldo, int diasVacaciones, int antiguedad) {

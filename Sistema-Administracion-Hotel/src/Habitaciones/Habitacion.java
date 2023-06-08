@@ -52,12 +52,11 @@ public abstract class Habitacion {
 
     @Override
     public String toString() {
-        return "Habitacion{" +
-                "numero=" + numero +
-                ", ocupada=" + ocupada +
-                ", capacidad=" + capacidad +
-                ", terraza=" + terraza +
-                ", precio=" + precio +
-                '}';
+        return "\nHabitacion: "+ numero +
+                "\nOcupada=" + ocupada +
+                "\nCapacidad=" + capacidad +
+                "\nTerraza=" + terraza +
+                "\nPrecio=" + precio +
+                "\n---------------------------------";
     }
 }

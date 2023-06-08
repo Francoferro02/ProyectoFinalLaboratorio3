@@ -4,25 +4,15 @@ import Controladora.Rol;
 
 public class Usuario {
 
-    private String nombreUsuario;
     private String contraseña;
     private Rol rol;
 
     public Usuario() {
     }
 
-    public Usuario(String nombreUsuario, String contraseña, Rol rol) {
-        this.nombreUsuario = nombreUsuario;
+    public Usuario(String contraseña, Rol rol) {
         this.contraseña = contraseña;
         this.rol = rol;
-    }
-
-    public String getNombreUsuario() {
-        return nombreUsuario;
-    }
-
-    public void setNombreUsuario(String nombreUsuario) {
-        this.nombreUsuario = nombreUsuario;
     }
 
     public String getContraseña() {
@@ -44,8 +34,7 @@ public class Usuario {
     @Override
     public String toString() {
         return "Usuario{" +
-                "nombreUsuario='" + nombreUsuario + '\'' +
-                ", contraseña='" + contraseña + '\'' +
+                "contraseña='" + contraseña + '\'' +
                 ", rol=" + rol +
                 '}';
     }

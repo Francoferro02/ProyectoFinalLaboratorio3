@@ -21,7 +21,7 @@ public class Factura {
         this.habitaciones = new ArrayList<>();
     }
 
-    public Factura(double precioTotal, Pasajero pasajero, Habitacion habitacion, LocalDate fechaDeEmision, String codigoIdentificador) {
+    public Factura(double precioTotal, Pasajero pasajero, Habitacion habitacion, LocalDateTime fechaDeEmision, String codigoIdentificador) {
         this.precioTotal = precioTotal;
         this.pasajero = pasajero;
         this.habitaciones = new ArrayList<>();
