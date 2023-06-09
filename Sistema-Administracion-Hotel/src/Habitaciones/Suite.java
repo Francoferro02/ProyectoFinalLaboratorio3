@@ -5,7 +5,7 @@ public class Suite extends Habitacion{
     public String serviciosAdicionales;
 
 
-    public Suite(int numero, int capacidad, boolean terraza, double precio) {
+    public Suite(String numero, int capacidad, boolean terraza, double precio) {
         super(numero, capacidad, terraza, precio);
         this.serviciosAdicionales = "";
     }

@@ -14,14 +14,17 @@ import Servicios.Consumible;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import javax.swing.*;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-public class Hotel <K,T>{
+public class Hotel<K, T> {
 
     private String serviciosIncluidos;
     public String nombre;
@@ -32,20 +35,20 @@ public class Hotel <K,T>{
     private double dineroTotal;
     private Cochera cochera;
     public ArrayList<Pasajero> listaPasajeros = new ArrayList<>();
-    public HashMap<Integer, Habitacion> mapHabitaciones = new HashMap<>();
-    public HashMap<String, Factura> mapFacturas = new HashMap<>();
+    public TreeMap<String, Habitacion> mapHabitaciones = new TreeMap<>();
+    public TreeMap<String, Factura> mapFacturas = new TreeMap<>();
     public ArrayList<Consumible> listaConsumibles = new ArrayList<>();
-    private HashMap<String, Empleado> mapEmpleados = new HashMap<>();//clave=DNI
-    public HashMap<String, Reserva> mapReservas = new HashMap<>();
+    private TreeMap<String, Empleado> mapEmpleados = new TreeMap<>();//clave=DNI
+    public TreeMap<String, Reserva> mapReservas = new TreeMap<>();
 
-    static final String ruta = "D:\\Documents\\Facultad\\Programación y Laboratorio III\\TP Final\\ProyectoFinalLaboratorio3\\Sistema-Administracion-Hotel\\src\\Files\\";
-    public File archivoHotel = new File(ruta+"Hotel.json");//SOLO GUARDA EL HOTEL
-    public File archivoHabitaciones = new File(ruta+"Habitaciones.json");
-    public File archivoFacturas = new File(ruta+"Facturas.json");
-    public File archivoEmpleados = new File(ruta+"Empleados.json");
-    public File archivoReservas = new File(ruta+"Reservas.json");
-    public File archivoPasajeros = new File(ruta+"Pasajeros.json");
-    public File archivoConsumibles = new File(ruta+"Consumibles.json");
+    static final String ruta = "F:\\Laboratorio-3\\ProyectoFinalLabo3\\Sistema-Administracion-Hotel\\src\\Files\\";
+    public File archivoHotel = new File(ruta + "Hotel.json");//SOLO GUARDA EL HOTEL
+    public File archivoHabitaciones = new File(ruta + "Habitaciones.json");
+    public File archivoFacturas = new File(ruta + "Facturas.json");
+    public File archivoEmpleados = new File(ruta + "Empleados.json");
+    public File archivoReservas = new File(ruta + "Reservas.json");
+    public File archivoPasajeros = new File(ruta + "Pasajeros.json");
+    public File archivoConsumibles = new File(ruta + "Consumibles.json");
 
     ObjectMapper mapper = new ObjectMapper();
     Scanner teclado = new Scanner(System.in);
@@ -110,7 +113,7 @@ public class Hotel <K,T>{
         mes = teclado.nextInt();
         System.out.println("Ingrese anio:");
         anio = teclado.nextInt();
-        LocalDateTime fechaSalida = LocalDateTime.of(anio, mes, dia, 10,00);
+        LocalDateTime fechaSalida = LocalDateTime.of(anio, mes, dia, 10, 00);
         reserva.fechaSalida = fechaSalida;
         if (cochera.getEspacioDisponible() > 0) {
             registrarCochera(reserva);
@@ -123,38 +126,38 @@ public class Hotel <K,T>{
         //Sistema de facturacion
         System.out.println("A continuacion se imprimira la factura de su reserva. ACLARACION IMPORTANTE: El precio final incluye la estadia y la cochera. LOS CONSUMIBLES SE PAGAN AL MOMENTO DE ORDENARLO");
         Factura factura = new Factura();
-        generarFactura(factura,reserva);
+        generarFactura(factura, reserva);
         System.out.println("Felicitaciones ya realizaste tu reserva en Lester Hotel. Te esperamos pronto");
         System.out.println(factura);
     }
 
-    private void generarFactura(Factura factura, Reserva reserva){
+    private void generarFactura(Factura factura, Reserva reserva) {
         factura.setCodigoIdentificador(reserva.getIdentificador());
-        factura.calcularPrecio(calcularDias(reserva), reserva,cochera.precioDia);
+        factura.calcularPrecio(calcularDias(reserva), reserva, cochera.precioDia);
         factura.habitaciones = reserva.habitaciones;
         factura.setPasajero(reserva.getPasajeros().get(0));
         LocalDateTime ahora = LocalDateTime.now();
         factura.setFechaDeEmision(ahora);
         dineroTotal += factura.getPrecioTotal();
         if (mapFacturas != null)
-            for (String clave: mapFacturas.keySet()) {
+            for (String clave : mapFacturas.keySet()) {
                 try {
-                    if (factura.getCodigoIdentificador().equals(mapFacturas.get(clave).getCodigoIdentificador())){
-                         throw new IOException();
+                    if (factura.getCodigoIdentificador().equals(mapFacturas.get(clave).getCodigoIdentificador())) {
+                        throw new IOException();
                     }
-                }catch (IOException e){
+                } catch (IOException e) {
                     System.out.println("Esa factura ya se encuentra en la lista,revise correctamente los datos");
                 }
             }
     }
 
 
-
-    private int calcularDias(Reserva reserva){
+    private int calcularDias(Reserva reserva) {
         long dias = (reserva.fechaSalida.toEpochSecond(ZoneOffset.UTC) - reserva.fechaEntrada.toEpochSecond(ZoneOffset.UTC));
-        dias = dias/(1000*60*60*24);
+        dias = dias / (1000 * 60 * 60 * 24);
         return (int) dias;
     }
+
     private ArrayList<Pasajero> registrarPasajero() {
         ArrayList<Pasajero> pasajeros = new ArrayList<>();
         boolean excepcionLanzada = false;
@@ -218,15 +221,15 @@ public class Hotel <K,T>{
 
     private void registrarHabitacion(Reserva reserva, LocalDateTime fechaEntrada) {
         char continuar = 's';
-        int numero = 0;
+        String numero;
         boolean ocupacion;
         do {
-            for (Integer number : mapHabitaciones.keySet()) {
+            for (String number : mapHabitaciones.keySet()) {
                 System.out.println(mapHabitaciones.get(number));
             }
             do {
                 System.out.println("Ingrese el numero de habitacion que quiere reservar");
-                numero = teclado.nextInt();
+                numero = teclado.next();
                 ocupacion = verificarOcupacion(numero, fechaEntrada);
                 if (!ocupacion) {
                     System.out.println("La habitacion que selecciono se encuentra reservada hasta una fecha posterior a su fecha de entrada.");
@@ -240,10 +243,10 @@ public class Hotel <K,T>{
         } while (continuar == 's');
     }
 
-    private boolean verificarOcupacion(int habitacion, LocalDateTime fechaEntrada) {
+    private boolean verificarOcupacion(String habitacion, LocalDateTime fechaEntrada) {
         int cont = 0;
         for (String reserva1 : mapReservas.keySet()) {
-            if (mapReservas.get(reserva1).habitaciones.get(cont).numero == habitacion) {
+            if (mapReservas.get(reserva1).habitaciones.get(cont).numero.equals(habitacion)) {
                 if (mapReservas.get(reserva1).fechaSalida.compareTo(fechaEntrada) == 1 || mapReservas.get(reserva1).fechaSalida.compareTo(fechaEntrada) == 0) {
                     return false;
                 } else if (mapReservas.get(reserva1).fechaSalida.compareTo(fechaEntrada) < 0) {
@@ -265,26 +268,26 @@ public class Hotel <K,T>{
     public void solicitarConsumo() {
 
     }
-/*
-    public void cargarHabitaciones(){
-        Comun comun1 = new Comun(101, 4, false, 30000);
-        Comun comun2 = new Comun(102, 2, true, 16000);
-        Comun comun3 = new Comun(103, 3, false, 22000);
-        Comun comun4 = new Comun(104, 2, true, 16000);
-        Comun comun5 = new Comun(105, 2, false, 16000);
-        Comun comun6 = new Comun(201, 2, false, 16000);
-        Comun comun7 = new Comun(202, 3, true, 22000);
-        Comun comun8 = new Comun(203, 4, false, 30000);
-        Comun comun9 = new Comun(204, 4, true, 30000);
-        Comun comun10 = new Comun(205, 2, false, 16000);
-        Comun comun11 = new Comun(301, 3, false, 22000);
-        Comun comun12 = new Comun(302, 3, true, 22000);
-        Comun comun13 = new Comun(303, 2, false, 16000);
-        Comun comun14 = new Comun(304, 2, true, 16000);
-        Comun comun15 = new Comun(305, 4, false, 30000);
-        Suite suite1 = new Suite(401, 5, true, 100000);
-        Suite suite2 = new Suite(402, 5, true, 100000);
-        Suite suite3 = new Suite(500, 6, true, 150000);
+
+    public void cargarHabitaciones() {
+        Comun comun1 = new Comun("101", 4, false, 30000);
+        Comun comun2 = new Comun("102", 2, true, 16000);
+        Comun comun3 = new Comun("103", 3, false, 22000);
+        Comun comun4 = new Comun("104", 2, true, 16000);
+        Comun comun5 = new Comun("105", 2, false, 16000);
+        Comun comun6 = new Comun("201", 2, false, 16000);
+        Comun comun7 = new Comun("202", 3, true, 22000);
+        Comun comun8 = new Comun("203", 4, false, 30000);
+        Comun comun9 = new Comun("204", 4, true, 30000);
+        Comun comun10 = new Comun("205", 2, false, 16000);
+        Comun comun11 = new Comun("301", 3, false, 22000);
+        Comun comun12 = new Comun("302", 3, true, 22000);
+        Comun comun13 = new Comun("303", 2, false, 16000);
+        Comun comun14 = new Comun("304", 2, true, 16000);
+        Comun comun15 = new Comun("305", 4, false, 30000);
+        Suite suite1 = new Suite("401", 5, true, 100000);
+        Suite suite2 = new Suite("402", 5, true, 100000);
+        Suite suite3 = new Suite("500", 6, true, 150000);
 
         this.mapHabitaciones.put(comun1.numero, comun1);
         this.mapHabitaciones.put(comun2.numero, comun2);
@@ -305,10 +308,10 @@ public class Hotel <K,T>{
         this.mapHabitaciones.put(suite2.numero, suite2);
         this.mapHabitaciones.put(suite3.numero, suite3);
 
-        this.escribirArchivoMap(this.archivoHabitaciones, (HashMap<K, T>) this.mapHabitaciones);
+        this.escribirArchivoMap(this.archivoHabitaciones, (TreeMap<K, T>) this.mapHabitaciones);
 
     }
-*/
+
     public void cargarConsumibles() {
         Consumible consu1 = new Consumible(800, "Agua mineral", "Villavicencio 500ml");
         Consumible consu2 = new Consumible(1000, "Gaseosa", "Coca-Cola, Sprite, Fanta 600ml");
@@ -332,10 +335,12 @@ public class Hotel <K,T>{
         this.listaConsumibles.add(consu9);
         this.listaConsumibles.add(consu10);
 
+        this.escribirArchivoArrayList(archivoConsumibles, (ArrayList<T>) listaConsumibles);
+
     }
 
     public void mostrarHabitaciones() {
-        for(int clave : mapHabitaciones.keySet()){
+        for (String clave : mapHabitaciones.keySet()) {
             System.out.println(mapHabitaciones.get(clave));
         }
     }
@@ -357,31 +362,50 @@ public class Hotel <K,T>{
                 '}';
     }
 
-    public void escribirArchivoMap(File archivo, HashMap<K,T> mapa){
-        try{
-            if(archivo!=null) {
-                this.mapper.writeValue(archivo, mapa);
-            }else {
-                throw new IOException();
-            }
-        }catch (IOException e){
+    public void escribirArchivoMap(File archivo, TreeMap<K, T> mapa) {
+        try {
+            this.mapper.writeValue(archivo, mapa);
+        } catch (IOException e) {
             System.out.println("ERROR al escribir el archivo.");
         }
 
     }
 
-    public HashMap<K,T> leerArchivoMap(File archivo){
-        HashMap<K,T> mapa = new HashMap<K,T>();
-        try{
-            if(archivo!=null) {
+    public TreeMap<K, T> leerArchivoMap(File archivo) {
+        TreeMap<K, T> mapa = new TreeMap<K, T>();
+        try {
+            if (archivo != null) {
                 mapa = this.mapper.readValue(archivo, mapa.getClass());
-            }else {
+            } else {
                 throw new IOException();
             }
-        }catch (IOException e){
+        } catch (IOException e) {
             System.out.println("ERROR al leer el archivo.");
         }
         return mapa;
+    }
+
+    public void escribirArchivoArrayList(File archivo, ArrayList<T> arrayList) {
+        try {
+            this.mapper.writeValue(archivo, arrayList);
+        } catch (IOException e) {
+            System.out.println("ERROR al escribir el archivo.");
+        }
+
+    }
+
+    public ArrayList<T> leerArchivoArrayList(File archivo) {
+        ArrayList<T> arrayList = new ArrayList<T>();
+        try {
+            if (archivo != null) {
+                arrayList = this.mapper.readValue(archivo, arrayList.getClass());
+            } else {
+                throw new IOException();
+            }
+        } catch (IOException e) {
+            System.out.println("ERROR al leer el archivo.");
+        }
+        return arrayList;
     }
 }
 

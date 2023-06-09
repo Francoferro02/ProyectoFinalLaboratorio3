@@ -5,7 +5,7 @@ import Servicios.Consumible;
 
 public abstract class Habitacion {
 
-    public int numero;
+    public String numero;
     private boolean ocupada;
     public int capacidad;
     public boolean terraza;
@@ -18,7 +18,7 @@ public abstract class Habitacion {
     public Habitacion() {
     }
 
-    public Habitacion(int numero, int capacidad, boolean terraza, double precio) {
+    public Habitacion(String numero, int capacidad, boolean terraza, double precio) {
         this.numero = numero;
         this.ocupada = false;
         this.capacidad = capacidad;
@@ -26,7 +26,7 @@ public abstract class Habitacion {
         this.precio = precio;
     }
 
-    public int getNumero() {
+    public String getNumero() {
         return numero;
     }
 

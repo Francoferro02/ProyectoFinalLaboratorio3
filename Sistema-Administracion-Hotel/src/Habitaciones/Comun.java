@@ -3,7 +3,7 @@ package Habitaciones;
 public class Comun extends Habitacion {
 
 
-    public Comun(int numero, int capacidad, boolean terraza, double precio) {
+    public Comun(String numero, int capacidad, boolean terraza, double precio) {
         super(numero, capacidad, terraza, precio);
     }
 
