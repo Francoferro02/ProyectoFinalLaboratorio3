@@ -72,6 +72,8 @@ public class Recepcionista extends Empleado implements Gerenciamiento{
 
     }
 
+
+
     @Override
     public String toString() {
         return "Recepcionista{" +

@@ -11,7 +11,6 @@ public class Pasajero extends Persona {
     private Boolean registrado;
     private int cantDias;
 
-
     public Pasajero(String nombre, String apellido, String DNI, String origen, String domicilioOrigen, String historia, Boolean registrado, int cantDias) {
         super(nombre, apellido, DNI);
         this.origen = origen;
