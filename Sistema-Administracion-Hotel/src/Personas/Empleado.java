@@ -1,7 +1,17 @@
 package Personas;
 
 import Controladora.Rol;
+import Habitaciones.Comun;
+import Habitaciones.Suite;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@class")
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = Comun.class, name = "Personas.Administrador"),
+        @JsonSubTypes.Type(value = Suite.class, name = "Personas.Servicio"),
+        @JsonSubTypes.Type(value = Suite.class, name = "Personas.Recepcionista")
+})
 public  abstract class Empleado extends Persona{
 
     protected double sueldo;

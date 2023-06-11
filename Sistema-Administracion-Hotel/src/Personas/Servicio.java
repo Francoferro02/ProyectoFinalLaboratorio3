@@ -1,10 +1,14 @@
 package Personas;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
+
+@JsonTypeName("Personas.Servicio")
 public class Servicio extends Empleado{
 
     Trabajadores trabajadores;
 
-    public Servicio(String nombre, String apellido, String DNI, double sueldo, int diasVacaciones, int antiguedad, Trabajadores rol) {
+    public Servicio(@JsonProperty("nombre")String nombre, @JsonProperty("apellido")String apellido, @JsonProperty("DNI")String DNI, @JsonProperty("sueldo")double sueldo, @JsonProperty("diasVacaciones")int diasVacaciones, @JsonProperty("antiguedad")int antiguedad, @JsonProperty("rol")Trabajadores rol) {
         super(nombre, apellido, DNI, sueldo, diasVacaciones, antiguedad);
         this.usuario = new Usuario();
         this.trabajadores = rol;

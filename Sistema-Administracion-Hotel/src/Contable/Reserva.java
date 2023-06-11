@@ -2,6 +2,8 @@ package Contable;
 
 import Habitaciones.Habitacion;
 import Personas.Pasajero;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -10,7 +12,9 @@ import java.util.Date;
 import java.util.UUID;
 
 public class Reserva {
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     public LocalDateTime fechaEntrada; //Revisar que hacer con esto
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     public LocalDateTime fechaSalida;
     public ArrayList<Pasajero> pasajeros;
     public ArrayList<Habitacion> habitaciones;

@@ -2,27 +2,20 @@ package Controladora;
 
 import Contable.Factura;
 import Contable.Reserva;
-import Habitaciones.Comun;
 import Habitaciones.Habitacion;
-import Habitaciones.Suite;
 import Personas.Empleado;
-import Personas.Gerenciamiento;
 import Personas.Pasajero;
-import Personas.Usuario;
 import Servicios.Cochera;
 import Servicios.Consumible;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import javax.swing.*;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Hotel<K, T> {
 
@@ -41,7 +34,7 @@ public class Hotel<K, T> {
     private TreeMap<String, Empleado> mapEmpleados = new TreeMap<>();//clave=DNI
     public TreeMap<String, Reserva> mapReservas = new TreeMap<>();
 
-    static final String ruta = "C:\\Tp final labo III\\ProyectoFinalLaboratorio3\\Sistema-Administracion-Hotel\\src\\Files\\";
+    static final String ruta = "C:\\Users\\Escobar\\IdeaProjects\\ProyectoFinalLaboratorio3\\ProyectoFinalLaboratorio3\\Sistema-Administracion-Hotel\\src\\Files\\";
     public File archivoHotel = new File(ruta + "Hotel.json");//SOLO GUARDA EL HOTEL
     public File archivoHabitaciones = new File(ruta + "Habitaciones.json");
     public File archivoFacturas = new File(ruta + "Facturas.json");
@@ -102,7 +95,7 @@ public class Hotel<K, T> {
         int mes = teclado.nextInt();
         System.out.println("Ingrese anio:");
         int anio = teclado.nextInt();
-        LocalDateTime fechaEntrada = LocalDateTime.of(anio, mes, dia, 18, 00);
+        LocalDateTime fechaEntrada = LocalDateTime.of(anio, mes, dia, 18, 0);
         reserva.fechaEntrada = fechaEntrada;
         System.out.println("Ingrese la fecha de salida(Dia/Mes/Anio): ");
         System.out.println("Ingrese dia:");
@@ -111,7 +104,7 @@ public class Hotel<K, T> {
         int mesSalida = teclado.nextInt();
         System.out.println("Ingrese anio:");
         int anioSalida = teclado.nextInt();
-        LocalDateTime fechaSalida = LocalDateTime.of(anioSalida, mesSalida, diaSalida, 10, 00);
+        LocalDateTime fechaSalida = LocalDateTime.of(anioSalida, mesSalida, diaSalida, 10, 0);
         reserva.fechaSalida = fechaSalida;
         if (cochera.getEspacioDisponible() > 0) {
             registrarCochera(reserva);
@@ -158,13 +151,14 @@ public class Hotel<K, T> {
     private int calcularDias(Reserva reserva) {
         long dias = (reserva.fechaSalida.toEpochSecond(ZoneOffset.UTC) - reserva.fechaEntrada.toEpochSecond(ZoneOffset.UTC));
         dias = dias / (1000 * 60 * 60 * 24);
+        System.out.println(dias);
         return (int) dias;
     }
 
     private ArrayList<Pasajero> registrarPasajero() {
         ArrayList<Pasajero> pasajeros = new ArrayList<>();
         boolean excepcionLanzada = false;
-        char control = 's';
+        char control;
         do {
             Pasajero nuevo = new Pasajero();
             do {
@@ -191,7 +185,7 @@ public class Hotel<K, T> {
                 teclado.nextLine();
                 System.out.printf("\nHistoria (Opcional): ");
                 nuevo.setHistoria(teclado.next());
-            } while (excepcionLanzada == true);
+            } while (excepcionLanzada);
             nuevo.setRegistrado(true);
             pasajeros.add(nuevo);
             listaPasajeros.add(nuevo);
@@ -204,7 +198,7 @@ public class Hotel<K, T> {
     }
 
     private void registrarCochera(Reserva reserva) {
-        int espacios = 0;
+        int espacios;
         System.out.printf("\nQuiere cochera? s/n: ");
         char a = teclado.next().toLowerCase().charAt(0);
         if (a == 's') {
@@ -226,7 +220,7 @@ public class Hotel<K, T> {
     }
 
     private void registrarHabitacion(Reserva reserva, LocalDateTime fechaEntrada) {
-        char continuar = 's';
+        char continuar;
         String numero;
         boolean ocupacion;
         do {
@@ -350,8 +344,8 @@ public class Hotel<K, T> {
         this.escribirArchivoArrayList(archivoConsumibles, (ArrayList<T>) listaConsumibles);
 
     }
+*/
 
- */
 
     public void mostrarHabitaciones() {
         for (String clave : mapHabitaciones.keySet()) {
@@ -378,22 +372,35 @@ public class Hotel<K, T> {
 
     public void escribirArchivoMap(File archivo, TreeMap<K, T> mapa) {
         try {
+            mapper.activateDefaultTyping(
+                    mapper.getPolymorphicTypeValidator(),
+                    ObjectMapper.DefaultTyping.NON_FINAL,
+                    JsonTypeInfo.As.PROPERTY
+            );
             this.mapper.writeValue(archivo, mapa);
         } catch (IOException e) {
+            e.printStackTrace();
             System.out.println("ERROR al escribir el archivo.");
         }
 
     }
 
-    public TreeMap<K, T> leerArchivoMap(File archivo) {
-        TreeMap<K, T> mapa = new TreeMap<K, T>();
+    public TreeMap<K, T> leerArchivoMap(File archivo, Class<K> clave, Class<T> valor) {
+        TreeMap<K, T> mapa = new TreeMap<>();
         try {
             if (archivo != null) {
-                mapa = this.mapper.readValue(archivo, mapa.getClass());
+                JavaType mapType = mapper.getTypeFactory().constructParametricType(TreeMap.class, clave, valor);
+                mapper.activateDefaultTyping(
+                        mapper.getPolymorphicTypeValidator(),
+                        ObjectMapper.DefaultTyping.NON_FINAL,
+                        JsonTypeInfo.As.PROPERTY
+                );
+                mapa = mapper.readValue(archivo, mapType);
             } else {
                 throw new IOException();
             }
         } catch (IOException e) {
+            e.printStackTrace();
             System.out.println("ERROR al leer el archivo.");
         }
         return mapa;
@@ -403,13 +410,14 @@ public class Hotel<K, T> {
         try {
             this.mapper.writeValue(archivo, arrayList);
         } catch (IOException e) {
+            e.printStackTrace();
             System.out.println("ERROR al escribir el archivo.");
         }
 
     }
 
     public ArrayList<T> leerArchivoArrayList(File archivo, Class<T> clazz) {
-        ArrayList<T> arrayList = new ArrayList<T>();
+        ArrayList<T> arrayList = new ArrayList<>();
         try {
             if (archivo != null) {
                 arrayList = mapper.readValue(archivo, mapper.getTypeFactory().constructCollectionType(ArrayList.class, clazz));
@@ -417,6 +425,7 @@ public class Hotel<K, T> {
                 throw new IOException();
             }
         } catch (IOException e) {
+            e.printStackTrace();
             System.out.println("ERROR al leer el archivo.");
         }
         return arrayList;
@@ -427,6 +436,7 @@ public class Hotel<K, T> {
         try {
             mapper.writeValue(archivo, auxiliar);
         } catch (IOException e) {
+            e.printStackTrace();
             System.out.println("Error al escribir el archivo auxiliar");
         }
     }
@@ -440,6 +450,7 @@ public class Hotel<K, T> {
                 throw new IOException();
             }
         } catch (IOException e) {
+            e.printStackTrace();
             System.out.println("Error al leer el archivo auxiliar");
         }
         dineroTotal = auxiliar.getDineroTotal();

@@ -1,8 +1,12 @@
 package Personas;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
+
+@JsonTypeName("Personas.Administrador")
 public class Administrador extends Empleado implements Gerenciamiento{
 
- public Administrador(String nombre, String apellido, String DNI, double sueldo, int diasVacaciones, int antiguedad) {
+ public Administrador(@JsonProperty("nombre")String nombre, @JsonProperty("apellido")String apellido, @JsonProperty("DNI")String DNI, @JsonProperty("sueldo")double sueldo, @JsonProperty("diasVacaciones")int diasVacaciones, @JsonProperty("antiguedad")int antiguedad) {
   super(nombre, apellido, DNI, sueldo, diasVacaciones, antiguedad);
   this.usuario = new Usuario();
  }

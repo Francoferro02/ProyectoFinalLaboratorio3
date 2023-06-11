@@ -3,6 +3,8 @@ package Contable;
 import Habitaciones.Habitacion;
 import Personas.Pasajero;
 import Servicios.Cochera;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -13,7 +15,7 @@ public class Factura {
     private double precioTotal;
     private Pasajero pasajero;
     public ArrayList<Habitacion> habitaciones;
-
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime fechaDeEmision;
     private String codigoIdentificador;
 

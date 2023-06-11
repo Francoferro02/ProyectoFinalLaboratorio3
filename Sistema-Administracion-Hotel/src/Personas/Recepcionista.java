@@ -1,12 +1,15 @@
 package Personas;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
+
 import java.util.ArrayList;
 import java.util.Scanner;
-
+@JsonTypeName("Personas.Recepcionista")
 public class Recepcionista extends Empleado implements Gerenciamiento{
     Scanner teclado = new Scanner(System.in);
 
-    public Recepcionista(String nombre, String apellido, String DNI, double sueldo, int diasVacaciones, int antiguedad) {
+    public Recepcionista(@JsonProperty("nombre")String nombre, @JsonProperty("apellido")String apellido, @JsonProperty("DNI")String DNI, @JsonProperty("sueldo")double sueldo, @JsonProperty("diasVacaciones")int diasVacaciones, @JsonProperty("antiguedad")int antiguedad) {
         super(nombre, apellido, DNI, sueldo, diasVacaciones, antiguedad);
         this.usuario = new Usuario();
     }
