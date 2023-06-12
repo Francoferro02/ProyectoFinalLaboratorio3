@@ -14,8 +14,8 @@ public class Main {
         lester.listaConsumibles = lester.leerArchivoArrayList(lester.archivoConsumibles, Consumible.class);
         lester.mapReservas = lester.leerArchivoMap(lester.archivoReservas,String.class, Reserva.class);
         lester.mapFacturas = lester.leerArchivoMap(lester.archivoFacturas,String.class, Factura.class);
-        lester.mostrarReservas();
-        //lester.realizarReserva();
+        //lester.mostrarReservas();
+        lester.realizarReserva();
         //System.out.println(lester);
         //lester.mostrarFactura();
         //lester.mostrarHabitaciones();

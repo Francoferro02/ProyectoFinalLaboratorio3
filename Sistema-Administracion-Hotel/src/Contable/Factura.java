@@ -4,6 +4,7 @@ import Habitaciones.Habitacion;
 import Personas.Pasajero;
 import Servicios.Cochera;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -30,7 +31,7 @@ public class Factura {
         this.habitaciones = new ArrayList<>();
     }
 
-    public Factura(double precioTotal, Pasajero pasajero, Habitacion habitacion, LocalDateTime fechaDeEmision, String codigoIdentificador) {
+    public Factura(double precioTotal, Pasajero pasajero, LocalDateTime fechaDeEmision, String codigoIdentificador) {
         this.precioTotal = precioTotal;
         this.pasajero = pasajero;
         this.habitaciones = new ArrayList<>();
@@ -38,52 +39,47 @@ public class Factura {
         this.codigoIdentificador = codigoIdentificador;
     }
 
-    public ArrayList<Habitacion> getHabitaciones() {
-        return habitaciones;
-    }
-    @JsonSetter
-    public void setHabitaciones(ArrayList<Habitacion> habitaciones) {
-        this.habitaciones = habitaciones;
-    }
-
-
     public double getPrecioTotal() {
         return precioTotal;
-    }
-
-    public Pasajero getPasajero() {
-        return pasajero;
-    }
-
-    public ArrayList<Habitacion> getHabitacion() {
-        return habitaciones;
-    }
-
-    public LocalDateTime getfechaDeEmision() {
-        return fechaDeEmision;
-    }
-
-    public String getCodigoIdentificador() {
-        return codigoIdentificador;
-    }
-
-    public void setPasajero(Pasajero pasajero) {
-        this.pasajero = pasajero;
-    }
-
-    public void setFechaDeEmision(LocalDateTime fechaDeEmision) {
-        this.fechaDeEmision = fechaDeEmision;
-    }
-
-    public void setCodigoIdentificador(String codigoIdentificador) {
-        this.codigoIdentificador = codigoIdentificador;
     }
 
     public void setPrecioTotal(double precioTotal) {
         this.precioTotal = precioTotal;
     }
 
-    public void calcularPrecio(int dias,Reserva reserva,double precioCochera){
+    public Pasajero getPasajero() {
+        return pasajero;
+    }
+
+    public void setPasajero(Pasajero pasajero) {
+        this.pasajero = pasajero;
+    }
+
+    public ArrayList<Habitacion> getHabitaciones() {
+        return habitaciones;
+    }
+    @JsonProperty("habitaciones")
+    public void setHabitaciones(ArrayList<Habitacion> habitaciones) {
+        this.habitaciones = habitaciones;
+    }
+
+    public LocalDateTime getFechaDeEmision() {
+        return fechaDeEmision;
+    }
+
+    public void setFechaDeEmision(LocalDateTime fechaDeEmision) {
+        this.fechaDeEmision = fechaDeEmision;
+    }
+
+    public String getCodigoIdentificador() {
+        return codigoIdentificador;
+    }
+
+    public void setCodigoIdentificador(String codigoIdentificador) {
+        this.codigoIdentificador = codigoIdentificador;
+    }
+
+    public void calcularPrecio(int dias, Reserva reserva, double precioCochera){
 
         for (Habitacion h: reserva.habitaciones) {
             precioTotal += h.precio * dias;

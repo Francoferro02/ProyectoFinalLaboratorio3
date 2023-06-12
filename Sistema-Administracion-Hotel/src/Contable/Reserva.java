@@ -3,6 +3,7 @@ package Contable;
 import Habitaciones.Habitacion;
 import Personas.Pasajero;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -48,49 +49,36 @@ public class Reserva {
 
     }
 
-    public void setFechaEntrada(LocalDateTime fechaEntrada) {
-        this.fechaEntrada = fechaEntrada;
-    }
-
-    public void setFechaSalida(LocalDateTime fechaSalida) {
-        this.fechaSalida = fechaSalida;
-    }
-
-    public void setPasajeros(ArrayList<Pasajero> pasajeros) {
-        this.pasajeros = pasajeros;
-    }
-
-    public ArrayList<Habitacion> getHabitaciones() {
-        return habitaciones;
-    }
-    @JsonSetter
-    public void setHabitaciones(ArrayList<Habitacion> habitaciones) {
-        this.habitaciones = habitaciones;
-    }
-
-    public void setIdentificador(String identificador) {
-        this.identificador = identificador;
-    }
-
     public LocalDateTime getFechaEntrada() {
         return fechaEntrada;
+    }
+
+    public void setFechaEntrada(LocalDateTime fechaEntrada) {
+        this.fechaEntrada = fechaEntrada;
     }
 
     public LocalDateTime getFechaSalida() {
         return fechaSalida;
     }
 
+    public void setFechaSalida(LocalDateTime fechaSalida) {
+        this.fechaSalida = fechaSalida;
+    }
+
     public ArrayList<Pasajero> getPasajeros() {
         return pasajeros;
     }
-
-    public ArrayList<Habitacion> getHabitacion() {
+    @JsonProperty("pasajeros")
+    public void setPasajeros(ArrayList<Pasajero> pasajeros) {
+        this.pasajeros = pasajeros;
+    }
+    @JsonProperty("habitaciones")
+    public ArrayList<Habitacion> getHabitaciones() {
         return habitaciones;
     }
 
-
-    public String getIdentificador() {
-        return identificador;
+    public void setHabitaciones(ArrayList<Habitacion> habitaciones) {
+        this.habitaciones = habitaciones;
     }
 
     public boolean isCochera() {
@@ -107,6 +95,14 @@ public class Reserva {
 
     public void setEspaciosCochera(int espaciosCochera) {
         this.espaciosCochera = espaciosCochera;
+    }
+
+    public String getIdentificador() {
+        return identificador;
+    }
+
+    public void setIdentificador(String identificador) {
+        this.identificador = identificador;
     }
 
     @Override
