@@ -22,5 +22,14 @@
       </library>
     </orderEntry>
     <orderEntry type="library" name="jackson-core-2.15.2" level="application" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../lib/jackson-datatype-jsr310-2.15.2.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>

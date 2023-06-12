@@ -2,11 +2,14 @@ package Controladora;
 
 import Contable.Factura;
 import Contable.Reserva;
+import Habitaciones.Comun;
 import Habitaciones.Habitacion;
+import Habitaciones.Suite;
 import Personas.Empleado;
 import Personas.Pasajero;
 import Servicios.Cochera;
 import Servicios.Consumible;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.JavaType;
@@ -34,7 +37,7 @@ public class Hotel<K, T> {
     private TreeMap<String, Empleado> mapEmpleados = new TreeMap<>();//clave=DNI
     public TreeMap<String, Reserva> mapReservas = new TreeMap<>();
 
-    static final String ruta = "C:\\Users\\Escobar\\IdeaProjects\\ProyectoFinalLaboratorio3\\ProyectoFinalLaboratorio3\\Sistema-Administracion-Hotel\\src\\Files\\";
+    static final String ruta = "H:\\Laboratorio-3\\ProyectoFinalLabo3\\Sistema-Administracion-Hotel\\src\\Files\\";
     public File archivoHotel = new File(ruta + "Hotel.json");//SOLO GUARDA EL HOTEL
     public File archivoHabitaciones = new File(ruta + "Habitaciones.json");
     public File archivoFacturas = new File(ruta + "Facturas.json");
@@ -265,10 +268,11 @@ public class Hotel<K, T> {
     }
 
     public void mostrarReservas() {
-        System.out.println("holaaaa");
-        for (String clave : mapReservas.keySet()) {
-            System.out.println(mapReservas.get(clave));
-        }
+        System.out.println(mapReservas);
+    }
+
+    public void mostrarFactura(){
+        System.out.println(mapFacturas);
     }
 
     public void solicitarConsumo() {
@@ -344,8 +348,8 @@ public class Hotel<K, T> {
         this.escribirArchivoArrayList(archivoConsumibles, (ArrayList<T>) listaConsumibles);
 
     }
-*/
 
+*/
 
     public void mostrarHabitaciones() {
         for (String clave : mapHabitaciones.keySet()) {
@@ -462,6 +466,11 @@ public class Hotel<K, T> {
         escribirArchivoMap(archivoReservas, (TreeMap<K, T>) mapReservas);
         escribirArchivoMap(archivoFacturas, (TreeMap<K, T>) mapFacturas);
         escribirAuxiliar(archivoHotel);
+    }
+
+    public void configurarMapper(){
+        mapper.registerModule(new JavaTimeModule());
+        mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS,false);
     }
 }
 

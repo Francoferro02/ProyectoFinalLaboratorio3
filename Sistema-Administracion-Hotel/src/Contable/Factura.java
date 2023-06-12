@@ -4,7 +4,12 @@ import Habitaciones.Habitacion;
 import Personas.Pasajero;
 import Servicios.Cochera;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -15,7 +20,9 @@ public class Factura {
     private double precioTotal;
     private Pasajero pasajero;
     public ArrayList<Habitacion> habitaciones;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
+
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime fechaDeEmision;
     private String codigoIdentificador;
 
@@ -30,6 +37,15 @@ public class Factura {
         this.fechaDeEmision = fechaDeEmision;
         this.codigoIdentificador = codigoIdentificador;
     }
+
+    public ArrayList<Habitacion> getHabitaciones() {
+        return habitaciones;
+    }
+    @JsonSetter
+    public void setHabitaciones(ArrayList<Habitacion> habitaciones) {
+        this.habitaciones = habitaciones;
+    }
+
 
     public double getPrecioTotal() {
         return precioTotal;
