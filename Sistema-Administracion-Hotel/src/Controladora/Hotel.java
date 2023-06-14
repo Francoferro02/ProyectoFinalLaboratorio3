@@ -7,6 +7,7 @@ import Habitaciones.Habitacion;
 import Habitaciones.Suite;
 import Personas.Empleado;
 import Personas.Pasajero;
+import Personas.Recepcionista;
 import Servicios.Cochera;
 import Servicios.Consumible;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -14,10 +15,12 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 public class Hotel<K, T> {
@@ -34,10 +37,10 @@ public class Hotel<K, T> {
     public TreeMap<String, Habitacion> mapHabitaciones = new TreeMap<>();
     public TreeMap<String, Factura> mapFacturas = new TreeMap<>();
     public ArrayList<Consumible> listaConsumibles = new ArrayList<>();
-    private TreeMap<String, Empleado> mapEmpleados = new TreeMap<>();//clave=DNI
+    public TreeMap<String, Empleado> mapEmpleados = new TreeMap<>();//clave=DNI
     public TreeMap<String, Reserva> mapReservas = new TreeMap<>();
 
-    static final String ruta = "C:\\Users\\Escobar\\IdeaProjects\\ProyectoFinalLaboratorio3\\ProyectoFinalLaboratorio3\\Sistema-Administracion-Hotel\\src\\Files\\";
+    static final String ruta = "H:\\Laboratorio-3\\ProyectoFinalLabo3\\Sistema-Administracion-Hotel\\src\\Files\\";
     public File archivoHotel = new File(ruta + "Hotel.json");//SOLO GUARDA EL HOTEL
     public File archivoHabitaciones = new File(ruta + "Habitaciones.json");
     public File archivoFacturas = new File(ruta + "Facturas.json");
@@ -47,6 +50,7 @@ public class Hotel<K, T> {
     public File archivoConsumibles = new File(ruta + "Consumibles.json");
 
     ObjectMapper mapper = new ObjectMapper();
+
     Scanner teclado = new Scanner(System.in);
 
 
@@ -59,6 +63,13 @@ public class Hotel<K, T> {
         this.serviciosIncluidos = "Cochera, Caja fuerte, Wi-Fi";
     }
 
+    public double getDineroTotal() {
+        return dineroTotal;
+    }
+
+    public Cochera getCochera() {
+        return cochera;
+    }
 
     public void login() {
 
@@ -85,6 +96,12 @@ public class Hotel<K, T> {
 
     private boolean verificarContrasena() {
         return false;
+    }
+
+    public void checkInRecepcionista(Recepcionista recepcionista) {
+        if (recepcionista.informarCheckIn(mapReservas) == true) {
+            realizarReserva();
+        }
     }
 
     public void realizarReserva() {
@@ -152,9 +169,7 @@ public class Hotel<K, T> {
 
 
     private int calcularDias(Reserva reserva) {
-        long dias = (reserva.fechaSalida.toEpochSecond(ZoneOffset.UTC) - reserva.fechaEntrada.toEpochSecond(ZoneOffset.UTC));
-        dias = dias / (1000 * 60 * 60 * 24);
-        System.out.println(dias);
+        long dias = ChronoUnit.DAYS.between(reserva.fechaEntrada, reserva.fechaSalida);
         return (int) dias;
     }
 
@@ -235,17 +250,18 @@ public class Hotel<K, T> {
                 teclado.nextLine();
                 numero = teclado.next();
                 ocupacion = verificarOcupacion(numero, fechaEntrada);
-                if (!ocupacion) {
-                    System.out.println("La habitacion que selecciono se encuentra reservada hasta una fecha posterior a su fecha de entrada.");
-                } else {
+                if (ocupacion) {
                     System.out.println("Gran eleccion!!");
                     for (String h : mapHabitaciones.keySet()) {
-                        if(h.equals(numero)) {
+                        if (h.equals(numero)) {
                             reserva.habitaciones.add(mapHabitaciones.get(h));
+                            reserva.habitaciones.get(Integer.parseInt(numero)).setOcupada(true);
+                            mapHabitaciones.get(h).setOcupada(true);
                         }
                     }
+                } else {
+                    System.out.println("La habitacion que selecciono se encuentra reservada hasta una fecha posterior a su fecha de entrada. Porfavor reintente en otra fecha o otra habitacion. Disculpe las molestias");
                 }
-
             } while (!ocupacion);
             System.out.println("Quiere reservar otra habitacion mas?");
             continuar = teclado.next().charAt(0);
@@ -253,26 +269,32 @@ public class Hotel<K, T> {
     }
 
     private boolean verificarOcupacion(String habitacion, LocalDateTime fechaEntrada) {
-        int cont = 0;
-        for (String reserva1 : mapReservas.keySet()) {
-            if (mapReservas.get(reserva1).habitaciones.get(cont).numero.equals(habitacion)) {
-                if (mapReservas.get(reserva1).fechaSalida.compareTo(fechaEntrada) == 1 || mapReservas.get(reserva1).fechaSalida.compareTo(fechaEntrada) == 0) {
-                    return false;
-                } else if (mapReservas.get(reserva1).fechaSalida.compareTo(fechaEntrada) < 0) {
-                    return true;
+        try {
+            for (String reserva1 : mapReservas.keySet()) {
+                for (int i = 0; i < mapReservas.get(reserva1).habitaciones.size(); i++) {
+                    if (mapReservas.get(reserva1).habitaciones.get(i).numero.equals(habitacion)) {
+                        if (mapReservas.get(reserva1).fechaSalida.compareTo(fechaEntrada) >= 0) {
+                            return false;  // La habitación está ocupada durante la fecha de entrada
+                        }
+                    }
                 }
             }
-            cont++;
+        } catch (Exception e) {
+            return false;
         }
-        return true;
+        return true;  // La habitación está disponible
     }
 
     public void mostrarReservas() {
-        System.out.println(mapReservas);
+        for (String clave : mapReservas.keySet()) {
+            System.out.println(mapReservas.get(clave));
+        }
     }
 
-    public void mostrarFactura(){
-        System.out.println(mapFacturas);
+    public void mostrarFactura() {
+        for (String clave : mapFacturas.keySet()) {
+            System.out.println(mapFacturas.get(clave));
+        }
     }
 
     public void solicitarConsumo() {
@@ -365,13 +387,13 @@ public class Hotel<K, T> {
 
     @Override
     public String toString() {
-        return "Hotel{" +
-                "nombre='" + nombre + '\'' +
-                ", direccion='" + direccion + '\'' +
-                ", ciudad='" + ciudad + '\'' +
-                ", cantidadEstrellas=" + cantidadEstrellas +
-                ", cochera=" + cochera +
-                '}';
+        return "\nHotel{" +
+                "\nnombre='" + nombre + '\'' +
+                "\n, direccion='" + direccion + '\'' +
+                "\n, ciudad='" + ciudad + '\'' +
+                "\n, cantidadEstrellas=" + cantidadEstrellas +
+                "\n, cochera=" + cochera +
+                "------------------------------------------------";
     }
 
     public void escribirArchivoMap(File archivo, TreeMap<K, T> mapa) {
@@ -446,6 +468,7 @@ public class Hotel<K, T> {
     }
 
     public void leerAuxiliar(File archivo) {
+
         Auxiliar auxiliar = new Auxiliar();
         try {
             if (archivo != null) {
@@ -466,12 +489,10 @@ public class Hotel<K, T> {
         escribirArchivoMap(archivoReservas, (TreeMap<K, T>) mapReservas);
         escribirArchivoMap(archivoFacturas, (TreeMap<K, T>) mapFacturas);
         escribirAuxiliar(archivoHotel);
+        escribirArchivoMap(archivoHabitaciones, (TreeMap<K, T>) mapHabitaciones);
     }
 
-    public void configurarMapper(){
-        mapper.registerModule(new JavaTimeModule());
-        mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS,false);
-    }
+
 }
 
 

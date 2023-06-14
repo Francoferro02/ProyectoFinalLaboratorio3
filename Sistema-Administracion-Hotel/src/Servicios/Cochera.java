@@ -1,5 +1,11 @@
 package Servicios;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@class")
+
 public class Cochera {
 
     private int espacioTotal;
@@ -8,8 +14,8 @@ public class Cochera {
 
     public Cochera() {
     }
-
-    public Cochera(int espacioTotal, int espacioDisponible, int precioDia) {
+    @JsonCreator
+    public Cochera(@JsonProperty("espacioTotal") int espacioTotal,@JsonProperty("espacioDisponible") int espacioDisponible,@JsonProperty("precioDia") int precioDia) {
         this.espacioTotal = espacioTotal;
         this.espacioDisponible = espacioDisponible;
     }
@@ -31,10 +37,11 @@ public class Cochera {
 
     @Override
     public String toString() {
-        return "Cochera{" +
-                "espacioTotal=" + espacioTotal +
-                ", espacioDisponible=" + espacioDisponible +
-                ", precio por Dia=" + precioDia +
+        return "\n------------------------------------------------" +
+                "\nCochera{" +
+                "\nespacioTotal=" + espacioTotal +
+                "\n, espacioDisponible=" + espacioDisponible +
+                "\n, precio por Dia=" + precioDia +
                 '}';
     }
 }

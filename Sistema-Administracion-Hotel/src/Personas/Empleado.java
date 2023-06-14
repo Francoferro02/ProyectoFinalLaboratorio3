@@ -8,9 +8,9 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = Comun.class, name = "Personas.Administrador"),
-        @JsonSubTypes.Type(value = Suite.class, name = "Personas.Servicio"),
-        @JsonSubTypes.Type(value = Suite.class, name = "Personas.Recepcionista")
+        @JsonSubTypes.Type(value = Administrador.class, name = "Personas.Administrador"),
+        @JsonSubTypes.Type(value = Servicio.class, name = "Personas.Servicio"),
+        @JsonSubTypes.Type(value = Recepcionista.class, name = "Personas.Recepcionista")
 })
 public  abstract class Empleado extends Persona{
 

@@ -91,12 +91,12 @@ public class Factura {
 
     @Override
     public String toString() {
-        return "Factura{" +
-                "precio Total=" + precioTotal +
-                ", pasajero=" + pasajero +
-                ", habitacion=" + habitaciones +
-                ", fecha de emision=" + fechaDeEmision +
-                ", codigo Identificador='" + codigoIdentificador + '\'' +
-                '}';
+        return "\n------------------------------------------------"+
+                "\nFactura{" +
+                "\nprecio Total=" + precioTotal +
+                "\n, pasajero=" + pasajero +
+                "\n, habitacion=" + habitaciones +
+                "\n, fecha de emision=" + fechaDeEmision +
+                "\n, codigo Identificador='" + codigoIdentificador + '\'';
     }
 }

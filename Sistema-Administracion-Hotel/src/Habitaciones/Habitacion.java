@@ -14,7 +14,7 @@ import java.util.ArrayList;
 public abstract class Habitacion {
 
     public String numero;
-    private boolean ocupada;
+    public boolean ocupada;
     public int capacidad;
     public boolean terraza;
 

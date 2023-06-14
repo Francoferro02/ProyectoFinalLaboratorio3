@@ -35,7 +35,7 @@ public class Reserva {
     public String identificador;
 
     public Reserva() {
-        this.identificador = (UUID.randomUUID().toString().toUpperCase());
+        this.identificador = (this.identificador = (UUID.randomUUID().toString().toUpperCase())).substring(0,5);
         this.pasajeros = new ArrayList<>();
         this.habitaciones = new ArrayList<>();
     }
@@ -43,7 +43,7 @@ public class Reserva {
     public Reserva( LocalDateTime fechaEntrada, LocalDateTime fechaSalida) {
         this.fechaEntrada = fechaEntrada;
         this.fechaSalida = fechaSalida;
-        this.identificador = (UUID.randomUUID().toString().toUpperCase());
+        this.identificador = (this.identificador = (UUID.randomUUID().toString().toUpperCase())).substring(0,5);
         this.habitaciones = new ArrayList<>();
         this.pasajeros = new ArrayList<>();
 
@@ -107,13 +107,13 @@ public class Reserva {
 
     @Override
     public String toString() {
-        return "Reserva{" +
-                ", fechaEntrada=" + fechaEntrada +
-                ", fechaSalida=" + fechaSalida +
-                ", pasajero=" + pasajeros +
-                ", habitacion=" + habitaciones +
-                ", identificador='" + identificador + '\'' +
-                '}';
+        return  "\n------------------------------------------------" +
+                "\nReserva{" +
+                "\n, fechaEntrada=" + fechaEntrada +
+                "\n, fechaSalida=" + fechaSalida +
+                "\n, pasajero=" + pasajeros +
+                "\n, habitacion=" + habitaciones +
+                "\n, identificador='" + identificador + '\'';
     }
 
     public void marcarReserva() {

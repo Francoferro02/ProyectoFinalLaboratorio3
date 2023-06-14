@@ -1,7 +1,11 @@
 package Controladora;
 
 import Servicios.Cochera;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 public class Auxiliar {
 
     private double dineroTotal;
@@ -9,8 +13,8 @@ public class Auxiliar {
 
     public Auxiliar() {
     }
-
-    public Auxiliar(double dineroTotal, Cochera cochera) {
+    @JsonCreator
+    public Auxiliar(@JsonProperty("dineroTotal")double dineroTotal,@JsonProperty("cochera") Cochera cochera) {
         this.dineroTotal = dineroTotal;
         this.cochera = cochera;
     }

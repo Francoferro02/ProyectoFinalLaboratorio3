@@ -1,1 +1,1 @@
-{"@class":"Controladora.Auxiliar","dineroTotal":0.0,"cochera":{"@class":"Servicios.Cochera","espacioTotal":30,"espacioDisponible":27,"precioDia":2500.0}}
+{"@class":"Auxiliar","dineroTotal":610000.0,"cochera":{"@class":"Cochera","espacioTotal":30,"espacioDisponible":29,"precioDia":2500.0}}

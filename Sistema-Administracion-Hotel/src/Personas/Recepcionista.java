@@ -1,15 +1,19 @@
 package Personas;
 
+import Contable.Reserva;
+import Habitaciones.Habitacion;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.TreeMap;
+
 @JsonTypeName("Personas.Recepcionista")
-public class Recepcionista extends Empleado implements Gerenciamiento{
+public class Recepcionista extends Empleado implements Gerenciamiento {
     Scanner teclado = new Scanner(System.in);
 
-    public Recepcionista(@JsonProperty("nombre")String nombre, @JsonProperty("apellido")String apellido, @JsonProperty("DNI")String DNI, @JsonProperty("sueldo")double sueldo, @JsonProperty("diasVacaciones")int diasVacaciones, @JsonProperty("antiguedad")int antiguedad) {
+    public Recepcionista(@JsonProperty("nombre") String nombre, @JsonProperty("apellido") String apellido, @JsonProperty("DNI") String DNI, @JsonProperty("sueldo") double sueldo, @JsonProperty("diasVacaciones") int diasVacaciones, @JsonProperty("antiguedad") int antiguedad) {
         super(nombre, apellido, DNI, sueldo, diasVacaciones, antiguedad);
         this.usuario = new Usuario();
     }
@@ -36,45 +40,72 @@ public class Recepcionista extends Empleado implements Gerenciamiento{
     }
 
 
+    public boolean informarCheckIn(TreeMap<String, Reserva> mapReserva) {
+        char tiene = 's';
+        String codReserva;
+        boolean exceptionLaunch = false;
+        System.out.println("Buenos dias, les saludo atentamente. Usted se encuentra con reserva?");
+        tiene = teclado.next().charAt(0);
+        if (tiene == 's') {
+            do {
+                System.out.println("Indique su codigo de reserva");
+                codReserva = teclado.next();
+                if (mapReserva.containsKey(codReserva)) {
+                    System.out.println("Su habitacion ya se encuentra lista");
+                    return false;
+                } else {
+                    exceptionLaunch = true;
+                    throw new RuntimeException("Ese nuemero de reserva no es valido");
+                }
 
-    public void informarCheckIn(){
-        ArrayList<Pasajero> pasajeros = new ArrayList<>();//registrarPasajero();
-        System.out.printf("\nCuantos días se va a hospedar?: ");
-        int cant = teclado.nextInt();
-        for (Pasajero pasajero: pasajeros) {
-            pasajero.setCantDias(cant);
+            } while (exceptionLaunch == true);
+
+        } else {
+            System.out.println("Perfecto dejeme registrar a los pasajeros");
+            return true;
         }
+    }
+
+    public void informarCheckOut(ArrayList<Pasajero> ListaPasajeros, TreeMap<String, Reserva> mapReserva, TreeMap<String, Habitacion> mapHabitaciones) {
+        String claveIdentificador;
+        System.out.println("Buenos dias, su estadia en Lester Hotel ha finalizado. Porfavor indiqueme su clave de reserva");
+        claveIdentificador = teclado.next();
+        for (String claveReserva : mapReserva.keySet()) {
+            if (mapReserva.get(claveReserva).identificador.equals(claveIdentificador)) {
+                for (Pasajero pasajero : mapReserva.get(claveReserva).pasajeros) {
+                    ListaPasajeros.remove(pasajero);
+                }
+                for (Habitacion habitacion : mapReserva.get(claveReserva).habitaciones) {
+                    mapHabitaciones.get(habitacion.numero).setOcupada(false);
+                }
+            }
+        }
+        mapReserva.remove(claveIdentificador);
+    }
+
+    private void reservarHabitacion() {
 
     }
 
-    public void informarCheckOut(){
+    public void informarCantHabitaciones() {
 
     }
 
-    private void reservarHabitacion(){
+    public void verOcupaciones() {
 
     }
 
-    public void informarCantHabitaciones(){
+    public void verDesocupadas() {
 
     }
 
-    public void verOcupaciones(){
-
-    }
-
-    public void verDesocupadas(){
-
-    }
-
-    private double calcularPrecio(){
+    private double calcularPrecio() {
         return 0;
     }
 
-    public void generarFactura(){
+    public void generarFactura() {
 
     }
-
 
 
     @Override
@@ -89,7 +120,7 @@ public class Recepcionista extends Empleado implements Gerenciamiento{
                 '}';
     }
 
-    public void cerrarTeclado(){
+    public void cerrarTeclado() {
         this.teclado.close();
     }
 
