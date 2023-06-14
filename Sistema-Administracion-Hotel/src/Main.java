@@ -30,11 +30,13 @@ public class Main {
         //lester.realizarReserva();
         //System.out.println(lester);
         //lester.mostrarFactura();
-        lester.cancelarReserva();
-        lester.mostrarPasajeros();
+      //  lester.cancelarReserva();
+      //  lester.mostrarPasajeros();
         //lester.mostrarConsumibles();
         //System.out.println(lester.getDineroTotal());
         //System.out.println(lester.getCochera());
+        //lester.menuRecepcionista(recepcionista);
+        lester.menuPrincipal();
 
 
        lester.escribirTodosArchivos();//AL FINAL
