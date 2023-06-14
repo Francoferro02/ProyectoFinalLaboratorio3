@@ -1,24 +1,24 @@
 package Personas;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
+
 import java.time.LocalDate;
 import java.util.Date;
-
+@JsonTypeName("Personas.Pasajero")
 public class Pasajero extends Persona {
 
     private String origen;
     private String domicilioOrigen;
     private String historia; //opcional
-    private Boolean registrado;
     private int cantDias;
 
-    public Pasajero(String nombre, String apellido, String DNI, String origen, String domicilioOrigen, String historia, Boolean registrado, int cantDias) {
+
+    public Pasajero(@JsonProperty("nombre")String nombre, @JsonProperty("apellido")String apellido, @JsonProperty("DNI")String DNI, @JsonProperty("origen")String origen, @JsonProperty("domicilioOrigen")String domicilioOrigen, @JsonProperty("historia")String historia) {
         super(nombre, apellido, DNI);
         this.origen = origen;
         this.domicilioOrigen = domicilioOrigen;
         this.historia = historia;
-        this.registrado = registrado;
-        this.cantDias = cantDias;
-
     }
 
     public Pasajero() {
@@ -37,23 +37,13 @@ public class Pasajero extends Persona {
         return historia;
     }
 
-    public Boolean getRegistrado() {
-        return registrado;
-    }
-
     public int getCantDias() {
         return cantDias;
-    }
-
-
-    public void setRegistrado(Boolean registrado) {
-        this.registrado = registrado;
     }
 
     public void setCantDias(int cantDias) {
         this.cantDias = cantDias;
     }
-
 
     public void setOrigen(String origen) {
         this.origen = origen;
@@ -70,5 +60,18 @@ public class Pasajero extends Persona {
     @Override
     public void realizarAcción() {
 
+    }
+
+    @Override
+    public String toString() {
+        return "\nPasajero{" +
+                "\norigen='" + origen + '\'' +
+                "\n, domicilioOrigen='" + domicilioOrigen + '\'' +
+                "\n, historia='" + historia + '\'' +
+                "\n, cantDias=" + cantDias +
+                "\n, nombre='" + nombre + '\'' +
+                "\n, apellido='" + apellido + '\'' +
+                "\n, DNI='" + DNI + '\'' +
+                '}';
     }
 }

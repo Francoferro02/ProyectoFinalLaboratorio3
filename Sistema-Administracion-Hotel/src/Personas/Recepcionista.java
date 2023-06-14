@@ -2,6 +2,7 @@ package Personas;
 
 import Contable.Reserva;
 import Habitaciones.Habitacion;
+import Servicios.Cochera;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
@@ -66,7 +67,7 @@ public class Recepcionista extends Empleado implements Gerenciamiento {
         }
     }
 
-    public void informarCheckOut(ArrayList<Pasajero> ListaPasajeros, TreeMap<String, Reserva> mapReserva, TreeMap<String, Habitacion> mapHabitaciones) {
+    public void informarCheckOut(ArrayList<Pasajero> ListaPasajeros, TreeMap<String, Reserva> mapReserva, TreeMap<String, Habitacion> mapHabitaciones, Cochera cochera) {
         String claveIdentificador;
         System.out.println("Buenos dias, su estadia en Lester Hotel ha finalizado. Porfavor indiqueme su clave de reserva");
         claveIdentificador = teclado.next();
@@ -78,14 +79,13 @@ public class Recepcionista extends Empleado implements Gerenciamiento {
                 for (Habitacion habitacion : mapReserva.get(claveReserva).habitaciones) {
                     mapHabitaciones.get(habitacion.numero).setOcupada(false);
                 }
+                cochera.setEspacioDisponible(cochera.getEspacioDisponible()+mapReserva.get(claveReserva).getEspaciosCochera());
             }
         }
         mapReserva.remove(claveIdentificador);
     }
 
-    private void reservarHabitacion() {
 
-    }
 
     public void informarCantHabitaciones() {
 
@@ -99,13 +99,6 @@ public class Recepcionista extends Empleado implements Gerenciamiento {
 
     }
 
-    private double calcularPrecio() {
-        return 0;
-    }
-
-    public void generarFactura() {
-
-    }
 
 
     @Override

@@ -15,6 +15,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sun.tools.javac.Main;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,7 +41,7 @@ public class Hotel<K, T> {
     public TreeMap<String, Empleado> mapEmpleados = new TreeMap<>();//clave=DNI
     public TreeMap<String, Reserva> mapReservas = new TreeMap<>();
 
-    static final String ruta = "H:\\Laboratorio-3\\ProyectoFinalLabo3\\Sistema-Administracion-Hotel\\src\\Files\\";
+    static final String ruta = "C:\\Users\\Escobar\\IdeaProjects\\ProyectoFinalLaboratorio3\\ProyectoFinalLaboratorio3\\Sistema-Administracion-Hotel\\src\\Files\\";
     public File archivoHotel = new File(ruta + "Hotel.json");//SOLO GUARDA EL HOTEL
     public File archivoHabitaciones = new File(ruta + "Habitaciones.json");
     public File archivoFacturas = new File(ruta + "Facturas.json");
@@ -50,7 +51,6 @@ public class Hotel<K, T> {
     public File archivoConsumibles = new File(ruta + "Consumibles.json");
 
     ObjectMapper mapper = new ObjectMapper();
-
     Scanner teclado = new Scanner(System.in);
 
 
@@ -105,6 +105,7 @@ public class Hotel<K, T> {
     }
 
     public void realizarReserva() {
+        teclado.useDelimiter("\n");
         Reserva reserva = new Reserva();
         System.out.println("Bienvenido/a al sistema de reservas de habitaciones del hotel Lester, a continuacion le solicitaremos los datos de los hospedantes");
         reserva.pasajeros = registrarPasajero();
@@ -138,6 +139,7 @@ public class Hotel<K, T> {
         System.out.println("A continuacion se imprimira la factura de su reserva. ACLARACION IMPORTANTE: El precio final incluye la estadia y la cochera. LOS CONSUMIBLES SE PAGAN AL MOMENTO DE ORDENARLO");
         Factura factura = new Factura();
         generarFactura(factura, reserva);
+        setearDias(reserva);
         dineroTotal += factura.getPrecioTotal();
         mapFacturas.put(factura.getCodigoIdentificador(), factura);
         System.out.println("Felicitaciones ya realizaste tu reserva en Lester Hotel. Te esperamos pronto");
@@ -147,7 +149,59 @@ public class Hotel<K, T> {
 
     }
 
-
+    public void cancelarReserva(){
+        teclado.useDelimiter("\n");
+        char seguir;
+        double descontar;
+        System.out.println("Ingrese su numero de reserva.");
+        String numeroR = teclado.next();
+        long dias = ChronoUnit.DAYS.between(LocalDateTime.now(), mapReservas.get(numeroR).fechaEntrada);
+        if(mapReservas.containsKey(numeroR)){
+            if(dias < 3) {
+                System.out.println("Su plazo para cancelar se ha extendido, y no tendra devolucion de dinero.");
+                System.out.println("Esta seguro que quiere continuar? s/n");
+                seguir = teclado.next().charAt(0);
+                teclado.nextLine();
+                if(seguir == 's'){
+                    mapReservas.remove(numeroR);
+                    mapFacturas.remove(numeroR);
+                    System.out.println("Su reserva ha sido cancelada.");
+                }else {
+                    //AGREGAR LLAMADO MENU.
+                }
+            }else if(dias >= 7 ){
+                descontar = (75 * mapFacturas.get(numeroR).getPrecioTotal()) / 100;
+                dineroTotal -= descontar;
+                System.out.println("Se le devolvera el 75% del dinero.");
+                System.out.println("Esta seguro que quiere continuar? s/n");
+                seguir = teclado.next().charAt(0);
+                teclado.nextLine();
+                if(seguir == 's') {
+                    mapReservas.remove(numeroR);
+                    mapFacturas.remove(numeroR);
+                    System.out.println("Su reserva ha sido cancelada.");
+                }else {
+                    //AGREGAR LLAMADO MENU.
+                }
+            }else{
+                descontar = (50 * mapFacturas.get(numeroR).getPrecioTotal()) / 100;
+                dineroTotal -= descontar;
+                System.out.println("Se le devolvera el 50% del dinero.");
+                System.out.println("Esta seguro que quiere continuar? s/n");
+                seguir = teclado.next().charAt(0);
+                teclado.nextLine();
+                if(seguir == 's') {
+                    mapReservas.remove(numeroR);
+                    mapFacturas.remove(numeroR);
+                    System.out.println("Su reserva ha sido cancelada.");
+                }else {
+                    //AGREGAR LLAMADO MENU.
+                }
+            }
+        }else {
+            System.out.println("Esa reserva no se encuentra.");
+        }
+    }
     private void generarFactura(Factura factura, Reserva reserva) {
         factura.setCodigoIdentificador(reserva.getIdentificador());
         factura.calcularPrecio(calcularDias(reserva), reserva, cochera.precioDia);
@@ -165,6 +219,15 @@ public class Hotel<K, T> {
                     System.out.println("Esa factura ya se encuentra en la lista,revise correctamente los datos");
                 }
             }
+    }
+
+    private void setearDias(Reserva reserva){
+        for(Pasajero pasajero : reserva.pasajeros){
+            pasajero.setCantDias(calcularDias(reserva));
+        }
+        for (Pasajero pasajero : listaPasajeros) {
+            pasajero.setCantDias(calcularDias(reserva));
+        }
     }
 
 
@@ -204,7 +267,7 @@ public class Hotel<K, T> {
                 System.out.printf("\nHistoria (Opcional): ");
                 nuevo.setHistoria(teclado.next());
             } while (excepcionLanzada);
-            nuevo.setRegistrado(true);
+
             pasajeros.add(nuevo);
             listaPasajeros.add(nuevo);
             System.out.printf("\nQuiere registrar a otro pasajero? s/n: ");
@@ -254,9 +317,8 @@ public class Hotel<K, T> {
                     System.out.println("Gran eleccion!!");
                     for (String h : mapHabitaciones.keySet()) {
                         if (h.equals(numero)) {
-                            reserva.habitaciones.add(mapHabitaciones.get(h));
-                            reserva.habitaciones.get(Integer.parseInt(numero)).setOcupada(true);
                             mapHabitaciones.get(h).setOcupada(true);
+                            reserva.habitaciones.add(mapHabitaciones.get(h));
                         }
                     }
                 } else {
@@ -297,9 +359,13 @@ public class Hotel<K, T> {
         }
     }
 
-    public void solicitarConsumo() {
-
+    public void mostrarPasajeros(){
+        for (Pasajero pasajero : listaPasajeros) {
+            System.out.println(pasajero);
+        }
     }
+
+
 /*
     public void cargarHabitaciones() {
         Comun comun1 = new Comun("101", 4, false, 30000);
