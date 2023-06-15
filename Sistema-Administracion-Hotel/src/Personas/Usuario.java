@@ -1,6 +1,11 @@
 package Personas;
 
 import Controladora.Rol;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 
 public class Usuario {
 
@@ -11,8 +16,8 @@ public class Usuario {
 
     public Usuario() {
     }
-
-    public Usuario(String contraseña, Rol rol, Persona persona, String nombreDeUsuario) {
+    @JsonCreator
+    public Usuario(@JsonProperty("contraseña")String contraseña, @JsonProperty("rol")Rol rol, @JsonProperty("persona")Persona persona, @JsonProperty("nombreDeUsuario")String nombreDeUsuario) {
         this.nombreDeUsuario = nombreDeUsuario;
         this.contraseña = contraseña;
         this.rol = rol;

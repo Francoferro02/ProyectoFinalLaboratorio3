@@ -43,7 +43,7 @@ public class Hotel<K, T> {
     public ArrayList<Usuario> listaUsuarios = new ArrayList<>();
     public TreeMap<String, Reserva> mapReservas = new TreeMap<>();
 
-    static final String ruta = "D:\\Documents\\Facultad\\Programación y Laboratorio III\\TP Final\\ProyectoFinalLaboratorio3\\Sistema-Administracion-Hotel\\src\\Files\\";
+    static final String ruta = "C:\\Tp final labo III\\ProyectoFinalLaboratorio3\\Sistema-Administracion-Hotel\\src\\Files\\";
     public File archivoHotel = new File(ruta + "Hotel.json");//SOLO GUARDA EL HOTEL
     public File archivoHabitaciones = new File(ruta + "Habitaciones.json");
     public File archivoFacturas = new File(ruta + "Facturas.json");
@@ -92,6 +92,37 @@ public class Hotel<K, T> {
         return user;
     }
 
+    public void menuPrincipal(){
+        System.out.println("Bienvenido a Lester Hotel");
+        System.out.println("1: INGRESAR");
+        System.out.println("2: REGISTRARSE");
+        System.out.println("3: EXIT");
+        System.out.println("Que desea realizar? ");
+        int principio = 0;
+        principio = teclado.nextInt();
+        Usuario user = new Usuario();
+
+        switch (principio){
+            case 1:
+                user = login();
+                break;
+            case 2:
+                user = registrarUsuario();
+                break;
+            case 3:
+                System.out.println("Vuelva pronto");
+                escribirTodosArchivos();
+                System.exit(0);
+        }
+        if(user.getRol().equals(Rol.ROL_USER)){
+            menuPasajero(user);
+        } else if (user.getRol().equals(Rol.ROL_EMPLEADO)){
+            menuRecepcionista(user);
+        } else {
+            menuAdministrador();
+        }
+        teclado.close();
+    }
     public void menuRecepcionista(Usuario user) {
         Recepcionista recepcionista = (Recepcionista) user.getPersona();
         System.out.println("Bienvenido " + recepcionista.getNombre() + " " + recepcionista.getApellido());
@@ -100,6 +131,7 @@ public class Hotel<K, T> {
         do {
 
             System.out.println("Que opcion desea realizar? ");
+            teclado.nextLine();
             opcion = teclado.nextInt();
             switch (opcion) {
                 case 1:
@@ -152,30 +184,17 @@ public class Hotel<K, T> {
     private void menuAdministrador() {
     }
 
-    public void menuPrincipal() {
-        System.out.println("Bienvenido a Lester Hotel");
-        System.out.println("1: INGRESAR");
-        System.out.println("2: REGISTRARSE");
-        System.out.println("Que desea realizar? ");
-        int principio = 0;
-        principio = teclado.nextInt();
-        Usuario user = new Usuario();
-        switch (principio){
-            case 1:
-                user = login();
-                break;
-            case 2:
-                user = registrarUsuario();
-                break;
-        }
+    public void menuPasajero(Usuario usuario) {
+       Pasajero pasajero = (Pasajero) usuario.getPersona();
         int opcion = 0;
         do {
-            opcionesCliente();
+            opcionesPasajero();
             System.out.println("Que desea realizar? ");
+            teclado.nextLine();
             opcion = teclado.nextInt();
             switch (opcion) {
                 case 1:
-                    realizarReserva(user);
+                    realizarReserva(usuario);
                     break;
                 case 2:
                     cancelarReserva();
@@ -184,16 +203,17 @@ public class Hotel<K, T> {
                     System.out.println(this); //Arreglar toString
                     break;
                 case 4:
+                    dineroTotal += pasajero.pedirConsumible(listaConsumibles, mapReservas);
                     //realizar consumo = verificar que tenga una reserva (no todos pueden pedir)
                     break;
                 case 5:
                     System.out.println("Hasta luego");
             }
         } while (opcion != 5);
-        teclado.close();
+        menuPrincipal();
     }
 
-    private void opcionesCliente() {
+    private void opcionesPasajero() {
         System.out.println("1: Realizar reserva");
         System.out.println("2: Cancelar reserva");
         System.out.println("3: Ver datos de Lester");
@@ -256,23 +276,24 @@ public class Hotel<K, T> {
     public void realizarReserva(Usuario user) {
         teclado.useDelimiter("\n");
         Reserva reserva = new Reserva();
+        teclado.nextLine();
         System.out.println("Bienvenido/a al sistema de reservas de habitaciones del hotel Lester, a continuacion le solicitaremos los datos de los hospedantes");
         reserva.pasajeros = registrarPasajeros(user);
-        System.out.println("Ingrese la fecha de entrada(Dia/Mes/Anio): ");
+        System.out.println("Ingrese la fecha de entrada(Dia/Mes/Año): ");
         System.out.println("Ingrese dia:");
         int dia = teclado.nextInt();
         System.out.println("Ingrese mes:");
         int mes = teclado.nextInt();
-        System.out.println("Ingrese anio:");
+        System.out.println("Ingrese año:");
         int anio = teclado.nextInt();
         LocalDateTime fechaEntrada = LocalDateTime.of(anio, mes, dia, 18, 0);
         reserva.fechaEntrada = fechaEntrada;
-        System.out.println("Ingrese la fecha de salida(Dia/Mes/Anio): ");
+        System.out.println("Ingrese la fecha de salida(Dia/Mes/Año): ");
         System.out.println("Ingrese dia:");
         int diaSalida = teclado.nextInt();
         System.out.println("Ingrese mes:");
         int mesSalida = teclado.nextInt();
-        System.out.println("Ingrese anio:");
+        System.out.println("Ingrese año:");
         int anioSalida = teclado.nextInt();
         LocalDateTime fechaSalida = LocalDateTime.of(anioSalida, mesSalida, diaSalida, 10, 0);
         reserva.fechaSalida = fechaSalida;
@@ -395,10 +416,9 @@ public class Hotel<K, T> {
         }
         pasajeros.add(nuevo);
         listaPasajeros.add(nuevo);
-        while (control == 's'){
             System.out.printf("\nQuiere registrar a otro pasajero? s/n: ");
-            teclado.nextLine();
             control = teclado.next().charAt(0);
+        while (control == 's'){
             nuevo = registrarPasajero();
             pasajeros.add(nuevo);
             listaPasajeros.add(nuevo);
@@ -718,6 +738,7 @@ public class Hotel<K, T> {
         escribirAuxiliar(archivoHotel);
         escribirArchivoMap(archivoHabitaciones, (TreeMap<K, T>) mapHabitaciones);
         escribirArchivoArrayList(archivoUsuarios, (ArrayList<T>) listaUsuarios);
+        escribirArchivoMap(archivoEmpleados, (TreeMap<K, T>) mapEmpleados);
     }
 
     public static void clearScreen() {

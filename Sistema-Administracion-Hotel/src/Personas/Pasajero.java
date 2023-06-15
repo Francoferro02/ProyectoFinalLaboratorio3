@@ -1,10 +1,17 @@
 package Personas;
 
+import Contable.Reserva;
+import Servicios.Consumible;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Scanner;
+import java.util.TreeMap;
+
 @JsonTypeName("Personas.Pasajero")
 public class Pasajero extends Persona {
 
@@ -14,7 +21,7 @@ public class Pasajero extends Persona {
     private int cantDias;
 
 
-    public Pasajero(@JsonProperty("nombre")String nombre, @JsonProperty("apellido")String apellido, @JsonProperty("DNI")String DNI, @JsonProperty("origen")String origen, @JsonProperty("domicilioOrigen")String domicilioOrigen, @JsonProperty("historia")String historia) {
+    public Pasajero(@JsonProperty("nombre") String nombre, @JsonProperty("apellido") String apellido, @JsonProperty("DNI") String DNI, @JsonProperty("origen") String origen, @JsonProperty("domicilioOrigen") String domicilioOrigen, @JsonProperty("historia") String historia) {
         super(nombre, apellido, DNI);
         this.origen = origen;
         this.domicilioOrigen = domicilioOrigen;
@@ -60,6 +67,35 @@ public class Pasajero extends Persona {
     @Override
     public void realizarAcción() {
 
+    }
+
+    public double pedirConsumible(ArrayList<Consumible> listaConsumibles, TreeMap<String, Reserva> mapReservas) {
+        int opcion = 0;
+        Scanner teclado = new Scanner(System.in);
+        for (String k : mapReservas.keySet()) {
+            for (Pasajero p : mapReservas.get(k).getPasajeros()) {
+                if (p.equals(this)) {
+                    if ((mapReservas.get(k).getFechaEntrada().compareTo(LocalDateTime.now()) <= 0) && (mapReservas.get(k).getFechaSalida().compareTo(LocalDateTime.now())) >= 0) {
+                        System.out.println("Se le mostrara la lista de consumibles");
+
+                        for (Consumible c : listaConsumibles) {
+                            System.out.printf(" " + opcion + ":");
+                            System.out.println(c);
+                            opcion++;
+                        }
+                        System.out.printf("Elija el consumible: ");
+                        opcion = teclado.nextInt();
+                        System.out.println("En minutos te estara llegando tu " + listaConsumibles.get(opcion).getNombre());
+                        return listaConsumibles.get(opcion).getPrecio();
+                    } else {
+                        System.out.println("Su reserva ya finalizo o todavia no es valida");
+                    }
+                }
+            }
+
+        }
+
+        return 0;
     }
 
     @Override
