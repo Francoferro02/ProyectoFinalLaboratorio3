@@ -16,7 +16,6 @@ public class Recepcionista extends Empleado implements Gerenciamiento {
 
     public Recepcionista(@JsonProperty("nombre") String nombre, @JsonProperty("apellido") String apellido, @JsonProperty("DNI") String DNI, @JsonProperty("sueldo") double sueldo, @JsonProperty("diasVacaciones") int diasVacaciones, @JsonProperty("antiguedad") int antiguedad) {
         super(nombre, apellido, DNI, sueldo, diasVacaciones, antiguedad);
-        this.usuario = new Usuario();
     }
 
 
@@ -35,17 +34,12 @@ public class Recepcionista extends Empleado implements Gerenciamiento {
 
     }
 
-    @Override
-    public void mostrarDatosUsuario() {
-        super.mostrarDatosUsuario();
-    }
-
 
     public boolean informarCheckIn(TreeMap<String, Reserva> mapReserva) {
         char tiene = 's';
         String codReserva;
         boolean exceptionLaunch = false;
-        System.out.println("Buenos dias, les saludo atentamente. Usted se encuentra con reserva?");
+        System.out.println("Tiene reserva? s/n");
         tiene = teclado.next().charAt(0);
         if (tiene == 's') {
             do {

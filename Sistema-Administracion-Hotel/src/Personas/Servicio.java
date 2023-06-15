@@ -10,14 +10,9 @@ public class Servicio extends Empleado{
 
     public Servicio(@JsonProperty("nombre")String nombre, @JsonProperty("apellido")String apellido, @JsonProperty("DNI")String DNI, @JsonProperty("sueldo")double sueldo, @JsonProperty("diasVacaciones")int diasVacaciones, @JsonProperty("antiguedad")int antiguedad, @JsonProperty("rol")Trabajadores rol) {
         super(nombre, apellido, DNI, sueldo, diasVacaciones, antiguedad);
-        this.usuario = new Usuario();
         this.trabajadores = rol;
     }
 
-    @Override
-    public void mostrarDatosUsuario() {
-        super.mostrarDatosUsuario();
-    }
 
     @Override
     public void realizarAcción() {

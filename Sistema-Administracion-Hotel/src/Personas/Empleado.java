@@ -17,7 +17,6 @@ public  abstract class Empleado extends Persona{
     protected double sueldo;
     protected  int diasVacaciones;
     protected  int antiguedad;
-    protected Usuario usuario;
 
     public Empleado(String nombre, String apellido, String DNI, double sueldo, int diasVacaciones, int antiguedad) {
         super(nombre, apellido, DNI);
@@ -32,9 +31,7 @@ public  abstract class Empleado extends Persona{
     public abstract void calcularSueldo();
 
     public abstract void calcularDiasVacaciones();
-    public void mostrarDatosUsuario(){
-        System.out.println(this.usuario);
-    }
+
     @Override
     public String toString() {
         return "Empleado{" +

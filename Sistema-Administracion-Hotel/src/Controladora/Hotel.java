@@ -8,6 +8,7 @@ import Habitaciones.Suite;
 import Personas.Empleado;
 import Personas.Pasajero;
 import Personas.Recepcionista;
+import Personas.Usuario;
 import Servicios.Cochera;
 import Servicios.Consumible;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -39,9 +40,10 @@ public class Hotel<K, T> {
     public TreeMap<String, Factura> mapFacturas = new TreeMap<>();
     public ArrayList<Consumible> listaConsumibles = new ArrayList<>();
     public TreeMap<String, Empleado> mapEmpleados = new TreeMap<>();//clave=DNI
+    public ArrayList<Usuario> listaUsuarios = new ArrayList<>();
     public TreeMap<String, Reserva> mapReservas = new TreeMap<>();
 
-    static final String ruta = "C:\\Tp final labo III\\ProyectoFinalLaboratorio3\\Sistema-Administracion-Hotel\\src\\Files\\";
+    static final String ruta = "D:\\Documents\\Facultad\\Programación y Laboratorio III\\TP Final\\ProyectoFinalLaboratorio3\\Sistema-Administracion-Hotel\\src\\Files\\";
     public File archivoHotel = new File(ruta + "Hotel.json");//SOLO GUARDA EL HOTEL
     public File archivoHabitaciones = new File(ruta + "Habitaciones.json");
     public File archivoFacturas = new File(ruta + "Facturas.json");
@@ -49,6 +51,7 @@ public class Hotel<K, T> {
     public File archivoReservas = new File(ruta + "Reservas.json");
     public File archivoPasajeros = new File(ruta + "Pasajeros.json");
     public File archivoConsumibles = new File(ruta + "Consumibles.json");
+    public File archivoUsuarios = new File(ruta + "Usuarios.json");
 
     ObjectMapper mapper = new ObjectMapper();
     Scanner teclado = new Scanner(System.in);
@@ -71,11 +74,26 @@ public class Hotel<K, T> {
         return cochera;
     }
 
-    public void login() {
-
+    public Usuario login() {
+        Usuario user = new Usuario();
+        do {
+            System.out.printf("Ingrese el nombre de usuario: ");
+            String aBuscar = teclado.nextLine();
+            user = buscarPorNombre(aBuscar);
+        }while (user==null);
+        boolean verif = false;
+        int i=3;
+        while (!verif&&i>0) {
+            System.out.printf("Hola, " + user.getNombreDeUsuario() + ". Ingrese la contraseña: ");
+            String contra = teclado.nextLine();
+            verif = verificarContrasena(user, contra, i);
+            i--;
+        }
+        return user;
     }
 
-    public void menuRecepcionista(Recepcionista recepcionista) {
+    public void menuRecepcionista(Usuario user) {
+        Recepcionista recepcionista = (Recepcionista) user.getPersona();
         System.out.println("Bienvenido " + recepcionista.getNombre() + " " + recepcionista.getApellido());
         int opcion = 0;
         opcionesRecepcionista();
@@ -86,7 +104,7 @@ public class Hotel<K, T> {
             switch (opcion) {
                 case 1:
                     clearScreen();
-                    checkInRecepcionista(recepcionista);
+                    checkInRecepcionista(user);
                     break;
                 case 2:
                     clearScreen();
@@ -116,7 +134,7 @@ public class Hotel<K, T> {
                     System.out.println("Error, opcion no valida");
                     break;
             }
-        } while (opcion != 7);
+        } while (opcion != 6);
         menuPrincipal();
     }
 
@@ -136,14 +154,28 @@ public class Hotel<K, T> {
 
     public void menuPrincipal() {
         System.out.println("Bienvenido a Lester Hotel");
+        System.out.println("1: INGRESAR");
+        System.out.println("2: REGISTRARSE");
+        System.out.println("Que desea realizar? ");
+        int principio = 0;
+        principio = teclado.nextInt();
+        Usuario user = new Usuario();
+        switch (principio){
+            case 1:
+                user = login();
+                break;
+            case 2:
+                user = registrarUsuario();
+                break;
+        }
         int opcion = 0;
-        opcionesCliente();
         do {
+            opcionesCliente();
             System.out.println("Que desea realizar? ");
             opcion = teclado.nextInt();
             switch (opcion) {
                 case 1:
-                    realizarReserva();
+                    realizarReserva(user);
                     break;
                 case 2:
                     cancelarReserva();
@@ -153,16 +185,12 @@ public class Hotel<K, T> {
                     break;
                 case 4:
                     //realizar consumo = verificar que tenga una reserva (no todos pueden pedir)
+                    break;
                 case 5:
-                    login();
-                    break;
-                case 6:
-                    opcionesCliente();
-                    break;
-                case 7:
                     System.out.println("Hasta luego");
             }
-        } while (opcion != 7);
+        } while (opcion != 5);
+        teclado.close();
     }
 
     private void opcionesCliente() {
@@ -170,34 +198,66 @@ public class Hotel<K, T> {
         System.out.println("2: Cancelar reserva");
         System.out.println("3: Ver datos de Lester");
         System.out.println("4: Realizar consumo");
-        System.out.println("5: Login");
-        System.out.println("6: Ver opciones");
-        System.out.println("7: Salir");
+        System.out.println("5: Salir");
     }
 
-    private void registrarUsuario() {
-
+    private Usuario registrarUsuario() {
+        teclado.nextLine();
+        Usuario user = new Usuario();
+        boolean verif = true;
+        while(verif) {
+            System.out.printf("Ingrese un nombre de usuario: ");
+            user.setNombreDeUsuario(teclado.nextLine());
+            verif = verificarNombre(user.getNombreDeUsuario());
+        }
+        System.out.printf("\nIngrese su contraseña: ");
+        user.setContraseña(teclado.nextLine());
+        user.setRol(Rol.ROL_USER);
+        user.setPersona(registrarPasajero());
+        listaUsuarios.add(user);
+        return user;
     }
 
-    private boolean verificarNombre() {
+
+    private boolean verificarNombre(String nombreDeUsuario) {
+        for (Usuario usuario : listaUsuarios) {
+            if(usuario.getNombreDeUsuario().equals(nombreDeUsuario)){
+                System.out.println("Ese nombre de usuario ya se encuentra registrado.");
+                return true;
+            }
+        }
         return false;
     }
 
-    private boolean verificarContrasena() {
+    private Usuario buscarPorNombre(String nombreDeUsuario) {
+        for (Usuario usuario : listaUsuarios) {
+            if(usuario.getNombreDeUsuario().equals(nombreDeUsuario)){
+                return usuario;
+            }
+        }
+        return null;
+    }
+
+    private boolean verificarContrasena(Usuario user, String contra, int intentos) {
+        if(user.getContraseña().equals(contra)){
+            return true;
+        }
+        System.out.println("La contraseña ingresada es incorrecta. Le quedan "+(intentos-1)+" intentos.");
         return false;
     }
 
-    public void checkInRecepcionista(Recepcionista recepcionista) {
+    public void checkInRecepcionista(Usuario user) {
+        Recepcionista recepcionista = (Recepcionista) user.getPersona();
         if (recepcionista.informarCheckIn(mapReservas) == true) {
-            realizarReserva();
+            realizarReserva(user);
         }
     }
 
-    public void realizarReserva() {
+    public void realizarReserva(Usuario user) {
         teclado.useDelimiter("\n");
         Reserva reserva = new Reserva();
         System.out.println("Bienvenido/a al sistema de reservas de habitaciones del hotel Lester, a continuacion le solicitaremos los datos de los hospedantes");
-        reserva.pasajeros = registrarPasajero();
+        reserva.pasajeros = registrarPasajeros(user);
         System.out.println("Ingrese la fecha de entrada(Dia/Mes/Anio): ");
         System.out.println("Ingrese dia:");
         int dia = teclado.nextInt();
@@ -233,8 +293,6 @@ public class Hotel<K, T> {
         mapFacturas.put(factura.getCodigoIdentificador(), factura);
         System.out.println("Felicitaciones ya realizaste tu reserva en Lester Hotel. Te esperamos pronto");
         System.out.println(factura);
-
-        teclado.close();
 
     }
 
@@ -326,44 +384,25 @@ public class Hotel<K, T> {
         return (int) dias;
     }
 
-    private ArrayList<Pasajero> registrarPasajero() {
+    private ArrayList<Pasajero> registrarPasajeros(Usuario user) {
         ArrayList<Pasajero> pasajeros = new ArrayList<>();
-        boolean excepcionLanzada = false;
-        char control;
-        do {
-            Pasajero nuevo = new Pasajero();
-            do {
-                System.out.printf("\nPrimer nombre: ");
-                nuevo.setNombre(teclado.next());
-                System.out.printf("\nApellido: ");
-                nuevo.setApellido(teclado.next());
-                System.out.printf("\nDNI: ");
-                nuevo.setDNI(teclado.next());
-                try {
-                    for (Pasajero p : listaPasajeros) {
-                        if (p.getDNI().equals(nuevo.getDNI())) {
-                            throw new IOException();
-                        }
-                    }
-                } catch (IOException e) {
-                    System.out.println("El DNI ingresado ya se encuentra registrado, porfavor intente con un nuevo pasajero");
-                    excepcionLanzada = true;
-                }
-                System.out.printf("\nNacionalidad: ");
-                nuevo.setOrigen(teclado.next());
-                System.out.printf("\nDomicilio: ");
-                nuevo.setDomicilioOrigen(teclado.next());
-                teclado.nextLine();
-                System.out.printf("\nHistoria (Opcional): ");
-                nuevo.setHistoria(teclado.next());
-            } while (excepcionLanzada);
-
-            pasajeros.add(nuevo);
-            listaPasajeros.add(nuevo);
+        char control = 's';
+        Pasajero nuevo = new Pasajero();
+        if(user.getRol()==Rol.ROL_EMPLEADO){
+            nuevo = registrarPasajero();
+        }else if (user.getRol()==Rol.ROL_USER){
+            nuevo = (Pasajero) user.getPersona();
+        }
+        pasajeros.add(nuevo);
+        listaPasajeros.add(nuevo);
+        while (control == 's'){
             System.out.printf("\nQuiere registrar a otro pasajero? s/n: ");
             teclado.nextLine();
             control = teclado.next().charAt(0);
-        } while (control == 's');
+            nuevo = registrarPasajero();
+            pasajeros.add(nuevo);
+            listaPasajeros.add(nuevo);
+        }
         teclado.nextLine();
         return pasajeros;
     }
@@ -378,7 +417,7 @@ public class Hotel<K, T> {
                 System.out.println("Cuantos vehiculos quiere almacenar? Quedan disponibles " + cochera.getEspacioDisponible());
                 espacios = teclado.nextInt();
                 if (espacios > cochera.getEspacioDisponible()) {
-                    System.out.println("No tenemos suficiente espacio disponible en nuestra cochera, el MAXIMO es: " + cochera.getEspacioDisponible());
+                    System.out.println("No tenemos suficiente espacio disponible en nuestra cochera, el MÁXIMO es: " + cochera.getEspacioDisponible());
                 } else {
                     cochera.setEspacioDisponible(cochera.getEspacioDisponible() - espacios);
                     reserva.setEspaciosCochera(espacios);
@@ -388,6 +427,38 @@ public class Hotel<K, T> {
         } else {
             reserva.setCochera(false);
         }
+    }
+
+    private Pasajero registrarPasajero(){
+        boolean excepcionLanzada = false;
+        Pasajero nuevo = new Pasajero();
+        do {
+            System.out.printf("\nPrimer nombre: ");
+            nuevo.setNombre(teclado.next());
+            System.out.printf("\nApellido: ");
+            nuevo.setApellido(teclado.next());
+            System.out.printf("\nDNI: ");
+            nuevo.setDNI(teclado.next());
+            try {
+                for (Pasajero p : listaPasajeros) {
+                    if (p.getDNI().equals(nuevo.getDNI())) {
+                        throw new IOException();
+                    }
+                }
+            } catch (IOException e) {
+                System.out.println("El DNI ingresado ya se encuentra registrado, porfavor intente con un nuevo pasajero");
+                excepcionLanzada = true;
+            }
+        } while (excepcionLanzada);
+        System.out.printf("\nNacionalidad: ");
+        nuevo.setOrigen(teclado.next());
+        System.out.printf("\nDomicilio: ");
+        nuevo.setDomicilioOrigen(teclado.next());
+        teclado.nextLine();
+        System.out.printf("\nHistoria (Opcional): ");
+        nuevo.setHistoria(teclado.next());
+
+        return nuevo;
     }
 
     private void registrarHabitacion(Reserva reserva, LocalDateTime fechaEntrada) {
@@ -646,6 +717,7 @@ public class Hotel<K, T> {
         escribirArchivoMap(archivoFacturas, (TreeMap<K, T>) mapFacturas);
         escribirAuxiliar(archivoHotel);
         escribirArchivoMap(archivoHabitaciones, (TreeMap<K, T>) mapHabitaciones);
+        escribirArchivoArrayList(archivoUsuarios, (ArrayList<T>) listaUsuarios);
     }
 
     public static void clearScreen() {

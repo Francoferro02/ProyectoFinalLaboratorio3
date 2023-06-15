@@ -8,13 +8,8 @@ public class Administrador extends Empleado implements Gerenciamiento{
 
  public Administrador(@JsonProperty("nombre")String nombre, @JsonProperty("apellido")String apellido, @JsonProperty("DNI")String DNI, @JsonProperty("sueldo")double sueldo, @JsonProperty("diasVacaciones")int diasVacaciones, @JsonProperty("antiguedad")int antiguedad) {
   super(nombre, apellido, DNI, sueldo, diasVacaciones, antiguedad);
-  this.usuario = new Usuario();
  }
 
-    @Override
-    public void mostrarDatosUsuario() {
-        super.mostrarDatosUsuario();
-    }
 
     @Override
     public void realizarAcción() {
