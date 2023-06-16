@@ -78,7 +78,7 @@ public class Hotel<K, T> {
         Usuario user = new Usuario();
         do {
             System.out.printf("Ingrese el nombre de usuario: ");
-            String aBuscar = teclado.nextLine();
+            String aBuscar = teclado.next();
             user = buscarPorNombre(aBuscar);
         }while (user==null);
         boolean verif = false;
@@ -144,21 +144,25 @@ public class Hotel<K, T> {
                     break;
                 case 3:
                     clearScreen();
-                    recepcionista.informarCantHabitaciones();
+                    recepcionista.informarCantHabitaciones(mapHabitaciones.size());
                     break;
                 case 4:
                     clearScreen();
-                    recepcionista.verOcupaciones();
+                    recepcionista.verOcupaciones(mapHabitaciones);
                     break;
                 case 5:
                     clearScreen();
-                    recepcionista.verDesocupadas();
+                    recepcionista.verDesocupadas(mapHabitaciones);
                     break;
                 case 6:
+                    System.out.println("Ingrese numero de habitacion");
+                    recepcionista.buscarHabitacion(mapHabitaciones, teclado.next());
+                    break;
+                case 7:
                     clearScreen();
                     opcionesRecepcionista();
                     break;
-                case 7:
+                case 8:
                     System.out.println("Hasta luego"); //Volver al login
                     clearScreen();
                     break;
@@ -166,7 +170,7 @@ public class Hotel<K, T> {
                     System.out.println("Error, opcion no valida");
                     break;
             }
-        } while (opcion != 6);
+        } while (opcion != 8);
         menuPrincipal();
     }
 
@@ -251,10 +255,14 @@ public class Hotel<K, T> {
 
     private Usuario buscarPorNombre(String nombreDeUsuario) {
         for (Usuario usuario : listaUsuarios) {
+            System.out.println(usuario.getNombreDeUsuario());
+            System.out.println(nombreDeUsuario);
             if(usuario.getNombreDeUsuario().equals(nombreDeUsuario)){
+                System.out.println(usuario.getNombreDeUsuario());
                 return usuario;
             }
         }
+        System.out.println("Nombre de usuario incorrecto");
         return null;
     }
 
@@ -451,6 +459,7 @@ public class Hotel<K, T> {
 
     private Pasajero registrarPasajero(){
         boolean excepcionLanzada = false;
+        teclado.useDelimiter("\n");
         Pasajero nuevo = new Pasajero();
         do {
             System.out.printf("\nPrimer nombre: ");

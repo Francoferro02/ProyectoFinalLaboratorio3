@@ -14,10 +14,10 @@ public class Main {
         Hotel lester = new Hotel();
         Recepcionista recepcionista = new Recepcionista("Jose", "Lopez", "34534546", 200000, 20, 6);
         lester.mapHabitaciones = lester.leerArchivoMap(lester.archivoHabitaciones, String.class, Habitacion.class);
-        lester.leerArchivoMap(lester.archivoEmpleados, String.class, Empleado.class);
-        lester.mapReservas = lester.leerArchivoMap(lester.archivoReservas, String.class, Reserva.class);
+        //lester.leerArchivoMap(lester.archivoEmpleados, String.class, Empleado.class);
+        //lester.mapReservas = lester.leerArchivoMap(lester.archivoReservas, String.class, Reserva.class);
         lester.listaConsumibles = lester.leerArchivoArrayList(lester.archivoConsumibles, Consumible.class);
-        lester.mapFacturas = lester.leerArchivoMap(lester.archivoFacturas, String.class, Factura.class);
+        //lester.mapFacturas = lester.leerArchivoMap(lester.archivoFacturas, String.class, Factura.class);
         lester.listaPasajeros = lester.leerArchivoArrayList(lester.archivoPasajeros, Pasajero.class);
         lester.leerAuxiliar(lester.archivoHotel);
         lester.listaUsuarios = lester.leerArchivoArrayList(lester.archivoUsuarios, Usuario.class);

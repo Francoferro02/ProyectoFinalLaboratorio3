@@ -73,27 +73,36 @@ public class Recepcionista extends Empleado implements Gerenciamiento {
                 for (Habitacion habitacion : mapReserva.get(claveReserva).habitaciones) {
                     mapHabitaciones.get(habitacion.numero).setOcupada(false);
                 }
-                cochera.setEspacioDisponible(cochera.getEspacioDisponible()+mapReserva.get(claveReserva).getEspaciosCochera());
+                cochera.setEspacioDisponible(cochera.getEspacioDisponible() + mapReserva.get(claveReserva).getEspaciosCochera());
             }
         }
         mapReserva.remove(claveIdentificador);
     }
 
 
-
-    public void informarCantHabitaciones() {
-
+    public void informarCantHabitaciones(int cantidad) {
+        System.out.println("Cantidad de habitaciones total: " + cantidad);
     }
 
-    public void verOcupaciones() {
-
+    public void verOcupaciones(TreeMap<String, Habitacion> map) {
+        for (String k : map.keySet()) {
+            if (map.get(k).isOcupada() == true) {
+                System.out.println(map.get(k));
+            }
+        }
     }
 
-    public void verDesocupadas() {
-
+    public void verDesocupadas(TreeMap<String, Habitacion> map) {
+        for (String k : map.keySet()) {
+            if (map.get(k).isOcupada() == false) {
+                System.out.println(map.get(k));
+            }
+        }
     }
 
-
+    public void buscarHabitacion(TreeMap<String, Habitacion> map, String numero) {
+        System.out.println(map.get(numero));
+    }
 
     @Override
     public String toString() {

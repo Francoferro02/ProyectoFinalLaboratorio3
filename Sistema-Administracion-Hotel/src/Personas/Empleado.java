@@ -5,13 +5,16 @@ import Habitaciones.Comun;
 import Habitaciones.Suite;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 @JsonSubTypes({
         @JsonSubTypes.Type(value = Administrador.class, name = "Personas.Administrador"),
         @JsonSubTypes.Type(value = Servicio.class, name = "Personas.Servicio"),
         @JsonSubTypes.Type(value = Recepcionista.class, name = "Personas.Recepcionista")
+
 })
+@JsonTypeName("Personas.Empleado")
 public  abstract class Empleado extends Persona{
 
     protected double sueldo;
@@ -25,7 +28,6 @@ public  abstract class Empleado extends Persona{
         this.antiguedad = antiguedad;
     }
 
-    @Override
     public abstract void realizarAcción();
 
     public abstract void calcularSueldo();

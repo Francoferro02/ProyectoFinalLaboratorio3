@@ -64,10 +64,6 @@ public class Pasajero extends Persona {
         this.historia = historia;
     }
 
-    @Override
-    public void realizarAcción() {
-
-    }
 
     public double pedirConsumible(ArrayList<Consumible> listaConsumibles, TreeMap<String, Reserva> mapReservas) {
         int opcion = 0;
