@@ -1,16 +1,17 @@
 package Personas;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.*;
+
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 @JsonSubTypes({
         @JsonSubTypes.Type(value = Pasajero.class, name = "Personas.Pasajero"),
-        @JsonSubTypes.Type(value = Empleado.class, name = "Personas.Empleado")
+        @JsonSubTypes.Type(value = Empleado.class, name = "Personas.Empleado"),
+        @JsonSubTypes.Type(value = Usuario.class, name = "Usuario")
 
 })
+@JsonTypeName("Personas.Persona")
+
 public abstract class Persona {
     protected String nombre;
     protected String apellido;

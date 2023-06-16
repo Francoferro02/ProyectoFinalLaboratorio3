@@ -1,1 +1,1 @@
-["java.util.ArrayList",[{"@class":"Personas.Usuario","contraseña":"franco","rol":"ROL_USER","persona":{"@class":"Personas.Pasajero","nombre":"Franco","apellido":"Ferro","origen":"Peru","domicilioOrigen":"Peruano","historia":"soy gay","cantDias":0,"dni":"12345678"},"nombreDeUsuario":"franco"}]]
+["java.util.ArrayList",[{"@class":"Personas.Usuario","contraseña":"aa","rol":"ROL_USER","persona":{"@class":"Personas.Pasajero","nombre":"aa","apellido":"aa","origen":"aa","domicilioOrigen":"aa","historia":"aa","cantDias":0,"dni":"aa"},"nombreDeUsuario":"aa"}]]

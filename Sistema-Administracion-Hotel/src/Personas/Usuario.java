@@ -3,16 +3,21 @@ package Personas;
 import Controladora.Rol;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ClassSerializer;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 
 public class Usuario {
 
-    private String nombreDeUsuario;
-    private String contraseña;
-    private Rol rol;
-    private Persona persona;
+    public String nombreDeUsuario;
+    public String contraseña;
+    public Rol rol;
+    public Persona persona;
 
     public Usuario() {
     }
@@ -59,9 +64,9 @@ public class Usuario {
     @Override
     public String toString() {
         return "Usuario{" +
-                "username='" + nombreDeUsuario + '\''+
-                "contraseña='" + contraseña + '\''+
-                ", rol=" + rol +
-                '}';
+                "\nusername= '" + nombreDeUsuario + '\''+
+                "\ncontraseña= '" + contraseña + '\''+
+                "\nrol= " + rol +
+                "\n}";
     }
 }

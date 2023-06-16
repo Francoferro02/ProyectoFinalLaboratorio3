@@ -80,10 +80,10 @@ public class Hotel<K, T> {
             System.out.printf("Ingrese el nombre de usuario: ");
             String aBuscar = teclado.next();
             user = buscarPorNombre(aBuscar);
-        }while (user==null);
+        } while (user == null);
         boolean verif = false;
-        int i=3;
-        while (!verif&&i>0) {
+        int i = 3;
+        while (!verif && i > 0) {
             System.out.printf("Hola, " + user.getNombreDeUsuario() + ". Ingrese la contraseña: ");
             String contra = teclado.nextLine();
             verif = verificarContrasena(user, contra, i);
@@ -92,7 +92,7 @@ public class Hotel<K, T> {
         return user;
     }
 
-    public void menuPrincipal(){
+    public void menuPrincipal() {
         System.out.println("Bienvenido a Lester Hotel");
         System.out.println("1: INGRESAR");
         System.out.println("2: REGISTRARSE");
@@ -102,7 +102,7 @@ public class Hotel<K, T> {
         principio = teclado.nextInt();
         Usuario user = new Usuario();
 
-        switch (principio){
+        switch (principio) {
             case 1:
                 user = login();
                 break;
@@ -114,15 +114,16 @@ public class Hotel<K, T> {
                 escribirTodosArchivos();
                 System.exit(0);
         }
-        if(user.getRol().equals(Rol.ROL_USER)){
+        if (user.getRol().equals(Rol.ROL_USER)) {
             menuPasajero(user);
-        } else if (user.getRol().equals(Rol.ROL_EMPLEADO)){
+        } else if (user.getRol().equals(Rol.ROL_EMPLEADO)) {
             menuRecepcionista(user);
         } else {
             menuAdministrador();
         }
         teclado.close();
     }
+
     public void menuRecepcionista(Usuario user) {
         Recepcionista recepcionista = (Recepcionista) user.getPersona();
         System.out.println("Bienvenido " + recepcionista.getNombre() + " " + recepcionista.getApellido());
@@ -159,10 +160,12 @@ public class Hotel<K, T> {
                     recepcionista.buscarHabitacion(mapHabitaciones, teclado.next());
                     break;
                 case 7:
+                    verUsuario(user);
+                case 8:
                     clearScreen();
                     opcionesRecepcionista();
                     break;
-                case 8:
+                case 9:
                     System.out.println("Hasta luego"); //Volver al login
                     clearScreen();
                     break;
@@ -170,7 +173,7 @@ public class Hotel<K, T> {
                     System.out.println("Error, opcion no valida");
                     break;
             }
-        } while (opcion != 8);
+        } while (opcion != 9);
         menuPrincipal();
     }
 
@@ -180,8 +183,10 @@ public class Hotel<K, T> {
         System.out.println("3: Cantidad de habitaciones totales");
         System.out.println("4: Ver habitaciones ocupadas");
         System.out.println("5: Ver habitaciones desocupadas");
-        System.out.println("6: Ver opciones");
-        System.out.println("7: Salir");
+        System.out.println("6: Ver habitacion especifica");
+        System.out.println("7: Ver usuario");
+        System.out.println("8: Ver opciones");
+        System.out.println("9: Salir");
 
     }
 
@@ -189,7 +194,7 @@ public class Hotel<K, T> {
     }
 
     public void menuPasajero(Usuario usuario) {
-       Pasajero pasajero = (Pasajero) usuario.getPersona();
+        Pasajero pasajero = (Pasajero) usuario.getPersona();
         int opcion = 0;
         do {
             opcionesPasajero();
@@ -204,32 +209,40 @@ public class Hotel<K, T> {
                     cancelarReserva();
                     break;
                 case 3:
+                    verUsuario(usuario);
+                case 4:
                     System.out.println(this); //Arreglar toString
                     break;
-                case 4:
+                case 5:
                     dineroTotal += pasajero.pedirConsumible(listaConsumibles, mapReservas);
                     //realizar consumo = verificar que tenga una reserva (no todos pueden pedir)
                     break;
-                case 5:
+                case 6:
                     System.out.println("Hasta luego");
+                    break;
             }
-        } while (opcion != 5);
+        } while (opcion != 6);
         menuPrincipal();
     }
 
     private void opcionesPasajero() {
         System.out.println("1: Realizar reserva");
         System.out.println("2: Cancelar reserva");
-        System.out.println("3: Ver datos de Lester");
-        System.out.println("4: Realizar consumo");
-        System.out.println("5: Salir");
+        System.out.println("3: Ver usuario");
+        System.out.println("4: Ver datos de Lester");
+        System.out.println("5: Realizar consumo");
+        System.out.println("6: Salir");
+    }
+
+    private void verUsuario(Usuario usuario) {
+        System.out.println(usuario);
     }
 
     private Usuario registrarUsuario() {
         teclado.nextLine();
         Usuario user = new Usuario();
         boolean verif = true;
-        while(verif) {
+        while (verif) {
             System.out.printf("Ingrese un nombre de usuario: ");
             user.setNombreDeUsuario(teclado.nextLine());
             verif = verificarNombre(user.getNombreDeUsuario());
@@ -245,7 +258,7 @@ public class Hotel<K, T> {
 
     private boolean verificarNombre(String nombreDeUsuario) {
         for (Usuario usuario : listaUsuarios) {
-            if(usuario.getNombreDeUsuario().equals(nombreDeUsuario)){
+            if (usuario.getNombreDeUsuario().equals(nombreDeUsuario)) {
                 System.out.println("Ese nombre de usuario ya se encuentra registrado.");
                 return true;
             }
@@ -257,7 +270,7 @@ public class Hotel<K, T> {
         for (Usuario usuario : listaUsuarios) {
             System.out.println(usuario.getNombreDeUsuario());
             System.out.println(nombreDeUsuario);
-            if(usuario.getNombreDeUsuario().equals(nombreDeUsuario)){
+            if (usuario.getNombreDeUsuario().equals(nombreDeUsuario)) {
                 System.out.println(usuario.getNombreDeUsuario());
                 return usuario;
             }
@@ -267,10 +280,10 @@ public class Hotel<K, T> {
     }
 
     private boolean verificarContrasena(Usuario user, String contra, int intentos) {
-        if(user.getContraseña().equals(contra)){
+        if (user.getContraseña().equals(contra)) {
             return true;
         }
-        System.out.println("La contraseña ingresada es incorrecta. Le quedan "+(intentos-1)+" intentos.");
+        System.out.println("La contraseña ingresada es incorrecta. Le quedan " + (intentos - 1) + " intentos.");
         return false;
     }
 
@@ -417,16 +430,16 @@ public class Hotel<K, T> {
         ArrayList<Pasajero> pasajeros = new ArrayList<>();
         char control = 's';
         Pasajero nuevo = new Pasajero();
-        if(user.getRol()==Rol.ROL_EMPLEADO){
+        if (user.getRol() == Rol.ROL_EMPLEADO) {
             nuevo = registrarPasajero();
-        }else if (user.getRol()==Rol.ROL_USER){
+        } else if (user.getRol() == Rol.ROL_USER) {
             nuevo = (Pasajero) user.getPersona();
         }
         pasajeros.add(nuevo);
         listaPasajeros.add(nuevo);
-            System.out.printf("\nQuiere registrar a otro pasajero? s/n: ");
-            control = teclado.next().charAt(0);
-        while (control == 's'){
+        System.out.printf("\nQuiere registrar a otro pasajero? s/n: ");
+        control = teclado.next().charAt(0);
+        while (control == 's') {
             nuevo = registrarPasajero();
             pasajeros.add(nuevo);
             listaPasajeros.add(nuevo);
@@ -457,7 +470,7 @@ public class Hotel<K, T> {
         }
     }
 
-    private Pasajero registrarPasajero(){
+    private Pasajero registrarPasajero() {
         boolean excepcionLanzada = false;
         teclado.useDelimiter("\n");
         Pasajero nuevo = new Pasajero();
@@ -690,6 +703,10 @@ public class Hotel<K, T> {
 
     public void escribirArchivoArrayList(File archivo, ArrayList<T> arrayList) {
         try {
+            mapper.activateDefaultTyping(
+                    mapper.getPolymorphicTypeValidator(),
+                    ObjectMapper.DefaultTyping.NON_FINAL,
+                    JsonTypeInfo.As.PROPERTY);
             this.mapper.writeValue(archivo, arrayList);
         } catch (IOException e) {
             e.printStackTrace();
@@ -702,6 +719,11 @@ public class Hotel<K, T> {
         ArrayList<T> arrayList = new ArrayList<>();
         try {
             if (archivo != null) {
+                mapper.activateDefaultTyping(
+                        mapper.getPolymorphicTypeValidator(),
+                        ObjectMapper.DefaultTyping.NON_FINAL,
+                        JsonTypeInfo.As.PROPERTY
+                );
                 arrayList = mapper.readValue(archivo, mapper.getTypeFactory().constructCollectionType(ArrayList.class, clazz));
             } else {
                 throw new IOException();
