@@ -6,11 +6,11 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 @JsonTypeName("Personas.Servicio")
 public class Servicio extends Empleado{
 
-    Trabajadores trabajadores;
+    public Servicio() {
+    }
 
-    public Servicio(@JsonProperty("nombre")String nombre, @JsonProperty("apellido")String apellido, @JsonProperty("DNI")String DNI, @JsonProperty("sueldo")double sueldo, @JsonProperty("diasVacaciones")int diasVacaciones, @JsonProperty("antiguedad")int antiguedad, @JsonProperty("rol")Trabajadores rol) {
-        super(nombre, apellido, DNI, sueldo, diasVacaciones, antiguedad);
-        this.trabajadores = rol;
+    public Servicio(@JsonProperty("nombre")String nombre, @JsonProperty("apellido")String apellido, @JsonProperty("DNI")String DNI, @JsonProperty("sueldo")double sueldo, @JsonProperty("diasVacaciones")int diasVacaciones, @JsonProperty("antiguedad")int antiguedad, @JsonProperty("trabajador")Trabajadores trabajador) {
+        super(nombre, apellido, DNI, sueldo, diasVacaciones, antiguedad,trabajador);
     }
 
 
@@ -29,20 +29,30 @@ public class Servicio extends Empleado{
 
     }
 
+    @Override
+    public void fichaje() {
+
+    }
+
+    @Override
+    public void desFichaje() {
+
+    }
+
     public void agregarTrabajadores(){
 
     }
 
     @Override
     public String toString() {
-        return "Servicios{" +
-                "trabajadores=" + trabajadores+
-                ", sueldo=" + sueldo +
-                ", diasVacaciones=" + diasVacaciones +
-                ", antiguedad=" + antiguedad +
-                ", nombre='" + nombre + '\'' +
-                ", apellido='" + apellido + '\'' +
-                ", DNI=" + DNI +
-                '}';
+        return "\n------------------------------------------------"+
+                "\nServicio{" +
+                "\nsueldo=" + sueldo +
+                "\n, diasVacaciones=" + diasVacaciones +
+                "\n, antiguedad=" + antiguedad +
+                "\n, trabajador=" + trabajador +
+                "\n, nombre='" + nombre + '\'' +
+                "\n, apellido='" + apellido + '\'' +
+                "\n, DNI='" + DNI + '\'';
     }
 }

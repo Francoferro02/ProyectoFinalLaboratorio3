@@ -63,10 +63,11 @@ public class Usuario {
 
     @Override
     public String toString() {
-        return "Usuario{" +
-                "\nusername= '" + nombreDeUsuario + '\''+
-                "\ncontraseña= '" + contraseña + '\''+
-                "\nrol= " + rol +
-                "\n}";
+        return "\n------------------------------------------------"+
+                "\nUsuario{" +
+                "\nnombreDeUsuario='" + nombreDeUsuario + '\'' +
+                "\n, contraseña='" + contraseña + '\'' +
+                "\n, rol=" + rol +
+                "\n, persona=" + persona;
     }
 }

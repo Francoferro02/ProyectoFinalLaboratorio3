@@ -12,10 +12,13 @@ import java.util.TreeMap;
 
 @JsonTypeName("Personas.Recepcionista")
 public class Recepcionista extends Empleado implements Gerenciamiento {
-    Scanner teclado = new Scanner(System.in);
+    private Scanner teclado = new Scanner(System.in);
 
-    public Recepcionista(@JsonProperty("nombre") String nombre, @JsonProperty("apellido") String apellido, @JsonProperty("DNI") String DNI, @JsonProperty("sueldo") double sueldo, @JsonProperty("diasVacaciones") int diasVacaciones, @JsonProperty("antiguedad") int antiguedad) {
-        super(nombre, apellido, DNI, sueldo, diasVacaciones, antiguedad);
+    public Recepcionista() {
+    }
+
+    public Recepcionista(@JsonProperty("nombre") String nombre, @JsonProperty("apellido") String apellido, @JsonProperty("DNI") String DNI, @JsonProperty("sueldo") double sueldo, @JsonProperty("diasVacaciones") int diasVacaciones, @JsonProperty("antiguedad") int antiguedad, @JsonProperty("trabajador")Trabajadores trabajador) {
+        super(nombre, apellido, DNI, sueldo, diasVacaciones, antiguedad,trabajador);
     }
 
 
@@ -31,6 +34,16 @@ public class Recepcionista extends Empleado implements Gerenciamiento {
 
     @Override
     public void calcularDiasVacaciones() {
+
+    }
+
+    @Override
+    public void fichaje() {
+
+    }
+
+    @Override
+    public void desFichaje() {
 
     }
 
@@ -106,14 +119,15 @@ public class Recepcionista extends Empleado implements Gerenciamiento {
 
     @Override
     public String toString() {
-        return "Recepcionista{" +
-                "sueldo=" + sueldo +
-                ", diasVacaciones=" + diasVacaciones +
-                ", antiguedad=" + antiguedad +
-                ", nombre='" + nombre + '\'' +
-                ", apellido='" + apellido + '\'' +
-                ", DNI=" + DNI +
-                '}';
+        return "\n------------------------------------------------"+
+                "\nRecepcionista{" +
+                "\nsueldo=" + sueldo +
+                "\n, diasVacaciones=" + diasVacaciones +
+                "\n, antiguedad=" + antiguedad +
+                "\n, trabajador=" + trabajador +
+                "\n, nombre='" + nombre + '\'' +
+                "\n, apellido='" + apellido + '\'' +
+                "\n, DNI='" + DNI + '\'';
     }
 
     public void cerrarTeclado() {

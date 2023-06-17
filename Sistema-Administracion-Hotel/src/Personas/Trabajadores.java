@@ -1,7 +1,8 @@
 package Personas;
 
 public enum Trabajadores {
-    CONSERJE,
+    RECEPCIONISTA,
+    ADMINISTRADOR,
     MUCAMA,
     CHEF,
     AYUDANTE_COCINA,

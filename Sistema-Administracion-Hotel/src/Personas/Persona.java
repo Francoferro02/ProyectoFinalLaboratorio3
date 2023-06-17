@@ -31,10 +31,10 @@ public abstract class Persona {
 
     @Override
     public String toString() {
-        return "Persona{" +
-                "nombre='" + nombre + '\'' +
-                ", apellido='" + apellido + '\'' +
-                ", DNI=" + DNI +
+        return "\nPersona{" +
+                "\nnombre='" + nombre + '\'' +
+                "\n, apellido='" + apellido + '\'' +
+                "\n, DNI=" + DNI +
                 '}';
     }
 

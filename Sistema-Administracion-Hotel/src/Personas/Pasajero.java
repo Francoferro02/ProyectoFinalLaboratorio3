@@ -7,10 +7,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Scanner;
-import java.util.TreeMap;
+import java.util.*;
 
 @JsonTypeName("Personas.Pasajero")
 public class Pasajero extends Persona {
@@ -96,14 +93,27 @@ public class Pasajero extends Persona {
 
     @Override
     public String toString() {
-        return "\nPasajero{" +
+        return "\n------------------------------------------------"+
+                "\nPasajero{" +
                 "\norigen='" + origen + '\'' +
                 "\n, domicilioOrigen='" + domicilioOrigen + '\'' +
                 "\n, historia='" + historia + '\'' +
                 "\n, cantDias=" + cantDias +
                 "\n, nombre='" + nombre + '\'' +
                 "\n, apellido='" + apellido + '\'' +
-                "\n, DNI='" + DNI + '\'' +
-                '}';
+                "\n, DNI='" + DNI + '\'';
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        Pasajero other = (Pasajero) obj;
+        // Comparar los atributos relevantes para determinar si son iguales
+        return Objects.equals(nombre, other.nombre) && Objects.equals(apellido, other.apellido);
     }
 }

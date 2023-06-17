@@ -1,0 +1,1 @@
+["java.util.ArrayList",[{"@class":"Personas.Usuario","contraseña":"aa","rol":"ROL_USER","persona":{"@class":"Personas.Pasajero","nombre":"aa","apellido":"aa","origen":"aa","domicilioOrigen":"aa","historia":"aa","cantDias":0,"dni":"aa"},"nombreDeUsuario":"aa"}]]
