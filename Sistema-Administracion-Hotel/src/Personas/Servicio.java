@@ -9,8 +9,8 @@ public class Servicio extends Empleado{
     public Servicio() {
     }
 
-    public Servicio(@JsonProperty("nombre")String nombre, @JsonProperty("apellido")String apellido, @JsonProperty("DNI")String DNI, @JsonProperty("sueldo")double sueldo, @JsonProperty("diasVacaciones")int diasVacaciones, @JsonProperty("antiguedad")int antiguedad, @JsonProperty("trabajador")Trabajadores trabajador) {
-        super(nombre, apellido, DNI, sueldo, diasVacaciones, antiguedad,trabajador);
+    public Servicio(@JsonProperty("nombre")String nombre, @JsonProperty("apellido")String apellido, @JsonProperty("DNI")String DNI, @JsonProperty("sueldo")double sueldo, @JsonProperty("antiguedad")int antiguedad, @JsonProperty("trabajador")String  trabajador) {
+        super(nombre, apellido, DNI, sueldo, antiguedad,trabajador);
     }
 
 
@@ -26,22 +26,20 @@ public class Servicio extends Empleado{
 
     @Override
     public void calcularDiasVacaciones() {
-
+        super.calcularDiasVacaciones();
     }
 
     @Override
     public void fichaje() {
-
+        super.fichaje();
     }
 
     @Override
     public void desFichaje() {
-
+        super.desFichaje();
     }
 
-    public void agregarTrabajadores(){
 
-    }
 
     @Override
     public String toString() {

@@ -17,8 +17,8 @@ public class Recepcionista extends Empleado implements Gerenciamiento {
     public Recepcionista() {
     }
 
-    public Recepcionista(@JsonProperty("nombre") String nombre, @JsonProperty("apellido") String apellido, @JsonProperty("DNI") String DNI, @JsonProperty("sueldo") double sueldo, @JsonProperty("diasVacaciones") int diasVacaciones, @JsonProperty("antiguedad") int antiguedad, @JsonProperty("trabajador")Trabajadores trabajador) {
-        super(nombre, apellido, DNI, sueldo, diasVacaciones, antiguedad,trabajador);
+    public Recepcionista(@JsonProperty("nombre") String nombre, @JsonProperty("apellido") String apellido, @JsonProperty("DNI") String DNI, @JsonProperty("sueldo") double sueldo, @JsonProperty("antiguedad") int antiguedad, @JsonProperty("trabajador")String trabajador) {
+        super(nombre, apellido, DNI, sueldo, antiguedad,trabajador);
     }
 
 
@@ -34,19 +34,18 @@ public class Recepcionista extends Empleado implements Gerenciamiento {
 
     @Override
     public void calcularDiasVacaciones() {
-
+        super.calcularDiasVacaciones();
     }
 
     @Override
     public void fichaje() {
-
+        super.fichaje();
     }
 
     @Override
     public void desFichaje() {
-
+        super.desFichaje();
     }
-
 
     public boolean informarCheckIn(TreeMap<String, Reserva> mapReserva) {
         char tiene = 's';
@@ -101,6 +100,7 @@ public class Recepcionista extends Empleado implements Gerenciamiento {
         for (String k : map.keySet()) {
             if (map.get(k).isOcupada() == true) {
                 System.out.println(map.get(k));
+                System.out.println(map.get(k).getEstado());
             }
         }
     }

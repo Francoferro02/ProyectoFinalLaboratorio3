@@ -33,11 +33,15 @@ public class Reserva {
 
     private int espaciosCochera;
     public String identificador;
+    private boolean lateCheckOut;
+    private boolean earlyCheckIn;
 
     public Reserva() {
         this.identificador = (this.identificador = (UUID.randomUUID().toString().toUpperCase())).substring(0,5);
         this.pasajeros = new ArrayList<>();
         this.habitaciones = new ArrayList<>();
+        this.lateCheckOut = false;
+        this.earlyCheckIn = false;
     }
 
     public Reserva( LocalDateTime fechaEntrada, LocalDateTime fechaSalida) {
@@ -46,7 +50,25 @@ public class Reserva {
         this.identificador = (this.identificador = (UUID.randomUUID().toString().toUpperCase())).substring(0,5);
         this.habitaciones = new ArrayList<>();
         this.pasajeros = new ArrayList<>();
+        this.lateCheckOut = false;
+        this.earlyCheckIn = false;
 
+    }
+
+    public boolean isLateCheckOut() {
+        return lateCheckOut;
+    }
+
+    public void setLateCheckOut(boolean lateCheckOut) {
+        this.lateCheckOut = lateCheckOut;
+    }
+
+    public boolean isEarlyCheckIn() {
+        return earlyCheckIn;
+    }
+
+    public void setEarlyCheckIn(boolean earlyCheckIn) {
+        this.earlyCheckIn = earlyCheckIn;
     }
 
     public LocalDateTime getFechaEntrada() {

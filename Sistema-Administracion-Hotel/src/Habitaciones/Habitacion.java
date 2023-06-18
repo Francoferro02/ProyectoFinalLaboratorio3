@@ -19,6 +19,7 @@ public abstract class Habitacion {
     public boolean terraza;
 
     public double precio;
+    public String estado;
 
 
     public ArrayList<Consumible> consumibles = new ArrayList<>(); //ingresar al archivo de consumibles y mostrarlo
@@ -32,6 +33,15 @@ public abstract class Habitacion {
         this.capacidad = capacidad;
         this.terraza = terraza;
         this.precio = precio;
+        this.estado = "Disponible";
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 
     public String getNumero() {

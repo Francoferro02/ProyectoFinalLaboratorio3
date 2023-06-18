@@ -40,7 +40,7 @@ public class Hotel<K, T> {
     public ArrayList<Usuario> listaUsuarios = new ArrayList<>();
     public TreeMap<String, Reserva> mapReservas = new TreeMap<>();
 
-    static final String ruta = "H:\\Laboratorio-3\\ProyectoFinalLabo3\\Sistema-Administracion-Hotel\\src\\Files\\";
+    static final String ruta = "C:\\Tp final labo III\\ProyectoFinalLaboratorio3\\Sistema-Administracion-Hotel\\src\\Files\\";
     public File archivoHotel = new File(ruta + "Hotel.json");//SOLO GUARDA EL HOTEL
     public File archivoHabitaciones = new File(ruta + "Habitaciones.json");
     public File archivoFacturas = new File(ruta + "Facturas.json");
@@ -184,18 +184,24 @@ public class Hotel<K, T> {
                     Usuario empleado = administrador.crearUsuarioEmpleado(listaUsuarios, mapEmpleados);
                     listaUsuarios.add(empleado);
                     mapEmpleados.put(empleado.getNombreDeUsuario(), (Empleado) empleado.getPersona());
+                    escribirArchivoMap(archivoEmpleados, (TreeMap<K, T>) mapEmpleados);
+                    escribirArchivoArrayList(archivoUsuarios, (ArrayList<T>) listaUsuarios);
                     break;
                 case 2:
-                    administrador.eliminarUsuario();
+                    administrador.eliminarUsuario(listaUsuarios, mapEmpleados);
+                    escribirArchivoMap(archivoEmpleados, (TreeMap<K, T>) mapEmpleados);
+                    escribirArchivoArrayList(archivoUsuarios, (ArrayList<T>) listaUsuarios);
                     break;
                 case 3:
-                    administrador.darPermisos();
+                    administrador.darPermisos(mapEmpleados);
+                    escribirArchivoMap(archivoEmpleados, (TreeMap<K, T>) mapEmpleados);
                     break;
                 case 4:
-                    administrador.agregarConsumibles();
+                    administrador.agregarConsumibles(listaConsumibles);
+                    escribirArchivoArrayList(archivoConsumibles, (ArrayList<T>) listaConsumibles);
                     break;
                 case 5:
-                    administrador.generarBackUp();
+                    administrador.generarBackUp(this);
                     break;
                 case 6:
                     administrador.fichaje();
@@ -206,11 +212,15 @@ public class Hotel<K, T> {
                 case 8:
                     System.out.println(administrador);
                     break;
+                case 9:
+                    System.out.println("Hasta luego " + user.getPersona().getNombre());
+                    break;
                 default:
                     System.out.println("Error, opcion no valida");
                     break;
             }
         } while (opcion != 9);
+
         menuPrincipal();
     }
 
@@ -228,6 +238,8 @@ public class Hotel<K, T> {
 
     private void menuPasajero(Usuario usuario) {
         Pasajero pasajero = (Pasajero) usuario.getPersona();
+        boolean checkOut;
+        boolean checkIn;
         int opcion = 0;
         do {
             opcionesPasajero();
@@ -239,7 +251,7 @@ public class Hotel<K, T> {
                     realizarReserva(usuario);
                     break;
                 case 2:
-                    cancelarReserva();
+                    cancelarReserva(usuario);
                     break;
                 case 3:
                     verUsuario(usuario);
@@ -293,12 +305,14 @@ public class Hotel<K, T> {
     }
 
     public void lateCheckOut(Usuario user) {
+
         teclado.nextLine();
         String codigo;
         int horas;
         System.out.println("Ingrese su codigo de reserva");
         codigo = teclado.next();
         Reserva reserva = null;
+
         try {
             if (mapReservas.containsKey(codigo)) {
                 reserva = mapReservas.get(codigo);
@@ -309,25 +323,33 @@ public class Hotel<K, T> {
             System.out.println("Ese codigo de reserva no es valido");
             menuPasajero(user);
         }
-        System.out.println("Ingrese cuantos horas extras desea quedarse. Tenga en cuenta que se le cobrara medio dia hasta las 2 horas y mas de eso se le cobra el dia completo.");
-        horas = teclado.nextInt();
-        LocalDateTime horasAgregadas;
-        horasAgregadas = reserva.fechaSalida.plusHours(horas);
-        reserva.fechaSalida = horasAgregadas;
-        if (horas <= 2 && horas > 0) {
-            for (Habitacion habitacion : reserva.habitaciones) {
-                mapFacturas.get(codigo).setPrecioTotal(mapFacturas.get(codigo).getPrecioTotal() + (habitacion.getPrecio() / 2));
+        if(!reserva.isLateCheckOut()) {
+            System.out.println("Ingrese cuantos horas extras desea quedarse. Tenga en cuenta que se le cobrara medio dia hasta las 2 horas y mas de eso se le cobra el dia completo. Solamente se puede solicitar una vez");
+            horas = teclado.nextInt();
+            LocalDateTime horasAgregadas;
+            horasAgregadas = reserva.fechaSalida.plusHours(horas);
+            reserva.fechaSalida = horasAgregadas;
+            if (horas <= 2 && horas > 0) {
+                for (Habitacion habitacion : reserva.habitaciones) {
+                    mapFacturas.get(codigo).setPrecioTotal(mapFacturas.get(codigo).getPrecioTotal() + (habitacion.getPrecio() / 2));
+                }
+            } else if (horas > 2) {
+                for (Habitacion habitacion : reserva.habitaciones) {
+                    mapFacturas.get(codigo).setPrecioTotal(mapFacturas.get(codigo).getPrecioTotal() + habitacion.getPrecio());
+                }
+            } else {
+                System.out.println("Esa cantidad no es valida");
             }
-        } else if (horas > 2) {
-            for (Habitacion habitacion : reserva.habitaciones) {
-                mapFacturas.get(codigo).setPrecioTotal(mapFacturas.get(codigo).getPrecioTotal() + habitacion.getPrecio());
-            }
-        } else {
-            System.out.println("Esa cantidad no es valida");
+            System.out.println("Cambio de hora realizado");
+            escribirArchivoMap(archivoReservas, (TreeMap<K, T>) mapReservas);
+            escribirArchivoMap(archivoFacturas, (TreeMap<K, T>) mapFacturas);
+            reserva.setLateCheckOut(true);
+        }else{
+            System.out.println("En esta reserva ya se ha hecho un late CheckOut");
+
         }
-        System.out.println("Cambio de hora realizado");
-        escribirArchivoMap(archivoReservas, (TreeMap<K, T>) mapReservas);
-        escribirArchivoMap(archivoFacturas, (TreeMap<K, T>) mapFacturas);
+
+
     }
 
     public void earlyCheckIn(Usuario user) {
@@ -347,27 +369,30 @@ public class Hotel<K, T> {
             System.out.println("Ese codigo de reserva no es valido");
             menuPasajero(user);
         }
-        System.out.println("Ingrese cuantos horas antes desea ingresar. Nuestro hotel dispone de un Early Check in de maximo 4 horas");
-        horas = teclado.nextInt();
-        if (horas > 4) {
-            System.out.println("Maximo de horas permitido superado");
-            menuPasajero(user);
+        if(!reserva.isEarlyCheckIn()) {
+            System.out.println("Ingrese cuantos horas antes desea ingresar. Nuestro hotel dispone de un Early Check in de maximo 4 horas. Solamente se puede solicitar una vez");
+            horas = teclado.nextInt();
+            if (horas > 4) {
+                System.out.println("Maximo de horas permitido superado");
+                menuPasajero(user);
+            }
+            LocalDateTime horasRestadas;
+            horasRestadas = reserva.fechaEntrada.minusHours(horas);
+            reserva.fechaEntrada = horasRestadas;
+            System.out.println("Cambio de hora realizado");
+            escribirArchivoMap(archivoReservas, (TreeMap<K, T>) mapReservas);
+            escribirArchivoMap(archivoFacturas, (TreeMap<K, T>) mapFacturas);
+            reserva.setEarlyCheckIn(true);
+        }else {
+            System.out.println("En esta reserva ya se ha realizado un early CheckIn");
         }
-        LocalDateTime horasRestadas;
-        horasRestadas = reserva.fechaEntrada.minusHours(horas);
-        reserva.fechaEntrada = horasRestadas;
-        System.out.println("Cambio de hora realizado");
-        escribirArchivoMap(archivoReservas, (TreeMap<K, T>) mapReservas);
-        escribirArchivoMap(archivoFacturas, (TreeMap<K, T>) mapFacturas);
     }
 
     public void verMisReservas(Usuario user) {
         for (String clave : mapReservas.keySet()) {
             for (Pasajero pasajero : mapReservas.get(clave).pasajeros) {
                 if (user.getPersona() instanceof Pasajero) {
-                    System.out.println("aaa");
                     if (pasajero.equals(user.getPersona())) {
-                        System.out.println("aaa");
                         System.out.println(mapReservas.get(clave));
                     }
                 }
@@ -550,7 +575,11 @@ public class Hotel<K, T> {
     public void realizarReserva(Usuario user) {
         Reserva reserva = new Reserva();
         teclado.nextLine();
-        System.out.println("Bienvenido/a al sistema de reservas de habitaciones del hotel Lester, a continuacion le solicitaremos los datos de los hospedantes");
+        if(user.getPersona() instanceof Pasajero) {
+            System.out.println("Bienvenido/a al sistema de reservas de habitaciones del hotel Lester, a continuacion le solicitaremos los datos de los acompañantes");
+        }else if (user.getPersona() instanceof Recepcionista){
+            System.out.println("Bienvenido/a al sistema de reservas de habitaciones del hotel Lester, a continuacion le solicitaremos los datos de los pasajeros");
+        }
         reserva.pasajeros = registrarPasajeros(user);
         LocalDateTime fechaEntrada;
         do {
@@ -605,7 +634,7 @@ public class Hotel<K, T> {
         escribirAuxiliar(archivoHotel);
     }
 
-    public void cancelarReserva() {
+    public void cancelarReserva(Usuario user) {
         teclado.useDelimiter("\n");
         char seguir;
         double descontar;
@@ -626,7 +655,7 @@ public class Hotel<K, T> {
                     }
                     System.out.println("Su reserva ha sido cancelada.");
                 } else {
-                    //AGREGAR LLAMADO MENU.
+                    menuPasajero(user);
                 }
             } else if (dias >= 7) {
                 descontar = (75 * mapFacturas.get(numeroR).getPrecioTotal()) / 100;
@@ -640,7 +669,7 @@ public class Hotel<K, T> {
                     mapFacturas.remove(numeroR);
                     System.out.println("Su reserva ha sido cancelada.");
                 } else {
-                    //AGREGAR LLAMADO MENU.
+                    menuPasajero(user);
                 }
             } else {
                 descontar = (50 * mapFacturas.get(numeroR).getPrecioTotal()) / 100;
@@ -654,7 +683,7 @@ public class Hotel<K, T> {
                     mapFacturas.remove(numeroR);
                     System.out.println("Su reserva ha sido cancelada.");
                 } else {
-                    //AGREGAR LLAMADO MENU.
+                    menuPasajero(user);
                 }
             }
         } else {
@@ -694,9 +723,10 @@ public class Hotel<K, T> {
         }
     }
 
-
     private int calcularDias(Reserva reserva) {
-        long dias = ChronoUnit.DAYS.between(reserva.fechaEntrada, reserva.fechaSalida);
+        LocalDateTime fechaEntradaSinHora = reserva.fechaEntrada.truncatedTo(ChronoUnit.DAYS);
+        LocalDateTime fechaSalidaSinHora = reserva.fechaSalida.truncatedTo(ChronoUnit.DAYS);
+        long dias = ChronoUnit.DAYS.between(fechaEntradaSinHora, fechaSalidaSinHora);
         return (int) dias;
     }
 
@@ -704,19 +734,20 @@ public class Hotel<K, T> {
         ArrayList<Pasajero> pasajeros = new ArrayList<>();
         char control = 's';
         Pasajero nuevo = new Pasajero();
-        if (user.getRol() == Rol.ROL_EMPLEADO) {
-            nuevo = registrarPasajero();
-        } else if (user.getRol() == Rol.ROL_USER) {
+        if (user.getRol() == Rol.ROL_USER) {
             nuevo = (Pasajero) user.getPersona();
         }
         pasajeros.add(nuevo);
         listaPasajeros.add(nuevo);
-        System.out.printf("\nQuiere registrar a otro pasajero? s/n: ");
-        control = teclado.next().charAt(0);
+
         while (control == 's') {
-            nuevo = registrarPasajero();
-            pasajeros.add(nuevo);
-            listaPasajeros.add(nuevo);
+            System.out.printf("\nQuiere registrar a otro pasajero? s/n: ");
+            control = teclado.next().charAt(0);
+            if(control == 's') {
+                nuevo = registrarPasajero();
+                pasajeros.add(nuevo);
+                listaPasajeros.add(nuevo);
+            }
         }
         teclado.nextLine();
         escribirArchivoArrayList(archivoPasajeros, (ArrayList<T>) listaPasajeros);
@@ -782,9 +813,7 @@ public class Hotel<K, T> {
         String numero;
         boolean ocupacion;
         do {
-            for (String number : mapHabitaciones.keySet()) {
-                System.out.println(mapHabitaciones.get(number));
-            }
+            mostrarHabitaciones();
             do {
                 System.out.println("Ingrese el numero de habitacion que quiere reservar");
                 teclado.nextLine();
@@ -843,7 +872,7 @@ public class Hotel<K, T> {
     }
 
 
-/*
+
     public void cargarHabitaciones() {
         Comun comun1 = new Comun("101", 4, false, 30000);
         Comun comun2 = new Comun("102", 2, true, 16000);
@@ -886,7 +915,7 @@ public class Hotel<K, T> {
         this.escribirArchivoMap(this.archivoHabitaciones, (TreeMap<K, T>) this.mapHabitaciones);
 
     }
-
+/*
     public void cargarConsumibles() {
         Consumible consu1 = new Consumible(800, "Agua mineral", "Villavicencio 500ml");
         Consumible consu2 = new Consumible(1000, "Gaseosa", "Coca-Cola, Sprite, Fanta 600ml");
@@ -918,7 +947,9 @@ public class Hotel<K, T> {
 
     public void mostrarHabitaciones() {
         for (String clave : mapHabitaciones.keySet()) {
-            System.out.println(mapHabitaciones.get(clave));
+
+                System.out.println(mapHabitaciones.get(clave));
+
         }
     }
 

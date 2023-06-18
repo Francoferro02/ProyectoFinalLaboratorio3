@@ -7,6 +7,8 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
+import java.time.LocalDateTime;
+
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 @JsonSubTypes({
         @JsonSubTypes.Type(value = Administrador.class, name = "Personas.Administrador"),
@@ -20,15 +22,15 @@ public  abstract class Empleado extends Persona{
     protected double sueldo;
     protected  int diasVacaciones;
     protected  int antiguedad;
-    protected Trabajadores trabajador;
+    protected String trabajador;
 
     public Empleado() {
     }
 
-    public Empleado(String nombre, String apellido, String DNI, double sueldo, int diasVacaciones, int antiguedad, Trabajadores trabajador) {
+    public Empleado(String nombre, String apellido, String DNI, double sueldo,  int antiguedad, String trabajador) {
         super(nombre, apellido, DNI);
         this.sueldo = sueldo;
-        this.diasVacaciones = diasVacaciones;
+        calcularDiasVacaciones();
         this.antiguedad = antiguedad;
         this.trabajador = trabajador;
     }
@@ -37,11 +39,17 @@ public  abstract class Empleado extends Persona{
 
     public abstract void calcularSueldo();
 
-    public abstract void calcularDiasVacaciones();
+    public void calcularDiasVacaciones(){
+        this.setDiasVacaciones(14 + this.antiguedad);
+    }
 
-    public abstract void fichaje();
+    public void fichaje(){
+        System.out.println("Fecha de entrada: " + LocalDateTime.now());
+    }
 
-    public abstract void desFichaje();
+    public void desFichaje(){
+        System.out.println("Fecha de salida: " + LocalDateTime.now());
+    }
 
     public double getSueldo() {
         return sueldo;
@@ -67,11 +75,11 @@ public  abstract class Empleado extends Persona{
         this.antiguedad = antiguedad;
     }
 
-    public Trabajadores getTrabajador() {
+    public String getTrabajador() {
         return trabajador;
     }
 
-    public void setTrabajador(Trabajadores trabajador) {
+    public void setTrabajador(String trabajador) {
         this.trabajador = trabajador;
     }
 
