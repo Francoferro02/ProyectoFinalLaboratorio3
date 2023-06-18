@@ -15,15 +15,14 @@ public class Main {
         lester.mapEmpleados.put(administrador.getDNI(),administrador);
         lester.listaUsuarios.add(user);
         System.out.println(lester.listaUsuarios);*/
-
-        lester.mapHabitaciones = lester.leerArchivoMap(lester.archivoHabitaciones, String.class, Habitacion.class);
-        lester.mapEmpleados = lester.leerArchivoMap(lester.archivoEmpleados, String.class, Empleado.class);
-        lester.mapReservas = lester.leerArchivoMap(lester.archivoReservas, String.class, Reserva.class);
-        lester.listaConsumibles = lester.leerArchivoArrayList(lester.archivoConsumibles, Consumible.class);
-        lester.mapFacturas = lester.leerArchivoMap(lester.archivoFacturas, String.class, Factura.class);
-        lester.listaPasajeros = lester.leerArchivoArrayList(lester.archivoPasajeros, Pasajero.class);
-        lester.leerAuxiliar(lester.archivoHotel);
-        lester.listaUsuarios = lester.leerArchivoArrayList(lester.archivoUsuarios, Usuario.class);
+        lester.mapHabitaciones = lester.leerArchivoMap("Habitaciones.json", String.class, Habitacion.class);
+        lester.mapEmpleados = lester.leerArchivoMap("Empleados.json", String.class, Empleado.class);
+        lester.mapReservas = lester.leerArchivoMap("Reservas.json", String.class, Reserva.class);
+        lester.listaConsumibles = lester.leerArchivoArrayList("Consumibles.json", Consumible.class);
+        lester.mapFacturas = lester.leerArchivoMap("Facturas.json", String.class, Factura.class);
+        lester.listaPasajeros = lester.leerArchivoArrayList("Pasajeros.json", Pasajero.class);
+        lester.leerAuxiliar("Hotel.json");
+        lester.listaUsuarios = lester.leerArchivoArrayList("Usuarios.json", Usuario.class);
         lester.menuPrincipal();
     }
 }

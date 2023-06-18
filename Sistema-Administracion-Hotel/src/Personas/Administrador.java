@@ -222,8 +222,8 @@ public class Administrador extends Empleado implements Gerenciamiento {
 
     }
 
-    public void generarBackUp(Hotel lester) {
-        File backUp = new File("\\C:\\Tp final labo III\\ProyectoFinalLaboratorio3\\Sistema-Administracion-Hotel\\src\\Files\\BackUp.json");
+    public void generarBackUp(Hotel lester, String ruta) {
+        File backUp = new File(ruta + "BackUp.json");
         try {
             if (lester != null) {
                 mapper.writeValue(backUp, lester);

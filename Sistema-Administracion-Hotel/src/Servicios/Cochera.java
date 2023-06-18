@@ -15,7 +15,7 @@ public class Cochera {
     public Cochera() {
     }
     @JsonCreator
-    public Cochera(@JsonProperty("espacioTotal") int espacioTotal,@JsonProperty("espacioDisponible") int espacioDisponible,@JsonProperty("precioDia") int precioDia) {
+    public Cochera(@JsonProperty("espacioTotal") int espacioTotal,@JsonProperty("espacioDisponible") int espacioDisponible) {
         this.espacioTotal = espacioTotal;
         this.espacioDisponible = espacioDisponible;
     }

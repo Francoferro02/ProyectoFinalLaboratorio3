@@ -9,10 +9,12 @@ import Personas.*;
 import Servicios.Cochera;
 import Servicios.Consumible;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.sun.tools.javac.Main;
 
 import java.io.File;
@@ -23,8 +25,10 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 public class Hotel<K, T> {
-
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    public LocalDateTime fechaBackUp;
     private String serviciosIncluidos;
+
     public String nombre;
     public String direccion;
     public String ciudad;
@@ -40,27 +44,21 @@ public class Hotel<K, T> {
     public ArrayList<Usuario> listaUsuarios = new ArrayList<>();
     public TreeMap<String, Reserva> mapReservas = new TreeMap<>();
 
-    static final String ruta = "C:\\Tp final labo III\\ProyectoFinalLaboratorio3\\Sistema-Administracion-Hotel\\src\\Files\\";
-    public File archivoHotel = new File(ruta + "Hotel.json");//SOLO GUARDA EL HOTEL
-    public File archivoHabitaciones = new File(ruta + "Habitaciones.json");
-    public File archivoFacturas = new File(ruta + "Facturas.json");
-    public File archivoEmpleados = new File(ruta + "Empleados.json");
-    public File archivoReservas = new File(ruta + "Reservas.json");
-    public File archivoPasajeros = new File(ruta + "Pasajeros.json");
-    public File archivoConsumibles = new File(ruta + "Consumibles.json");
-    public File archivoUsuarios = new File(ruta + "Usuarios.json");
+    static final String ruta = "C:\\Users\\Escobar\\IdeaProjects\\ProyectoFinalLaboratorio3\\ProyectoFinalLaboratorio3\\Sistema-Administracion-Hotel\\src\\Files\\";
 
     ObjectMapper mapper = new ObjectMapper();
     Scanner teclado = new Scanner(System.in);
 
 
     public Hotel() {
+        this.fechaBackUp = LocalDateTime.now();
         this.nombre = "Lester Hotel";
         this.direccion = "Garay 074";
         this.ciudad = "Mar del Plata";
         this.cantidadEstrellas = 4;
-        this.cochera = new Cochera(30, 30, 3000);
+        this.cochera = new Cochera(30, 30);
         this.serviciosIncluidos = "Cochera, Caja fuerte, Wi-Fi";
+        this.dineroTotal = 1000000;
     }
 
     public double getDineroTotal() {
@@ -71,6 +69,13 @@ public class Hotel<K, T> {
         return cochera;
     }
 
+    public LocalDateTime getFechaBackUp() {
+        return fechaBackUp;
+    }
+
+    public void setFechaBackUp(LocalDateTime fechaBackUp) {
+        this.fechaBackUp = fechaBackUp;
+    }
 
     public void menuPrincipal() {
         teclado.useDelimiter("\n");
@@ -81,6 +86,7 @@ public class Hotel<K, T> {
         System.out.println("Que desea realizar? ");
         int principio = 0;
         principio = teclado.nextInt();
+        teclado.nextLine();
         Usuario user = new Usuario();
         switch (principio) {
             case 1:
@@ -184,24 +190,24 @@ public class Hotel<K, T> {
                     Usuario empleado = administrador.crearUsuarioEmpleado(listaUsuarios, mapEmpleados);
                     listaUsuarios.add(empleado);
                     mapEmpleados.put(empleado.getNombreDeUsuario(), (Empleado) empleado.getPersona());
-                    escribirArchivoMap(archivoEmpleados, (TreeMap<K, T>) mapEmpleados);
-                    escribirArchivoArrayList(archivoUsuarios, (ArrayList<T>) listaUsuarios);
+                    escribirArchivoMap("Empleados.json", (TreeMap<K, T>) mapEmpleados);
+                    escribirArchivoArrayList("Usuarios.json", (ArrayList<T>) listaUsuarios);
                     break;
                 case 2:
                     administrador.eliminarUsuario(listaUsuarios, mapEmpleados);
-                    escribirArchivoMap(archivoEmpleados, (TreeMap<K, T>) mapEmpleados);
-                    escribirArchivoArrayList(archivoUsuarios, (ArrayList<T>) listaUsuarios);
+                    escribirArchivoMap("Empleados.json", (TreeMap<K, T>) mapEmpleados);
+                    escribirArchivoArrayList("Usuarios.json", (ArrayList<T>) listaUsuarios);
                     break;
                 case 3:
                     administrador.darPermisos(mapEmpleados);
-                    escribirArchivoMap(archivoEmpleados, (TreeMap<K, T>) mapEmpleados);
+                    escribirArchivoMap("Empleados.json", (TreeMap<K, T>) mapEmpleados);
                     break;
                 case 4:
                     administrador.agregarConsumibles(listaConsumibles);
-                    escribirArchivoArrayList(archivoConsumibles, (ArrayList<T>) listaConsumibles);
+                    escribirArchivoArrayList("Consumibles.json", (ArrayList<T>) listaConsumibles);
                     break;
                 case 5:
-                    administrador.generarBackUp(this);
+                    administrador.generarBackUp(this, this.ruta);
                     break;
                 case 6:
                     administrador.fichaje();
@@ -341,8 +347,8 @@ public class Hotel<K, T> {
                 System.out.println("Esa cantidad no es valida");
             }
             System.out.println("Cambio de hora realizado");
-            escribirArchivoMap(archivoReservas, (TreeMap<K, T>) mapReservas);
-            escribirArchivoMap(archivoFacturas, (TreeMap<K, T>) mapFacturas);
+            escribirArchivoMap("Reservas.json", (TreeMap<K, T>) mapReservas);
+            escribirArchivoMap("Facturas.json", (TreeMap<K, T>) mapFacturas);
             reserva.setLateCheckOut(true);
         }else{
             System.out.println("En esta reserva ya se ha hecho un late CheckOut");
@@ -380,8 +386,8 @@ public class Hotel<K, T> {
             horasRestadas = reserva.fechaEntrada.minusHours(horas);
             reserva.fechaEntrada = horasRestadas;
             System.out.println("Cambio de hora realizado");
-            escribirArchivoMap(archivoReservas, (TreeMap<K, T>) mapReservas);
-            escribirArchivoMap(archivoFacturas, (TreeMap<K, T>) mapFacturas);
+            escribirArchivoMap("Reservas.json", (TreeMap<K, T>) mapReservas);
+            escribirArchivoMap("Facturas.json", (TreeMap<K, T>) mapFacturas);
             reserva.setEarlyCheckIn(true);
         }else {
             System.out.println("En esta reserva ya se ha realizado un early CheckIn");
@@ -428,7 +434,7 @@ public class Hotel<K, T> {
         user.setRol(Rol.ROL_USER);
         user.setPersona(registrarPasajero());
         listaUsuarios.add(user);
-        escribirArchivoArrayList(archivoUsuarios, (ArrayList<T>) listaUsuarios);
+        escribirArchivoArrayList("Usuarios.json", (ArrayList<T>) listaUsuarios);
         return user;
     }
 
@@ -540,8 +546,8 @@ public class Hotel<K, T> {
             System.out.println("Desea modificar algún otro aspecto de usuario?");
             continuar = teclado.next().charAt(0);
         } while (continuar == 's');
-        escribirArchivoArrayList(archivoPasajeros, (ArrayList<T>) listaPasajeros);
-        escribirArchivoArrayList(archivoUsuarios, (ArrayList<T>) listaUsuarios);
+        escribirArchivoArrayList("Pasajeros.json", (ArrayList<T>) listaPasajeros);
+        escribirArchivoArrayList("Usuarios.json", (ArrayList<T>) listaUsuarios);
     }
 
     private void menuModificacion() {
@@ -562,7 +568,7 @@ public class Hotel<K, T> {
                 listaPasajeros.remove((Pasajero) user.getPersona());
             }
         }
-        escribirArchivoArrayList(archivoUsuarios, (ArrayList<T>) listaUsuarios);
+        escribirArchivoArrayList("Usuarios.json", (ArrayList<T>) listaUsuarios);
     }
 
     public void checkInRecepcionista(Usuario user) {
@@ -628,10 +634,10 @@ public class Hotel<K, T> {
         mapFacturas.put(factura.getCodigoIdentificador(), factura);
         System.out.println("Felicitaciones ya realizaste tu reserva en Lester Hotel. Te esperamos pronto");
         System.out.println(factura);
-        escribirArchivoMap(archivoReservas, (TreeMap<K, T>) mapReservas);
-        escribirArchivoMap(archivoFacturas, (TreeMap<K, T>) mapFacturas);
-        escribirArchivoMap(archivoHabitaciones, (TreeMap<K, T>) mapHabitaciones);
-        escribirAuxiliar(archivoHotel);
+        escribirArchivoMap("Reservas.json", (TreeMap<K, T>) mapReservas);
+        escribirArchivoMap("Facturas.json", (TreeMap<K, T>) mapFacturas);
+        escribirArchivoMap("Habitaciones.json", (TreeMap<K, T>) mapHabitaciones);
+        escribirAuxiliar("Hotel.json");
     }
 
     public void cancelarReserva(Usuario user) {
@@ -689,9 +695,9 @@ public class Hotel<K, T> {
         } else {
             System.out.println("Esa reserva no se encuentra.");
         }
-        escribirArchivoMap(archivoReservas, (TreeMap<K, T>) mapReservas);
-        escribirArchivoMap(archivoHabitaciones, (TreeMap<K, T>) mapHabitaciones);
-        escribirArchivoMap(archivoFacturas, (TreeMap<K, T>) mapFacturas);
+        escribirArchivoMap("Reservas.json", (TreeMap<K, T>) mapReservas);
+        escribirArchivoMap("Habitaciones.json", (TreeMap<K, T>) mapHabitaciones);
+        escribirArchivoMap("Facturas.json", (TreeMap<K, T>) mapFacturas);
     }
 
     private void generarFactura(Factura factura, Reserva reserva) {
@@ -750,7 +756,7 @@ public class Hotel<K, T> {
             }
         }
         teclado.nextLine();
-        escribirArchivoArrayList(archivoPasajeros, (ArrayList<T>) listaPasajeros);
+        escribirArchivoArrayList("Pasajeros.json", (ArrayList<T>) listaPasajeros);
         return pasajeros;
     }
 
@@ -872,7 +878,7 @@ public class Hotel<K, T> {
     }
 
 
-
+/*
     public void cargarHabitaciones() {
         Comun comun1 = new Comun("101", 4, false, 30000);
         Comun comun2 = new Comun("102", 2, true, 16000);
@@ -915,7 +921,7 @@ public class Hotel<K, T> {
         this.escribirArchivoMap(this.archivoHabitaciones, (TreeMap<K, T>) this.mapHabitaciones);
 
     }
-/*
+
     public void cargarConsumibles() {
         Consumible consu1 = new Consumible(800, "Agua mineral", "Villavicencio 500ml");
         Consumible consu2 = new Consumible(1000, "Gaseosa", "Coca-Cola, Sprite, Fanta 600ml");
@@ -970,14 +976,14 @@ public class Hotel<K, T> {
                 "------------------------------------------------";
     }
 
-    public void escribirArchivoMap(File archivo, TreeMap<K, T> mapa) {
+    public void escribirArchivoMap(String archivo, TreeMap<K, T> mapa) {
         try {
             mapper.activateDefaultTyping(
                     mapper.getPolymorphicTypeValidator(),
                     ObjectMapper.DefaultTyping.NON_FINAL,
                     JsonTypeInfo.As.PROPERTY
             );
-            this.mapper.writeValue(archivo, mapa);
+            this.mapper.writeValue(new File(ruta + archivo), mapa);
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println("ERROR al escribir el archivo.");
@@ -985,8 +991,9 @@ public class Hotel<K, T> {
 
     }
 
-    public TreeMap<K, T> leerArchivoMap(File archivo, Class<K> clave, Class<T> valor) {
+    public TreeMap<K, T> leerArchivoMap(String archivo, Class<K> clave, Class<T> valor) {
         TreeMap<K, T> mapa = new TreeMap<>();
+        File file = new File(ruta + archivo);
         try {
             if (archivo != null) {
                 JavaType mapType = mapper.getTypeFactory().constructParametricType(TreeMap.class, clave, valor);
@@ -995,7 +1002,7 @@ public class Hotel<K, T> {
                         ObjectMapper.DefaultTyping.NON_FINAL,
                         JsonTypeInfo.As.PROPERTY
                 );
-                mapa = mapper.readValue(archivo, mapType);
+                mapa = mapper.readValue(file, mapType);
             } else {
                 throw new IOException();
             }
@@ -1006,13 +1013,13 @@ public class Hotel<K, T> {
         return mapa;
     }
 
-    public void escribirArchivoArrayList(File archivo, ArrayList<T> arrayList) {
+    public void escribirArchivoArrayList(String archivo, ArrayList<T> arrayList) {
         try {
             mapper.activateDefaultTyping(
                     mapper.getPolymorphicTypeValidator(),
                     ObjectMapper.DefaultTyping.NON_FINAL,
                     JsonTypeInfo.As.PROPERTY);
-            this.mapper.writeValue(archivo, arrayList);
+            this.mapper.writeValue(new File(ruta + archivo), arrayList);
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println("ERROR al escribir el archivo.");
@@ -1020,8 +1027,9 @@ public class Hotel<K, T> {
 
     }
 
-    public ArrayList<T> leerArchivoArrayList(File archivo, Class<T> clazz) {
+    public ArrayList<T> leerArchivoArrayList(String archivo, Class<T> clazz) {
         ArrayList<T> arrayList = new ArrayList<>();
+        File file = new File(ruta + archivo);
         try {
             if (archivo != null) {
                 mapper.activateDefaultTyping(
@@ -1029,7 +1037,7 @@ public class Hotel<K, T> {
                         ObjectMapper.DefaultTyping.NON_FINAL,
                         JsonTypeInfo.As.PROPERTY
                 );
-                arrayList = mapper.readValue(archivo, mapper.getTypeFactory().constructCollectionType(ArrayList.class, clazz));
+                arrayList = mapper.readValue(file, mapper.getTypeFactory().constructCollectionType(ArrayList.class, clazz));
             } else {
                 throw new IOException();
             }
@@ -1040,22 +1048,22 @@ public class Hotel<K, T> {
         return arrayList;
     }
 
-    public void escribirAuxiliar(File archivo) {
+    public void escribirAuxiliar(String archivo) {
         Auxiliar auxiliar = new Auxiliar(dineroTotal, cochera);
         try {
-            mapper.writeValue(archivo, auxiliar);
+            mapper.writeValue(new File(ruta + archivo), auxiliar);
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println("Error al escribir el archivo auxiliar");
         }
     }
 
-    public void leerAuxiliar(File archivo) {
-
+    public void leerAuxiliar(String archivo) {
         Auxiliar auxiliar = new Auxiliar();
+        File file = new File(ruta + archivo);
         try {
             if (archivo != null) {
-                auxiliar = mapper.readValue(archivo, Auxiliar.class);
+                auxiliar = mapper.readValue(file, Auxiliar.class);
             } else {
                 throw new IOException();
             }
@@ -1068,13 +1076,13 @@ public class Hotel<K, T> {
     }
 
     public void escribirTodosArchivos() {
-        escribirArchivoMap(archivoEmpleados, (TreeMap<K, T>) mapEmpleados);
-        escribirArchivoMap(archivoReservas, (TreeMap<K, T>) mapReservas);
-        escribirArchivoMap(archivoFacturas, (TreeMap<K, T>) mapFacturas);
-        escribirArchivoMap(archivoHabitaciones, (TreeMap<K, T>) mapHabitaciones);
-        escribirAuxiliar(archivoHotel);
-        escribirArchivoArrayList(archivoPasajeros, (ArrayList<T>) listaPasajeros);
-        escribirArchivoArrayList(archivoUsuarios, (ArrayList<T>) listaUsuarios);
+        escribirArchivoMap("Empleados.json", (TreeMap<K, T>) mapEmpleados);
+        escribirArchivoMap("Reservas.json", (TreeMap<K, T>) mapReservas);
+        escribirArchivoMap("Facturas.json", (TreeMap<K, T>) mapFacturas);
+        escribirArchivoMap("Habitaciones.json", (TreeMap<K, T>) mapHabitaciones);
+        escribirAuxiliar("Hotel.json");
+        escribirArchivoArrayList("Pasajeros.json", (ArrayList<T>) listaPasajeros);
+        escribirArchivoArrayList("Usuarios.json", (ArrayList<T>) listaUsuarios);
     }
 
 }
