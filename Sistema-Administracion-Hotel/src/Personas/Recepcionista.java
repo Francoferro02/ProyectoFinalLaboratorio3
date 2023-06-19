@@ -15,26 +15,25 @@ public class Recepcionista extends Empleado implements Gerenciamiento {
     private Scanner teclado = new Scanner(System.in);
 
     public Recepcionista() {
+        calcularSueldo();
     }
 
     public Recepcionista(@JsonProperty("nombre") String nombre, @JsonProperty("apellido") String apellido, @JsonProperty("DNI") String DNI, @JsonProperty("sueldo") double sueldo, @JsonProperty("antiguedad") int antiguedad, @JsonProperty("trabajador")String trabajador) {
         super(nombre, apellido, DNI, sueldo, antiguedad,trabajador);
-    }
-
-
-    @Override
-    public void realizarAcción() {
-
+        calcularSueldo();
     }
 
     @Override
     public void calcularSueldo() {
-
+        double sueldo = this.sueldo;
+        sueldo += sueldo*(this.antiguedad/100);
+        this.setSueldo(sueldo);
     }
 
     @Override
-    public void calcularDiasVacaciones() {
+    public int calcularDiasVacaciones() {
         super.calcularDiasVacaciones();
+        return diasVacaciones;
     }
 
     @Override

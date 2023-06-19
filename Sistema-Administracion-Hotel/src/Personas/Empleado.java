@@ -30,17 +30,16 @@ public  abstract class Empleado extends Persona{
     public Empleado(String nombre, String apellido, String DNI, double sueldo,  int antiguedad, String trabajador) {
         super(nombre, apellido, DNI);
         this.sueldo = sueldo;
-        calcularDiasVacaciones();
+        this.diasVacaciones = calcularDiasVacaciones();
         this.antiguedad = antiguedad;
         this.trabajador = trabajador;
     }
 
-    public abstract void realizarAcción();
-
     public abstract void calcularSueldo();
 
-    public void calcularDiasVacaciones(){
-        this.setDiasVacaciones(14 + this.antiguedad);
+    public int calcularDiasVacaciones(){
+        int dias = 14 + this.antiguedad;
+        return dias;
     }
 
     public void fichaje(){
@@ -85,7 +84,8 @@ public  abstract class Empleado extends Persona{
 
     @Override
     public String toString() {
-        return "\nEmpleado{" +
+        return "\n------------------------------------------------" +
+                "\nEmpleado{" +
                 "\nsueldo=" + sueldo +
                 "\n, diasVacaciones=" + diasVacaciones +
                 "\n, antiguedad=" + antiguedad +

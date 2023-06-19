@@ -21,22 +21,21 @@ public class Administrador extends Empleado implements Gerenciamiento {
 
     public Administrador(@JsonProperty("nombre") String nombre, @JsonProperty("apellido") String apellido, @JsonProperty("DNI") String DNI, @JsonProperty("sueldo") double sueldo, @JsonProperty("antiguedad") int antiguedad, @JsonProperty("trabajador") String trabajador) {
         super(nombre, apellido, DNI, sueldo, antiguedad, trabajador);
+        calcularSueldo();
     }
 
-
-    @Override
-    public void realizarAcción() {
-
-    }
 
     @Override
     public void calcularSueldo() {
-
+        double sueldo = this.sueldo;
+        sueldo += sueldo*(this.antiguedad/100);
+        this.setSueldo(sueldo);
     }
 
     @Override
-    public void calcularDiasVacaciones() {
+    public int calcularDiasVacaciones() {
         super.calcularDiasVacaciones();
+        return diasVacaciones;
     }
 
     @Override
@@ -54,7 +53,7 @@ public class Administrador extends Empleado implements Gerenciamiento {
         Usuario user = new Usuario();
         boolean verif = true;
         while (verif) {
-            System.out.printf("Ingrese un nombre de usuario: ");
+            System.out.printf("Ingrese un nombre de usuario (DNI): ");
             DNI = teclado.next();
             for (Usuario u : listaUsuario) {
                 if (!(u.getNombreDeUsuario().equals(DNI))) {
@@ -85,8 +84,10 @@ public class Administrador extends Empleado implements Gerenciamiento {
                 opcionRol = teclado.nextInt();
             }
             ((Servicio) user.getPersona()).setTrabajador(menuRegistroTrabajador(opcionRol));
+            System.out.println("Trabajador creado correctamente.");
         } else if (user.getPersona() instanceof Recepcionista) {
             ((Recepcionista) user.getPersona()).setTrabajador(Trabajadores.RECEPCIONISTA.getAbreviaturas(0));
+            System.out.println("Recepcionista creado correctamente.");
         }
         return user;
     }
@@ -180,7 +181,6 @@ public class Administrador extends Empleado implements Gerenciamiento {
                 recepcionista.setNombre(teclado.next());
                 System.out.println("Ingrese el apellido del empleado");
                 recepcionista.setApellido(teclado.next());
-                System.out.println("Ingresando el DNI del empleado");
                 recepcionista.setDNI(DNI);
                 registrado = true;
                 return recepcionista;

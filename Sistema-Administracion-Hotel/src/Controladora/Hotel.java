@@ -44,7 +44,7 @@ public class Hotel<K, T> {
     public ArrayList<Usuario> listaUsuarios = new ArrayList<>();
     public TreeMap<String, Reserva> mapReservas = new TreeMap<>();
 
-    static final String ruta = "C:\\Users\\Escobar\\IdeaProjects\\ProyectoFinalLaboratorio3\\ProyectoFinalLaboratorio3\\Sistema-Administracion-Hotel\\src\\Files\\";
+    static final String ruta = "D:\\Documents\\Facultad\\Programación y Laboratorio III\\TP Final\\ProyectoFinalLaboratorio3\\Sistema-Administracion-Hotel\\src\\Files\\";
 
     ObjectMapper mapper = new ObjectMapper();
     Scanner teclado = new Scanner(System.in);
@@ -79,6 +79,7 @@ public class Hotel<K, T> {
 
     public void menuPrincipal() {
         teclado.useDelimiter("\n");
+        System.out.println("\n");
         System.out.println("Bienvenido a Lester Hotel");
         System.out.println("1: INGRESAR");
         System.out.println("2: REGISTRARSE");
@@ -106,6 +107,8 @@ public class Hotel<K, T> {
             } else if (user.getRol().equals(Rol.ROL_EMPLEADO)) {
                 if (user.getPersona() instanceof Recepcionista) {
                     menuRecepcionista(user);
+                }else if (user.getPersona() instanceof Servicio){
+                    menuEmpleado(user);
                 }
             } else if (user.getRol().equals(Rol.ROL_ADMIN)) {
                 menuAdministrador(user);
@@ -120,6 +123,7 @@ public class Hotel<K, T> {
 
     public void menuRecepcionista(Usuario user) {
         Recepcionista recepcionista = (Recepcionista) user.getPersona();
+        System.out.println();
         System.out.println("Bienvenido " + recepcionista.getNombre() + " " + recepcionista.getApellido());
         int opcion = 0;
         do {
@@ -150,7 +154,7 @@ public class Hotel<K, T> {
                 case 7:
                     verUsuario(user);
                 case 8:
-                    opcionesRecepcionista();
+                    menuEmpleado(user);
                     break;
                 case 9:
                     System.out.println("Hasta luego"); //Volver al login
@@ -164,6 +168,7 @@ public class Hotel<K, T> {
     }
 
     private void opcionesRecepcionista() {
+        System.out.println();
         System.out.println("1: Check In");
         System.out.println("2: Check Out");
         System.out.println("3: Cantidad de habitaciones totales");
@@ -171,13 +176,14 @@ public class Hotel<K, T> {
         System.out.println("5: Ver habitaciones desocupadas");
         System.out.println("6: Ver habitacion especifica");
         System.out.println("7: Ver usuario");
-        System.out.println("8: Ver opciones");
+        System.out.println("8: Ver menú de empleado");
         System.out.println("9: Salir");
 
     }
 
     private void menuAdministrador(Usuario user) {
         Administrador administrador = (Administrador) user.getPersona();
+        System.out.println();
         System.out.println("Bienvenido " + administrador.getNombre() + " " + administrador.getApellido());
         int opcion = 0;
         do {
@@ -210,36 +216,29 @@ public class Hotel<K, T> {
                     administrador.generarBackUp(this, this.ruta);
                     break;
                 case 6:
-                    administrador.fichaje();
+                    menuEmpleado(user);
                     break;
                 case 7:
-                    administrador.desFichaje();
-                    break;
-                case 8:
-                    System.out.println(administrador);
-                    break;
-                case 9:
                     System.out.println("Hasta luego " + user.getPersona().getNombre());
                     break;
                 default:
                     System.out.println("Error, opcion no valida");
                     break;
             }
-        } while (opcion != 9);
+        } while (opcion != 7);
 
         menuPrincipal();
     }
 
     private void opcionesAdministrador() {
+        System.out.println();
         System.out.println("1- Crear Usuario");
         System.out.println("2- Eliminar Usuario");
         System.out.println("3- Dar Permisos");
         System.out.println("4- Agregar Consumibles");
         System.out.println("5- Generar BackUp");
-        System.out.println("6- Fichar");
-        System.out.println("7- Desfichar");
-        System.out.println("8- Ver datos");
-        System.out.println("9- Exit");
+        System.out.println("6- Ver menú empleado");
+        System.out.println("7- Exit");
     }
 
     private void menuPasajero(Usuario usuario) {
@@ -247,6 +246,8 @@ public class Hotel<K, T> {
         boolean checkOut;
         boolean checkIn;
         int opcion = 0;
+        System.out.println();
+        System.out.println("Bienvenido " + pasajero.getNombre() + " " + pasajero.getApellido());
         do {
             opcionesPasajero();
             System.out.println("Que desea realizar? ");
@@ -296,6 +297,7 @@ public class Hotel<K, T> {
     }
 
     private void opcionesPasajero() {
+        System.out.println();
         System.out.println("1: Realizar reserva");
         System.out.println("2: Cancelar reserva");
         System.out.println("3: Ver usuario");
@@ -308,6 +310,75 @@ public class Hotel<K, T> {
         System.out.println("10: Modificar usuario");
         System.out.println("11: Eliminar usuario");
         System.out.println("12: Salir");
+    }
+
+    private void menuEmpleado(Usuario user){
+        Class<?> clase;
+        Empleado empleado;
+
+        if (user.getPersona() instanceof Servicio) {
+            clase = Servicio.class;
+        } else if (user.getPersona() instanceof Recepcionista) {
+            clase = Recepcionista.class;
+        } else {
+            clase = Administrador.class;
+        }
+
+        empleado = (Empleado) clase.cast(user.getPersona());
+
+        System.out.println("Bienvenido " + empleado.getNombre() + " " + empleado.getApellido());
+        int opcion = 0;
+        do {
+            opcionesEmpleado();
+            System.out.println("Que opción desea realizar? ");
+            teclado.nextLine();
+            opcion = teclado.nextInt();
+            switch (opcion) {
+                case 1:
+                    empleado.fichaje();
+                    break;
+                case 2:
+                    empleado.desFichaje();
+                    break;
+                case 3:
+                    if(empleado instanceof Servicio) {
+                        ((Servicio) empleado).realizarAccion(mapHabitaciones);
+                    }else {
+                        System.out.println("Su cargo no lo habilita para esta acción.");
+                    }
+                    break;
+                case 4:
+                    System.out.println(empleado);
+                    break;
+                case 5:
+                    System.out.println("Tiene "+empleado.calcularDiasVacaciones()+" días de vacaciones disponibles.");
+                    break;
+                case 6:
+                    if(empleado instanceof Recepcionista) {
+                        menuRecepcionista(user);
+                    }else if(empleado instanceof Administrador){
+                        menuAdministrador(user);
+                    }else {
+                        System.out.println("Hasta luego"); //Volver al login
+                    }
+                    break;
+                default:
+                    System.out.println("Error, opción no valida");
+                    break;
+            }
+        } while (opcion != 6);
+
+        menuPrincipal();
+    }
+
+    private void opcionesEmpleado(){
+        System.out.println();
+        System.out.println("1: Fichar entrada");
+        System.out.println("2: Fichar salida");
+        System.out.println("3: Realizar labor");
+        System.out.println("4: Ver datos");
+        System.out.println("5: Calcular días de vacaciones");
+        System.out.println("6: Salir");
     }
 
     public void lateCheckOut(Usuario user) {
@@ -963,6 +1034,40 @@ public class Hotel<K, T> {
         for (Consumible consumible : listaConsumibles) {
             System.out.println(consumible);
         }
+    }
+
+    private void eventoHabNoDisponible(){
+        ArrayList<String> nros = new ArrayList<>();
+        for(String numero : mapHabitaciones.keySet()){
+            nros.add(numero);
+        }
+        Random random = new Random();
+        int num = random.nextInt(nros.size() - 1);
+
+        for(String string : nros){
+            int nume = Integer.parseInt(string);
+            if(nume==num){
+                mapHabitaciones.get(string).setEstado(problemas());
+            }
+        }
+    }
+
+    private String problemas(){
+        Random random = new Random();
+        int num = random.nextInt(5-1+1)+1;
+        String problema = "Disponible";
+        if(num==1){
+            problema="En reparación funcional";
+        }else if(num==2){
+            problema="En desinfección";
+        }else if(num==3){
+            problema="En reparación eléctrica";
+        }else if(num==4){
+            problema="En reparación estética";
+        }else if(num==5){
+            problema="En limpieza";
+        }
+        return problema;
     }
 
     @Override
