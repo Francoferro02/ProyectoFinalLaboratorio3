@@ -23,6 +23,12 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class Hotel<K, T> {
     @JsonSerialize(using = LocalDateTimeSerializer.class)
@@ -44,7 +50,7 @@ public class Hotel<K, T> {
     public ArrayList<Usuario> listaUsuarios = new ArrayList<>();
     public TreeMap<String, Reserva> mapReservas = new TreeMap<>();
 
-    static final String ruta = "D:\\Documents\\Facultad\\Programación y Laboratorio III\\TP Final\\ProyectoFinalLaboratorio3\\Sistema-Administracion-Hotel\\src\\Files\\";
+    static final String ruta = "H:\\Laboratorio-3\\ProyectoFinalLabo3\\Sistema-Administracion-Hotel\\src\\Files\\";
 
     ObjectMapper mapper = new ObjectMapper();
     Scanner teclado = new Scanner(System.in);
@@ -107,7 +113,7 @@ public class Hotel<K, T> {
             } else if (user.getRol().equals(Rol.ROL_EMPLEADO)) {
                 if (user.getPersona() instanceof Recepcionista) {
                     menuRecepcionista(user);
-                }else if (user.getPersona() instanceof Servicio){
+                } else if (user.getPersona() instanceof Servicio) {
                     menuEmpleado(user);
                 }
             } else if (user.getRol().equals(Rol.ROL_ADMIN)) {
@@ -237,7 +243,7 @@ public class Hotel<K, T> {
         System.out.println("3- Dar Permisos");
         System.out.println("4- Agregar Consumibles");
         System.out.println("5- Generar BackUp");
-        System.out.println("6- Ver menú empleado");
+        System.out.println("6- Ver menu empleado");
         System.out.println("7- Exit");
     }
 
@@ -312,7 +318,7 @@ public class Hotel<K, T> {
         System.out.println("12: Salir");
     }
 
-    private void menuEmpleado(Usuario user){
+    private void menuEmpleado(Usuario user) {
         Class<?> clase;
         Empleado empleado;
 
@@ -341,9 +347,9 @@ public class Hotel<K, T> {
                     empleado.desFichaje();
                     break;
                 case 3:
-                    if(empleado instanceof Servicio) {
+                    if (empleado instanceof Servicio) {
                         ((Servicio) empleado).realizarAccion(mapHabitaciones);
-                    }else {
+                    } else {
                         System.out.println("Su cargo no lo habilita para esta acción.");
                     }
                     break;
@@ -351,14 +357,14 @@ public class Hotel<K, T> {
                     System.out.println(empleado);
                     break;
                 case 5:
-                    System.out.println("Tiene "+empleado.calcularDiasVacaciones()+" días de vacaciones disponibles.");
+                    System.out.println("Tiene " + empleado.calcularDiasVacaciones() + " días de vacaciones disponibles.");
                     break;
                 case 6:
-                    if(empleado instanceof Recepcionista) {
+                    if (empleado instanceof Recepcionista) {
                         menuRecepcionista(user);
-                    }else if(empleado instanceof Administrador){
+                    } else if (empleado instanceof Administrador) {
                         menuAdministrador(user);
-                    }else {
+                    } else {
                         System.out.println("Hasta luego"); //Volver al login
                     }
                     break;
@@ -371,7 +377,7 @@ public class Hotel<K, T> {
         menuPrincipal();
     }
 
-    private void opcionesEmpleado(){
+    private void opcionesEmpleado() {
         System.out.println();
         System.out.println("1: Fichar entrada");
         System.out.println("2: Fichar salida");
@@ -400,7 +406,7 @@ public class Hotel<K, T> {
             System.out.println("Ese codigo de reserva no es valido");
             menuPasajero(user);
         }
-        if(!reserva.isLateCheckOut()) {
+        if (!reserva.isLateCheckOut()) {
             System.out.println("Ingrese cuantos horas extras desea quedarse. Tenga en cuenta que se le cobrara medio dia hasta las 2 horas y mas de eso se le cobra el dia completo. Solamente se puede solicitar una vez");
             horas = teclado.nextInt();
             LocalDateTime horasAgregadas;
@@ -421,7 +427,7 @@ public class Hotel<K, T> {
             escribirArchivoMap("Reservas.json", (TreeMap<K, T>) mapReservas);
             escribirArchivoMap("Facturas.json", (TreeMap<K, T>) mapFacturas);
             reserva.setLateCheckOut(true);
-        }else{
+        } else {
             System.out.println("En esta reserva ya se ha hecho un late CheckOut");
 
         }
@@ -446,7 +452,7 @@ public class Hotel<K, T> {
             System.out.println("Ese codigo de reserva no es valido");
             menuPasajero(user);
         }
-        if(!reserva.isEarlyCheckIn()) {
+        if (!reserva.isEarlyCheckIn()) {
             System.out.println("Ingrese cuantos horas antes desea ingresar. Nuestro hotel dispone de un Early Check in de maximo 4 horas. Solamente se puede solicitar una vez");
             horas = teclado.nextInt();
             if (horas > 4) {
@@ -460,7 +466,7 @@ public class Hotel<K, T> {
             escribirArchivoMap("Reservas.json", (TreeMap<K, T>) mapReservas);
             escribirArchivoMap("Facturas.json", (TreeMap<K, T>) mapFacturas);
             reserva.setEarlyCheckIn(true);
-        }else {
+        } else {
             System.out.println("En esta reserva ya se ha realizado un early CheckIn");
         }
     }
@@ -492,7 +498,6 @@ public class Hotel<K, T> {
     }
 
     private Usuario registrarUsuario() {
-        teclado.nextLine();
         Usuario user = new Usuario();
         boolean verif = true;
         while (verif) {
@@ -652,9 +657,9 @@ public class Hotel<K, T> {
     public void realizarReserva(Usuario user) {
         Reserva reserva = new Reserva();
         teclado.nextLine();
-        if(user.getPersona() instanceof Pasajero) {
+        if (user.getPersona() instanceof Pasajero) {
             System.out.println("Bienvenido/a al sistema de reservas de habitaciones del hotel Lester, a continuacion le solicitaremos los datos de los acompañantes");
-        }else if (user.getPersona() instanceof Recepcionista){
+        } else if (user.getPersona() instanceof Recepcionista) {
             System.out.println("Bienvenido/a al sistema de reservas de habitaciones del hotel Lester, a continuacion le solicitaremos los datos de los pasajeros");
         }
         reserva.pasajeros = registrarPasajeros(user);
@@ -700,15 +705,112 @@ public class Hotel<K, T> {
         System.out.println("A continuacion se imprimira la factura de su reserva. ACLARACION IMPORTANTE: El precio final incluye la estadia y la cochera. LOS CONSUMIBLES SE PAGAN AL MOMENTO DE ORDENARLO");
         Factura factura = new Factura();
         generarFactura(factura, reserva);
+        System.out.println(factura);
+        System.out.println("Redirigiendo a Paynet esto puede tardar unos segundos...");
+        Lock lock = new ReentrantLock();
+        Condition condition = lock.newCondition();
+        lock.lock(); // Bloquear el lock
+        try {
+            condition.await(6, TimeUnit.SECONDS); // Pausar durante 6 segundos
+        } catch (InterruptedException e) {
+            System.out.println("Error al ingresar a Paynet");
+        } finally {
+            lock.unlock(); // Desbloquear el lock
+        }
+        int opcionPago = 0;
+        System.out.println("Como quiere abonar en Lester Hotel");
+        System.out.println("VISA CREDITO 1 CUOTA");
+        System.out.println("VISA DEBITO");
+        System.out.println("TRANSFERENCIA BANCARIA");
+        System.out.println("Cancelar Pago");
+        opcionPago = teclado.nextInt();
+        if ((opcionPago < 5 && opcionPago > 0)) {
+            boolean pago = menuPaynet(opcionPago);
+            if (pago == true) {
+                dineroTotal += factura.getPrecioTotal();
+            }
+        }else{
+            System.out.println("Opcion incorrecta");
+            realizarReserva(user);
+        }
         setearDias(reserva);
-        dineroTotal += factura.getPrecioTotal();
         mapFacturas.put(factura.getCodigoIdentificador(), factura);
         System.out.println("Felicitaciones ya realizaste tu reserva en Lester Hotel. Te esperamos pronto");
-        System.out.println(factura);
         escribirArchivoMap("Reservas.json", (TreeMap<K, T>) mapReservas);
         escribirArchivoMap("Facturas.json", (TreeMap<K, T>) mapFacturas);
         escribirArchivoMap("Habitaciones.json", (TreeMap<K, T>) mapHabitaciones);
         escribirAuxiliar("Hotel.json");
+    }
+
+    private boolean menuPaynet(int opcion) {
+        teclado.useDelimiter("\n");
+        Lock lock = new ReentrantLock();
+        Condition condition = lock.newCondition();
+        lock.lock(); // Bloquear el lock
+        long numeroTarjeta = 0;
+        int seguridad = 0;
+        String nombre;
+        do {
+            switch (opcion) {
+                case 1:
+                    System.out.println("Ingrese su nombre completo");
+                    nombre = teclado.next();
+                    System.out.println("Ingrese su numero de tarjeta bancaria credito");
+                    numeroTarjeta = teclado.nextLong();
+                    System.out.println("Ingrese su numero de seguridad de la tarjeta");
+                    seguridad = teclado.nextInt();
+                    System.out.println("Procesando tu transaccion...");
+                    try {
+                        condition.await(6, TimeUnit.SECONDS); // Pausar durante 6 segundos
+                    } catch (InterruptedException e) {
+                        System.out.println("Error en la transaccion");
+                    } finally {
+                        lock.unlock(); // Desbloquear el lock
+                    }
+                    System.out.println("Transaccion realizada");
+                    System.out.println("Saliendo de Paynet...");
+                    return true;
+                case 2:
+                    System.out.println("Ingrese su nombre completo");
+                    nombre = teclado.next();
+                    System.out.println("Ingrese su numero de tarjeta bancaria debito");
+                    numeroTarjeta = teclado.nextLong();
+                    System.out.println("Ingrese su numero de seguridad de la tarjeta");
+                    seguridad = teclado.nextInt();
+                    System.out.println("Procesando tu transaccion...");
+                    try {
+                        condition.await(6, TimeUnit.SECONDS); // Pausar durante 6 segundos
+                    } catch (InterruptedException e) {
+                        System.out.println("Error en la transaccion");
+                    } finally {
+                        lock.unlock(); // Desbloquear el lock
+                    }
+                    System.out.println("Transaccion realizada");
+                    System.out.println("Saliendo de Paynet...");
+                    return true;
+                case 3:
+                    System.out.println("Envie el total de la operacion al siguiente alias bancario: Lester.Hotel.MDQ y envie un comprobante a lesterhotelmdq@gmail.com indicando su nombre completo y numero de reserva");
+                    System.out.println("Saliendo de Paynet...");
+                    try {
+                        condition.await(6, TimeUnit.SECONDS); // Pausar durante 6 segundos
+                    } catch (InterruptedException e) {
+                        System.out.println("Error en la transaccion");
+                    } finally {
+                        lock.unlock(); // Desbloquear el lock
+                    }
+                    return true;
+                case 4:
+                    System.out.println("Saliendo de Paynet...");
+                    try {
+                        condition.await(6, TimeUnit.SECONDS); // Pausar durante 6 segundos
+                    } catch (InterruptedException e) {
+                        System.out.println("Error en la transaccion");
+                    } finally {
+                        lock.unlock(); // Desbloquear el lock
+                    }
+            }
+        } while (opcion != 4);
+        return false;
     }
 
     public void cancelarReserva(Usuario user) {
@@ -723,7 +825,6 @@ public class Hotel<K, T> {
                 System.out.println("Su plazo para cancelar se ha extendido, y no tendra devolucion de dinero.");
                 System.out.println("Esta seguro que quiere continuar? s/n");
                 seguir = teclado.next().charAt(0);
-                teclado.nextLine();
                 if (seguir == 's') {
                     mapReservas.remove(numeroR);
                     mapFacturas.remove(numeroR);
@@ -820,7 +921,7 @@ public class Hotel<K, T> {
         while (control == 's') {
             System.out.printf("\nQuiere registrar a otro pasajero? s/n: ");
             control = teclado.next().charAt(0);
-            if(control == 's') {
+            if (control == 's') {
                 nuevo = registrarPasajero();
                 pasajeros.add(nuevo);
                 listaPasajeros.add(nuevo);
@@ -1025,7 +1126,7 @@ public class Hotel<K, T> {
     public void mostrarHabitaciones() {
         for (String clave : mapHabitaciones.keySet()) {
 
-                System.out.println(mapHabitaciones.get(clave));
+            System.out.println(mapHabitaciones.get(clave));
 
         }
     }
@@ -1036,36 +1137,36 @@ public class Hotel<K, T> {
         }
     }
 
-    private void eventoHabNoDisponible(){
+    private void eventoHabNoDisponible() {
         ArrayList<String> nros = new ArrayList<>();
-        for(String numero : mapHabitaciones.keySet()){
+        for (String numero : mapHabitaciones.keySet()) {
             nros.add(numero);
         }
         Random random = new Random();
         int num = random.nextInt(nros.size() - 1);
 
-        for(String string : nros){
+        for (String string : nros) {
             int nume = Integer.parseInt(string);
-            if(nume==num){
+            if (nume == num) {
                 mapHabitaciones.get(string).setEstado(problemas());
             }
         }
     }
 
-    private String problemas(){
+    private String problemas() {
         Random random = new Random();
-        int num = random.nextInt(5-1+1)+1;
+        int num = random.nextInt(5 - 1 + 1) + 1;
         String problema = "Disponible";
-        if(num==1){
-            problema="En reparación funcional";
-        }else if(num==2){
-            problema="En desinfección";
-        }else if(num==3){
-            problema="En reparación eléctrica";
-        }else if(num==4){
-            problema="En reparación estética";
-        }else if(num==5){
-            problema="En limpieza";
+        if (num == 1) {
+            problema = "En reparación funcional";
+        } else if (num == 2) {
+            problema = "En desinfección";
+        } else if (num == 3) {
+            problema = "En reparación eléctrica";
+        } else if (num == 4) {
+            problema = "En reparación estética";
+        } else if (num == 5) {
+            problema = "En limpieza";
         }
         return problema;
     }
