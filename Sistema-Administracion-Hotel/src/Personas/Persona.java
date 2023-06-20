@@ -31,11 +31,9 @@ public abstract class Persona {
 
     @Override
     public String toString() {
-        return "\nPersona{" +
-                "\nnombre='" + nombre + '\'' +
-                "\n, apellido='" + apellido + '\'' +
-                "\n, DNI=" + DNI +
-                '}';
+        return  "\n- Nombre: " + nombre + '\'' +
+                "\n- Apellido: " + apellido + '\'' +
+                "\n- DNI:" + DNI;
     }
 
     public void setNombre(String nombre) {

@@ -94,14 +94,14 @@ public class Pasajero extends Persona {
     @Override
     public String toString() {
         return "\n------------------------------------------------"+
-                "\nPasajero{" +
-                "\norigen='" + origen + '\'' +
-                "\n, domicilioOrigen='" + domicilioOrigen + '\'' +
-                "\n, historia='" + historia + '\'' +
-                "\n, cantDias=" + cantDias +
-                "\n, nombre='" + nombre + '\'' +
-                "\n, apellido='" + apellido + '\'' +
-                "\n, DNI='" + DNI + '\'';
+                "\nPasajero: " +
+                "\n- Nombre: " + nombre + '\'' +
+                "\n- Apellido: " + apellido + '\'' +
+                "\n- DNI: " + DNI + '\''+
+                "\n- Origen: " + origen + '\'' +
+                "\n- Domicilio: " + domicilioOrigen + '\'' +
+                "\n- Historia: " + historia + '\'' +
+                "\n- Cantidad de días: " + cantDias;
     }
 
     @Override

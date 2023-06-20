@@ -15,7 +15,7 @@ import java.util.Scanner;
 import java.util.TreeMap;
 
 @JsonTypeName("Personas.Administrador")
-public class Administrador extends Empleado implements Gerenciamiento {
+public class Administrador extends Empleado {
     private Scanner teclado = new Scanner(System.in);
     private ObjectMapper mapper = new ObjectMapper();
 
@@ -175,26 +175,26 @@ public class Administrador extends Empleado implements Gerenciamiento {
         Servicio servicio = new Servicio();
         Recepcionista recepcionista = new Recepcionista();
         boolean registrado;
+        teclado.useDelimiter("\n");
         do {
             if (opcion == 1) {
-                System.out.println("Ingrese el nombre del empleado");
+                System.out.println("Ingrese el primer nombre del recepcionista: ");
                 recepcionista.setNombre(teclado.next());
-                System.out.println("Ingrese el apellido del empleado");
+                System.out.println("Ingrese el apellido del recepcionista: ");
                 recepcionista.setApellido(teclado.next());
                 recepcionista.setDNI(DNI);
                 registrado = true;
                 return recepcionista;
             } else if (opcion == 2) {
-                System.out.println("Ingrese el nombre del empleado");
+                System.out.println("Ingrese el primer nombre del empleado: ");
                 servicio.setNombre(teclado.next());
-                System.out.println("Ingrese el apellido del empleado");
+                System.out.println("Ingrese el apellido del empleado: ");
                 servicio.setApellido(teclado.next());
-                System.out.println("Ingresando el DNI del empleado");
                 servicio.setDNI(DNI);
                 registrado = true;
                 return servicio;
             } else {
-                System.out.println("Opcion incorrecta");
+                System.out.println("Opción incorrecta");
                 registrado = true;
             }
         } while (!registrado);
@@ -249,7 +249,7 @@ public class Administrador extends Empleado implements Gerenciamiento {
             System.out.printf("Que rol desea darle?: ");
             cual = teclado.nextInt();
             while (cual > 8) {
-                System.out.println("Numero de rol invalido, vuelve a ingresarlo");
+                System.out.println("Número de rol inválido, vuelva a ingresarlo");
                 opcionesTrabajador();
                 cual = teclado.nextInt();
             }
@@ -270,7 +270,7 @@ public class Administrador extends Empleado implements Gerenciamiento {
             consumible.setNombre(teclado.next());
             System.out.printf("Ingrese el precio: ");
             consumible.setPrecio(teclado.nextDouble());
-            System.out.printf("Ingrese la descripcion: ");
+            System.out.printf("Ingrese la descripción: ");
             consumible.setDescripcion(teclado.next());
             listaConsumibles.add(consumible);
             System.out.println("Desea agregar otro consumible? s/n");
@@ -281,13 +281,13 @@ public class Administrador extends Empleado implements Gerenciamiento {
     @Override
     public String toString() {
         return "\n------------------------------------------------" +
-                "\nAdministrador{" +
-                "\nsueldo=" + sueldo +
-                "\n, diasVacaciones=" + diasVacaciones +
-                "\n, antiguedad=" + antiguedad +
-                "\n, trabajador=" + trabajador +
-                "\n, nombre='" + nombre + '\'' +
-                "\n, apellido='" + apellido + '\'' +
-                "\n, DNI='" + DNI + '\'';
+                "\nAdministrador: " +
+                "\n- Nombre: " + nombre + '\'' +
+                "\n- Apellido: " + apellido + '\'' +
+                "\n- DNI: " + DNI + '\''+
+                "\n- Sueldo: " + sueldo +
+                "\n- Días de vacaciones: " + diasVacaciones +
+                "\n- Antigüedad: " + antiguedad +
+                "\n- Trabajador: " + trabajador;
     }
 }

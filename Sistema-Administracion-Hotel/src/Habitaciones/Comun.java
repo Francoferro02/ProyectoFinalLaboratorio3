@@ -16,12 +16,12 @@ public class Comun extends Habitacion {
     @Override
     public String toString() {
         return "\n------------------------------------------------"+
-                "\nComun{" +
-                "\nnumero='" + numero + '\'' +
-                "\nOcupacion = " + ocupada +
-                "\n, capacidad=" + capacidad +
-                "\n, terraza=" + terraza +
-                "\n, precio=" + precio +
-                '}';
+                "\nComún: " +
+                "\n- Número: " + numero +
+                "\n- Ocupación: " + ocupada +
+                "\n- Estado: " + estado +
+                "\n- Capacidad: " + capacidad +
+                "\n- Terraza: " + terraza +
+                "\n- Precio: " + precio;
     }
 }

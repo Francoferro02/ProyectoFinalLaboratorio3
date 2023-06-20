@@ -31,13 +31,12 @@ public class Suite extends Habitacion{
     @Override
     public String toString() {
         return "\n------------------------------------------------"+
-                "\nSuite{" +
-                "\nnumero=" + numero +
-                "\nOcupacion = " + ocupada +
-                "\n, capacidad=" + capacidad +
-                "\n, terraza=" + terraza +
-                "\n, precio=" + precio +
-                "\n, consumibles=" + consumibles +
-                '}';
+                "\nSuite: " +
+                "\n- Número: " + numero +
+                "\n- Ocupación: " + ocupada +
+                "\n- Estado: " + estado +
+                "\n- Capacidad: " + capacidad +
+                "\n- Terraza: " + terraza +
+                "\n- Precio: " + precio;
     }
 }

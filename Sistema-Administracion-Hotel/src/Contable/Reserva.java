@@ -130,12 +130,12 @@ public class Reserva {
     @Override
     public String toString() {
         return  "\n------------------------------------------------" +
-                "\nReserva{" +
-                "\n, fechaEntrada=" + fechaEntrada +
-                "\n, fechaSalida=" + fechaSalida +
-                "\n, pasajero=" + pasajeros +
-                "\n, habitacion=" + habitaciones +
-                "\n, identificador='" + identificador + '\'';
+                "\nReserva: " +
+                "\n- Fecha de entrada: " + fechaEntrada +
+                "\n- Fecha de salida: " + fechaSalida +
+                "\n- Pasajero: " + pasajeros +
+                "\n- Habitación: " + habitaciones +
+                "\n- Identificador: " + identificador + '\'';
     }
 
     public void marcarReserva() {

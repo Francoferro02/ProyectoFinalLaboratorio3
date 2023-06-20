@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import java.util.TreeMap;
 
 @JsonTypeName("Personas.Servicio")
-public class Servicio extends Empleado{
+public class Servicio extends Empleado implements Mantenimiento {
 
     public Servicio() {
         calcularSueldo();
@@ -91,18 +91,32 @@ public class Servicio extends Empleado{
         super.desFichaje();
     }
 
+    @Override
+    public void mostrarHabitacionesConProblemas(TreeMap<String, Habitacion> mapa) {
+        for(String clave : mapa.keySet()){
+            if(mapa.get(clave).getEstado().equals("Disponible")){
 
+            }else {
+                System.out.println(mapa.get(clave));
+            }
+        }
+    }
+
+    @Override
+    public String darReporte() {
+        return null;
+    }
 
     @Override
     public String toString() {
         return "\n------------------------------------------------"+
-                "\nServicio{" +
-                "\nsueldo=" + sueldo +
-                "\n, diasVacaciones=" + diasVacaciones +
-                "\n, antiguedad=" + antiguedad +
-                "\n, trabajador=" + trabajador +
-                "\n, nombre='" + nombre + '\'' +
-                "\n, apellido='" + apellido + '\'' +
-                "\n, DNI='" + DNI + '\'';
+                "\nServicio: " +
+                "\n- Nombre: " + nombre + '\'' +
+                "\n- Apellido: " + apellido + '\'' +
+                "\n- DNI: " + DNI + '\''+
+                "\n- Sueldo: " + sueldo +
+                "\n- Días de vacaciones: " + diasVacaciones +
+                "\n- Antigüedad: " + antiguedad +
+                "\n- Trabajador: " + trabajador;
     }
 }

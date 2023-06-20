@@ -11,7 +11,7 @@ import java.util.Scanner;
 import java.util.TreeMap;
 
 @JsonTypeName("Personas.Recepcionista")
-public class Recepcionista extends Empleado implements Gerenciamiento {
+public class Recepcionista extends Empleado implements Mantenimiento {
     private Scanner teclado = new Scanner(System.in);
 
     public Recepcionista() {
@@ -54,20 +54,19 @@ public class Recepcionista extends Empleado implements Gerenciamiento {
         tiene = teclado.next().charAt(0);
         if (tiene == 's') {
             do {
-                System.out.println("Indique su codigo de reserva");
+                System.out.println("Indique su código de reserva");
                 codReserva = teclado.next();
                 if (mapReserva.containsKey(codReserva)) {
-                    System.out.println("Su habitacion ya se encuentra lista");
+                    System.out.println("Su habitación ya se encuentra lista");
                     return false;
                 } else {
                     exceptionLaunch = true;
-                    throw new RuntimeException("Ese nuemero de reserva no es valido");
+                    throw new RuntimeException("Ese número de reserva no es válido");
                 }
 
             } while (exceptionLaunch == true);
 
         } else {
-            System.out.println("Perfecto dejeme registrar a los pasajeros");
             return true;
         }
     }
@@ -117,16 +116,32 @@ public class Recepcionista extends Empleado implements Gerenciamiento {
     }
 
     @Override
+    public void mostrarHabitacionesConProblemas(TreeMap<String, Habitacion> mapa) {
+        for(String clave : mapa.keySet()){
+            if(mapa.get(clave).getEstado().equals("Disponible")){
+
+            }else {
+                System.out.println(mapa.get(clave));
+            }
+        }
+    }
+
+    @Override
+    public String darReporte() {
+        return null;
+    }
+
+    @Override
     public String toString() {
         return "\n------------------------------------------------"+
-                "\nRecepcionista{" +
-                "\nsueldo=" + sueldo +
-                "\n, diasVacaciones=" + diasVacaciones +
-                "\n, antiguedad=" + antiguedad +
-                "\n, trabajador=" + trabajador +
-                "\n, nombre='" + nombre + '\'' +
-                "\n, apellido='" + apellido + '\'' +
-                "\n, DNI='" + DNI + '\'';
+                "\nRecepcionista: " +
+                "\n- Nombre: " + nombre + '\'' +
+                "\n- Apellido: " + apellido + '\'' +
+                "\n- DNI: " + DNI + '\''+
+                "\n- Sueldo: " + sueldo +
+                "\n- Días de vacaciones: " + diasVacaciones +
+                "\n- Antigüedad: " + antiguedad +
+                "\n- Trabajador: " + trabajador;
     }
 
     public void cerrarTeclado() {
