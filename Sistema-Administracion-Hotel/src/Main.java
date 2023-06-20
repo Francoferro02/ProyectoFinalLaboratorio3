@@ -23,6 +23,7 @@ public class Main {
         lester.listaPasajeros = lester.leerArchivoArrayList("Pasajeros.json", Pasajero.class);
         lester.leerAuxiliar("Hotel.json");
         lester.listaUsuarios = lester.leerArchivoArrayList("Usuarios.json", Usuario.class);
+        lester.reportes = lester.leerArchivoArrayList("Reportes.json",String.class);
         lester.menuPrincipal();
     }
 }

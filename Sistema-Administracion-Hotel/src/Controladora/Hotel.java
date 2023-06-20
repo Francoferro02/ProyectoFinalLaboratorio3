@@ -19,6 +19,7 @@ import com.sun.tools.javac.Main;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
@@ -50,7 +51,9 @@ public class Hotel<K, T> {
     public ArrayList<Usuario> listaUsuarios = new ArrayList<>();
     public TreeMap<String, Reserva> mapReservas = new TreeMap<>();
 
-    static final String ruta = "D:\\Documents\\Facultad\\Programación y Laboratorio III\\TP Final\\ProyectoFinalLaboratorio3\\Sistema-Administracion-Hotel\\src\\Files\\";
+    public ArrayList<String> reportes = new ArrayList<>();
+
+    static final String ruta = "H:\\Laboratorio-3\\ProyectoFinalLabo3\\Sistema-Administracion-Hotel\\src\\Files\\";
 
     ObjectMapper mapper = new ObjectMapper();
     Scanner teclado = new Scanner(System.in);
@@ -158,19 +161,31 @@ public class Hotel<K, T> {
                     recepcionista.buscarHabitacion(mapHabitaciones, teclado.next());
                     break;
                 case 7:
-                    mostrarReservas();
+                    eventoHabNoDisponible();
+                    recepcionista.mostrarHabitacionesConProblemas(mapHabitaciones);
                     break;
                 case 8:
-                    menuEmpleado(user);
+                    System.out.println("Creando reporte de todas las habitaciones con problemas");
+                    recepcionista.darReporte(mapHabitaciones, reportes);
+                    escribirArchivoArrayList("Reportes.json", (ArrayList<T>) reportes);
                     break;
                 case 9:
+                    System.out.println(reportes);
+                    break;
+                case 10:
+                    mostrarReservas();
+                    break;
+                case 11:
+                    menuEmpleado(user);
+                    break;
+                case 12:
                     System.out.println("Hasta luego"); //Volver al login
                     break;
                 default:
                     System.out.println("Error, opcion no valida");
                     break;
             }
-        } while (opcion != 9);
+        } while (opcion != 12);
         menuPrincipal();
     }
 
@@ -182,9 +197,12 @@ public class Hotel<K, T> {
         System.out.println("4: Ver habitaciones ocupadas");
         System.out.println("5: Ver habitaciones desocupadas");
         System.out.println("6: Ver habitacion especifica");
-        System.out.println("7: Ver todas las reservas");
-        System.out.println("8: Ver menú de empleado");
-        System.out.println("9: Salir");
+        System.out.println("7: Ver habitaciones con problemas");
+        System.out.println("8: Dar reportes");
+        System.out.println("9: Ver historial de reportes");
+        System.out.println("10: Ver todas las reservas");
+        System.out.println("11: Ver menú de empleado");
+        System.out.println("12: Salir");
 
     }
 
@@ -345,22 +363,26 @@ public class Hotel<K, T> {
         int opcion = 0;
         do {
             opcionesEmpleado();
-            System.out.println("Que opción desea realizar? ");
+            System.out.println("Que opción desea realizar?");
             teclado.nextLine();
             opcion = teclado.nextInt();
             switch (opcion) {
                 case 1:
                     empleado.fichaje();
+                    if (empleado instanceof Servicio) {
+                        ((Servicio) empleado).notificacionesServicio(mapHabitaciones, reportes);
+                    }
                     break;
                 case 2:
                     empleado.desFichaje();
                     break;
                 case 3:
                     if (empleado instanceof Servicio) {
-                        ((Servicio) empleado).realizarAccion(mapHabitaciones);
+                        ((Servicio) empleado).darReporte(mapHabitaciones, reportes);
                     } else {
                         System.out.println("Su cargo no lo habilita para esta acción.");
                     }
+                    escribirArchivoArrayList("Reportes.json", (ArrayList<T>) reportes);
                     break;
                 case 4:
                     System.out.println(empleado);
@@ -388,9 +410,10 @@ public class Hotel<K, T> {
 
     private void opcionesEmpleado() {
         System.out.println();
+        System.out.println("!Recuerde fichar primero¡");
         System.out.println("1: Fichar entrada");
         System.out.println("2: Fichar salida");
-        System.out.println("3: Realizar labor");
+        System.out.println("3: Realizar reporte");
         System.out.println("4: Ver datos");
         System.out.println("5: Calcular días de vacaciones");
         System.out.println("6: Salir");
@@ -739,7 +762,7 @@ public class Hotel<K, T> {
             if (pago == true) {
                 dineroTotal += factura.getPrecioTotal();
             }
-        }else{
+        } else {
             System.out.println("Opción incorrecta");
             realizarReserva(user);
         }
@@ -924,7 +947,7 @@ public class Hotel<K, T> {
         Pasajero nuevo = new Pasajero();
         if (user.getRol() == Rol.ROL_USER) {
             nuevo = (Pasajero) user.getPersona();
-        }else {
+        } else {
             nuevo = registrarPasajero();
         }
         pasajeros.add(nuevo);
@@ -1011,7 +1034,7 @@ public class Hotel<K, T> {
                 numero = teclado.next();
                 ocupacion = verificarOcupacion(numero, fechaEntrada);
                 estado = verificarEstado(numero);
-                if (ocupacion&&estado) {
+                if (ocupacion && estado) {
                     System.out.println("Gran elección!!");
                     for (String h : mapHabitaciones.keySet()) {
                         if (h.equals(numero)) {
@@ -1019,14 +1042,14 @@ public class Hotel<K, T> {
                             reserva.habitaciones.add(mapHabitaciones.get(h));
                         }
                     }
-                } else if (!estado){
-                    System.out.println("La habitación que seleccionó se encuentra "+mapHabitaciones.get(numero).getEstado().toLowerCase()+". Por favor reintente con otra habitación. Disculpe las molestias.");
-                }else if(!ocupacion){
+                } else if (!estado) {
+                    System.out.println("La habitación que seleccionó se encuentra " + mapHabitaciones.get(numero).getEstado().toLowerCase() + ". Por favor reintente con otra habitación. Disculpe las molestias.");
+                } else if (!ocupacion) {
                     System.out.println("La habitación que seleccionó se encuentra reservada hasta una fecha posterior a su fecha de entrada. Por favor reintente en otra fecha u otra habitación. Disculpe las molestias.");
-                }else {
+                } else {
                     System.out.println("La habitación que seleccionó no se encuetra disponible. Por favor reintente con otra habitación. Disculpe las molestias.");
                 }
-            } while (!ocupacion||!estado);
+            } while (!ocupacion || !estado);
             System.out.println("Quiere reservar otra habitación más?");
             continuar = teclado.next().charAt(0);
         } while (continuar == 's');
@@ -1049,10 +1072,10 @@ public class Hotel<K, T> {
         return true;  // La habitación está disponible
     }
 
-    private boolean verificarEstado(String habitacion){
-        if(mapHabitaciones.get(habitacion).getEstado().equals("Disponible")){
+    private boolean verificarEstado(String habitacion) {
+        if (mapHabitaciones.get(habitacion).getEstado().equals("Disponible")) {
             return true;
-        }else {
+        } else {
             return false;
         }
     }
@@ -1075,13 +1098,13 @@ public class Hotel<K, T> {
         }
     }
 
-    public void mostrarEmpleados(){
+    public void mostrarEmpleados() {
         for (String empleado : mapEmpleados.keySet()) {
             System.out.println(mapEmpleados.get(empleado));
         }
     }
 
-    public void mostrarUsuarios(){
+    public void mostrarUsuarios() {
         for (Usuario usuario : listaUsuarios) {
             System.out.println(usuario);
         }
@@ -1176,14 +1199,21 @@ public class Hotel<K, T> {
 
     private void eventoHabNoDisponible() {
         ArrayList<String> nros = new ArrayList<>();
+        String string = null;
+        Random random = new Random();
+        boolean problema = false;
+        int num = 0;
         for (String numero : mapHabitaciones.keySet()) {
             nros.add(numero);
         }
-        Random random = new Random();
-        int num = random.nextInt(nros.size() - 1);
-        String string = nros.get(num);
+        for (String clave : nros) {
+            if ((!mapHabitaciones.get(clave).isOcupada()) && !problema) {
+                num = random.nextInt(nros.size() - 1);
+                string = nros.get(num);
+                problema = true;
+            }
+        }
         mapHabitaciones.get(string).setEstado(problemas());
-
     }
 
     private String problemas() {

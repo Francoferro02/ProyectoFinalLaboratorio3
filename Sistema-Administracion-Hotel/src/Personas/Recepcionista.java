@@ -118,17 +118,19 @@ public class Recepcionista extends Empleado implements Mantenimiento {
     @Override
     public void mostrarHabitacionesConProblemas(TreeMap<String, Habitacion> mapa) {
         for(String clave : mapa.keySet()){
-            if(mapa.get(clave).getEstado().equals("Disponible")){
-
-            }else {
+            if(!(mapa.get(clave).getEstado().equals("Disponible"))){
                 System.out.println(mapa.get(clave));
             }
         }
     }
 
     @Override
-    public String darReporte() {
-        return null;
+    public void darReporte(TreeMap<String, Habitacion> mapa , ArrayList<String> listaReportes) {
+        for(String clave : mapa.keySet()){
+            if(!(mapa.get(clave).getEstado().equals("Disponible"))){
+                listaReportes.add("Habitacion "+mapa.get(clave).getNumero()+" en "+mapa.get(clave).getEstado()+" informar a mantenimiento");
+            }
+        }
     }
 
     @Override
