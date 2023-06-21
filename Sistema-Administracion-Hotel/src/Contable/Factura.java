@@ -92,11 +92,11 @@ public class Factura {
     @Override
     public String toString() {
         return "\n------------------------------------------------"+
-                "\nFactura: " +
+                "\n  Factura: " +
                 "\n- Precio total: " + precioTotal +
                 "\n- Pasajero: " + pasajero +
-                "\n- Habitación: " + habitaciones +
-                "\n- Fecha de emisión: " + fechaDeEmision +
-                "\n- Código de identificación: " + codigoIdentificador + '\'';
+                "\n- Habitacion: " + habitaciones +
+                "\n- Fecha de emision: " + fechaDeEmision +
+                "\n- Numero de factura: " + codigoIdentificador + '\'';
     }
 }

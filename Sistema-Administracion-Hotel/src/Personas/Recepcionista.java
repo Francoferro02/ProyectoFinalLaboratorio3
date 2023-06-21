@@ -54,14 +54,14 @@ public class Recepcionista extends Empleado implements Mantenimiento {
         tiene = teclado.next().charAt(0);
         if (tiene == 's') {
             do {
-                System.out.println("Indique su código de reserva");
+                System.out.println("Indique su codigo de reserva");
                 codReserva = teclado.next();
                 if (mapReserva.containsKey(codReserva)) {
-                    System.out.println("Su habitación ya se encuentra lista");
+                    System.out.println("Su habitacion ya se encuentra lista");
                     return false;
                 } else {
                     exceptionLaunch = true;
-                    throw new RuntimeException("Ese número de reserva no es válido");
+                    throw new RuntimeException("Ese numero de reserva no es válido");
                 }
 
             } while (exceptionLaunch == true);
@@ -73,7 +73,7 @@ public class Recepcionista extends Empleado implements Mantenimiento {
 
     public void informarCheckOut(ArrayList<Pasajero> ListaPasajeros, TreeMap<String, Reserva> mapReserva, TreeMap<String, Habitacion> mapHabitaciones, Cochera cochera) {
         String claveIdentificador;
-        System.out.println("Buenos dias, su estadia en Lester Hotel ha finalizado. Porfavor indiqueme su clave de reserva");
+        System.out.println("Buenos dias, su estadia en Lester Hotel ha finalizado. Porfavor indique su clave de reserva");
         claveIdentificador = teclado.next();
         for (String claveReserva : mapReserva.keySet()) {
             if (mapReserva.get(claveReserva).identificador.equals(claveIdentificador)) {
@@ -141,8 +141,8 @@ public class Recepcionista extends Empleado implements Mantenimiento {
                 "\n- Apellido: " + apellido + '\'' +
                 "\n- DNI: " + DNI + '\''+
                 "\n- Sueldo: " + sueldo +
-                "\n- Días de vacaciones: " + diasVacaciones +
-                "\n- Antigüedad: " + antiguedad +
+                "\n- Dias de vacaciones: " + diasVacaciones +
+                "\n- Antiguedad: " + antiguedad +
                 "\n- Trabajador: " + trabajador;
     }
 

@@ -43,10 +43,9 @@ public class Consumible {
 
     @Override
     public String toString() {
-        return "Servicios.Consumibles{" +
-                "nombre='" + nombre + '\'' +
-                ", precio=" + precio +
-                ", descripcion='" + descripcion + '\'' +
-                '}';
+        return "\n------------------------------------------------"+
+                "\n- Nombre: " + nombre + '\'' +
+                "\n- Precio: " + precio +
+                "\n- Descripcion: " + descripcion;
     }
 }

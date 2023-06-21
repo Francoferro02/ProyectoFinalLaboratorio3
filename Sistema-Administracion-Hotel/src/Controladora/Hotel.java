@@ -15,6 +15,12 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import com.googlecode.lanterna.graphics.TextGraphics;
+import com.googlecode.lanterna.screen.Screen;
+import com.googlecode.lanterna.screen.TerminalScreen;
+import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
+import com.googlecode.lanterna.terminal.Terminal;
+import com.googlecode.lanterna.terminal.TerminalFactory;
 import com.sun.tools.javac.Main;
 
 import java.io.File;
@@ -33,14 +39,13 @@ import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Clase principal del proyecto, funciona como controladora del hotel.
+ *
  * @param <K>
- * @param <T>
- * Estos parametros permiten que la escritura y lectura de archivos a traves de un map o Arraylist, sea de forma genéroca.
+ * @param <T> Estos parametros permiten que la escritura y lectura de archivos a traves de un map o Arraylist, sea de forma genérica.
  */
 public class Hotel<K, T> {
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     public LocalDateTime fechaBackUp;
-    private String serviciosIncluidos;
 
     public String nombre;
     public String direccion;
@@ -59,7 +64,7 @@ public class Hotel<K, T> {
 
     public ArrayList<String> reportes = new ArrayList<>();
 
-    static final String ruta = "C:\\Tp final labo III\\ProyectoFinalLaboratorio3\\Sistema-Administracion-Hotel\\src\\Files\\";
+    static final String ruta = "H:\\Laboratorio-3\\ProyectoFinalLabo3\\Sistema-Administracion-Hotel\\src\\Files\\";
 
     ObjectMapper mapper = new ObjectMapper();
     Scanner teclado = new Scanner(System.in);
@@ -72,7 +77,6 @@ public class Hotel<K, T> {
         this.ciudad = "Mar del Plata";
         this.cantidadEstrellas = 4;
         this.cochera = new Cochera(30, 30);
-        this.serviciosIncluidos = "Cochera, Caja fuerte, Wi-Fi";
         this.dineroTotal = 1000000;
     }
 
@@ -94,17 +98,18 @@ public class Hotel<K, T> {
 
     /**
      * Este método es el menú al cual se entra a la página del hotel, tenes tres opciones:
-     * La primera te permite iniciar sesión, si esta acción fue exitosa, se retornará tu usuario a la variable local user. Sino, user pasará a ser NULL.
-     * La segunda es para crearte un usuario, si esta acción fue exitosa, se retornará tu usuario recien creado a la variable local user. Sino, user pasará a ser NULL.
+     * La primera te permite iniciar sesión {@link Hotel#login()}, si esta acción fue exitosa, se retornará tu usuario a la variable local user. Sino, user pasará a ser NULL.
+     * La segunda es para crearte un usuario {@link Hotel#registrarUsuario()}, si esta acción fue exitosa, se retornará tu usuario recien creado a la variable local user. Sino, user pasará a ser NULL.
      * La tercera es para salir del programa.
-     * Si la creación del usuario o el iniciar sesión fue exitoso, serás redirigido hacía el menú de tu respectivo rol.
+     * Si la creación del usuario o el iniciar sesión fue exitoso, serás redirigido hacía el menú de tu respectivo rol. {@link Hotel#menuRecepcionista(Usuario)},{@link Hotel#menuAdministrador(Usuario)},{@link Hotel#menuEmpleado(Usuario)} y {@link Hotel#menuPasajero(Usuario)}
      * Si la creación del usuario o el iniciar sesión NO fue exitoso, entraras dentro de un catch el cual te dirá que no estás logueado, ya que no se permite entrar a ningun menú con un usuario NULL.
-
      */
- public void menuPrincipal() {
+    public void menuPrincipal() {
         teclado.useDelimiter("\n");
         System.out.println("\n");
         System.out.println("Bienvenido a Lester Hotel");
+        mostrarServiciosIncluidos();
+        System.out.println("\n");
         System.out.println("1: INGRESAR");
         System.out.println("2: REGISTRARSE");
         System.out.println("3: EXIT");
@@ -147,8 +152,15 @@ public class Hotel<K, T> {
 
     /**
      * Este método es el menú de los recepcionistas del hotel, dentro de el cuentan con todas las funciones necesarias para realizar su trabajo.
+     *Se selecciona la función que se quiere realizar a través de un switch case.
+     *
+     * {@link Hotel#opcionesRecepcionista()}
+     *
+     *      * 1-{@link Hotel#checkInRecepcionista(Usuario)}, 2-{@link Recepcionista#informarCheckOut(ArrayList, TreeMap, TreeMap, Cochera)}, 3-{@link Recepcionista#informarCantHabitaciones(int)},
+     *      * 4-{@link Recepcionista#verOcupaciones(TreeMap)}, 5-{@link Recepcionista#verDesocupadas(TreeMap)}, 6-{@link Recepcionista#buscarHabitacion(TreeMap, String)},
+     *      * 7-{@link Recepcionista#mostrarHabitacionesConProblemas(TreeMap)}, 8-{@link Recepcionista#darReporte(TreeMap, ArrayList)}, 10-{@link Hotel#mostrarReservas()},
+     *      * 10-{@link Hotel#menuEmpleado(Usuario)}}
      * @param user este usuario es con el cual se ha iniciado sesión.
-     * Se selecciona la función que se quiere realizar a través de un switch case.
      */
     public void menuRecepcionista(Usuario user) {
         Recepcionista recepcionista = (Recepcionista) user.getPersona();
@@ -231,8 +243,15 @@ public class Hotel<K, T> {
 
     /**
      * Este método es el menú de el administrador del hotel, dentro de el cuentan con todas las funciones necesarias para realizar su trabajo.
+     *Se selecciona la función que se quiere realizar a través de un switch case.
+     *
+     * {@link Hotel#opcionesAdministrador()}
+     *
+     * 1-{@link Administrador#crearUsuarioEmpleado(ArrayList, TreeMap)},2-{@link Administrador#eliminarUsuario(ArrayList, TreeMap)},3-{@link Hotel#mostrarEmpleados()},
+     * 4-{@link Hotel#mostrarUsuarios()},5-{@link Administrador#darPermisos(TreeMap)},6-{@link Administrador#agregarConsumibles(ArrayList)},
+     * 7-{@link Administrador#generarBackUp(Hotel, String)},8-{@link Hotel#menuEmpleado(Usuario)},
+     *
      * @param user este usuario es con el cual se ha iniciado sesión.
-     * Se selecciona la función que se quiere realizar a través de un switch case.
      */
     private void menuAdministrador(Usuario user) {
         Administrador administrador = (Administrador) user.getPersona();
@@ -301,14 +320,28 @@ public class Hotel<K, T> {
         System.out.println("5: Dar Permisos");
         System.out.println("6: Agregar Consumibles");
         System.out.println("7: Generar BackUp");
-        System.out.println("8: Ver menú empleado");
+        System.out.println("8: Ver menu empleado");
         System.out.println("9: Exit");
     }
 
     /**
      * Este método es el menú de el pasajero del hotel, dentro de el cuentan con distintas opciones como la de realizar un CheckIn o un CheckOut, pedir un consumible, entre otras.
-     * @param usuario este usuario es con el cual se ha iniciado sesión.
      * Se selecciona la función que se quiere realizar a través de un switch case.
+     *
+     * {@link Hotel#opcionesPasajero()}
+     * 
+     * 1- {@link Hotel#realizarReserva(Usuario)},
+     * 2- {@link Hotel#cancelarReserva(Usuario)},
+     * 3- {@link Hotel#verUsuario(Usuario)},
+     * 5- {@link Pasajero#pedirConsumible(ArrayList, TreeMap)},
+     * 6- {@link Hotel#lateCheckOut(Usuario)},
+     * 7- {@link Hotel#earlyCheckIn(Usuario)},
+     * 8- {@link Hotel#verMisReservas(Usuario)},
+     * 9- {@link Hotel#verMisFacturas(Usuario)},
+     * 10- {@link Hotel#modificarUsuario(Usuario)},
+     * 11- {@link Hotel#eliminarUsuario(Usuario)},
+     *
+     * @param usuario este usuario es con el cual se ha iniciado sesión.
      */
     private void menuPasajero(Usuario usuario) {
         Pasajero pasajero = (Pasajero) usuario.getPersona();
@@ -386,8 +419,16 @@ public class Hotel<K, T> {
 
     /**
      * Este método es el menú de los empleados del hotel, dentro de el cuentan con distintas opciones para realizar sus tareas diarias.
+     *Se selecciona la función que se quiere realizar a través de un switch case.
+     *
+     * {@link Hotel#opcionesEmpleado()}
+     *
+     * 1- {@link Empleado#fichaje()},
+     * 2- {@link Empleado#desFichaje()}, {@link Servicio#notificacionesServicio(TreeMap, ArrayList)},
+     * 3- {@link Servicio#darReporte(TreeMap, ArrayList)},
+     * 5- {@link Empleado#calcularDiasVacaciones()},
+     *
      * @param user este usuario es con el cual se ha iniciado sesión.
-     * Se selecciona la función que se quiere realizar a través de un switch case.
      */
     private void menuEmpleado(Usuario user) {
         Class<?> clase;
@@ -407,7 +448,7 @@ public class Hotel<K, T> {
         int opcion = 0;
         do {
             opcionesEmpleado();
-            System.out.println("Que opción desea realizar?");
+            System.out.println("Que opcion desea realizar?");
             teclado.nextLine();
             opcion = teclado.nextInt();
             switch (opcion) {
@@ -424,7 +465,7 @@ public class Hotel<K, T> {
                     if (empleado instanceof Servicio) {
                         ((Servicio) empleado).darReporte(mapHabitaciones, reportes);
                     } else {
-                        System.out.println("Su cargo no lo habilita para esta acción.");
+                        System.out.println("Su cargo no lo habilita para esta accion.");
                     }
                     escribirArchivoArrayList("Reportes.json", (ArrayList<T>) reportes);
                     break;
@@ -444,7 +485,7 @@ public class Hotel<K, T> {
                     }
                     break;
                 default:
-                    System.out.println("Error, opción no valida");
+                    System.out.println("Error, opcion no valida");
                     break;
             }
         } while (opcion != 6);
@@ -457,18 +498,19 @@ public class Hotel<K, T> {
      */
     private void opcionesEmpleado() {
         System.out.println();
-        System.out.println("!Recuerde fichar primero¡");
+        System.out.println("¡Recuerde fichar primero!");
         System.out.println("1: Fichar entrada");
         System.out.println("2: Fichar salida");
         System.out.println("3: Realizar reporte");
         System.out.println("4: Ver datos");
-        System.out.println("5: Calcular días de vacaciones");
+        System.out.println("5: Calcular dias de vacaciones");
         System.out.println("6: Salir");
     }
 
     /**
      * Este método permite a los pasajeros pedir un late CheckOut (retirarse del hotel más tarde lo habitual).
      * Si se cumplen ciertas condiciones, el hotel les brindará una horas extras dentro de el.
+     *
      * @param user es el pasajero el cual pidió el late CheckOut.
      */
     public void lateCheckOut(Usuario user) {
@@ -522,6 +564,7 @@ public class Hotel<K, T> {
     /**
      * Este método permite a los pasajeros pedir un early CheckIn (ingresar unas horas antes al hotel).
      * Si se cumplen ciertas condiciones, el hotel les permitirá ingresar antes de lo habitual.
+     *
      * @param user es el pasajero el cual pidió el late CheckOut.
      */
     public void earlyCheckIn(Usuario user) {
@@ -562,6 +605,7 @@ public class Hotel<K, T> {
 
     /**
      * Este método permite al pasajero ver las reservas que ya ha realizado.
+     *
      * @param user es el pasajero que pidió ver sus reservas.
      */
     public void verMisReservas(Usuario user) {
@@ -578,6 +622,7 @@ public class Hotel<K, T> {
 
     /**
      * Este método permite al pasajero ver sus respectivas facturas.
+     *
      * @param user es el pasajero que pidió ver sus facturas.
      */
     public void verMisFacturas(Usuario user) {
@@ -592,6 +637,7 @@ public class Hotel<K, T> {
 
     /**
      * Este método permite al usuario ver sus datos.
+     *
      * @param usuario
      */
     private void verUsuario(Usuario usuario) {
@@ -600,6 +646,7 @@ public class Hotel<K, T> {
 
     /**
      * Este método es la segunda opción del menú principal. A traves de este una persona crea su usuario.
+     *
      * @return el usuario recien creado.
      */
     private Usuario registrarUsuario() {
@@ -621,7 +668,8 @@ public class Hotel<K, T> {
 
     /**
      * Esta funcion realiza la validación correspondiente para que una persona inicie sesión.
-     * @return
+     *
+     * @return retorna el usuario ingresado o en caso de que no se encuentre el usuario devuelve null.
      */
     public Usuario login() {
         Usuario user;
@@ -635,7 +683,7 @@ public class Hotel<K, T> {
         teclado.nextLine();
         while (!verif && i > 0) {
             System.out.println("Hola, " + user.getNombreDeUsuario());
-            System.out.printf("Ingrese la contraseña: ");
+            System.out.printf("Ingrese la contrasenia: ");
             String contra = teclado.next();
             verif = verificarContrasena(user, contra, i);
             if (verif) {
@@ -648,6 +696,7 @@ public class Hotel<K, T> {
 
     /**
      * Está función verifica que al crearse un usuario, el nombre de usuario elegido no se encuentre registrado anteriormente.
+     *
      * @param nombreDeUsuario es el nombre de usuario que la persona ha elegido para su nuevo usuario.
      * @return si el username ya se encuentra utilizado por otra persona, se retornará true. Si el nombre está disponible para este nuevo usuario, se retornará false.
      */
@@ -663,6 +712,7 @@ public class Hotel<K, T> {
 
     /**
      * Esta función busca dentro de toda la lista de usuarios, si existe el username con el cual se está iniciando sesión.
+     *
      * @param nombreDeUsuario es el username con el cual se está intentando de iniciar sesión.
      * @return retornará el usuario en caso de que esté se encuentre registrado. Si este no existe, se retornará NULL.
      */
@@ -678,8 +728,9 @@ public class Hotel<K, T> {
 
     /**
      * Esta función verifica que la persona ingrese la contraseña correcta de su usuario.
-     * @param user es el usuario en el cual se está intentando de iniciar sesión.
-     * @param contra es la contraseña ingresada por la persona.
+     *
+     * @param user     es el usuario en el cual se está intentando de iniciar sesión.
+     * @param contra   es la contraseña ingresada por la persona.
      * @param intentos es la cantidad de intentos restantes que tiene la persona para errar la contraseña (máximo 3).
      * @return si la persona ingresa la contraseña correctamente se retorna true, sino false.
      */
@@ -687,12 +738,13 @@ public class Hotel<K, T> {
         if (user.getContraseña().equals(contra)) {
             return true;
         }
-        System.out.println("La contraseña ingresada es incorrecta. Le quedan " + (intentos - 1) + " intentos.");
+        System.out.println("La contrasenia ingresada es incorrecta. Le quedan " + (intentos - 1) + " intentos.");
         return false;
     }
 
     /**
      * Esta función permite al usuario modificar sus datos.
+     *
      * @param user es el usuario que solicitó cambiar cierto dato de el.
      */
     public void modificarUsuario(Usuario user) {
@@ -709,7 +761,7 @@ public class Hotel<K, T> {
                     user.setNombreDeUsuario(teclado.next());
                     break;
                 case 2:
-                    System.out.println("Ingrese su nueva contraseña");
+                    System.out.println("Ingrese su nueva contrasenia");
                     user.setContraseña(teclado.next());
                     break;
                 case 3:
@@ -722,18 +774,18 @@ public class Hotel<K, T> {
                     break;
                 case 5:
                     if (user.getPersona() instanceof Pasajero) {
-                        System.out.println("Ingrese su nueva dirección");
+                        System.out.println("Ingrese su nueva direccion");
                         ((Pasajero) user.getPersona()).setDomicilioOrigen(teclado.next());
                     } else {
-                        System.out.println("No tiene registrada dirección");
+                        System.out.println("No tiene registrada direccion");
                     }
                     break;
                 case 6:
                     if (user.getPersona() instanceof Pasajero) {
-                        System.out.println("Ingrese su nuevo país");
+                        System.out.println("Ingrese su nuevo pais");
                         ((Pasajero) user.getPersona()).setOrigen(teclado.next());
                     } else {
-                        System.out.println("No tiene registrado país");
+                        System.out.println("No tiene registrado pais");
                     }
                     break;
                 case 7:
@@ -745,10 +797,10 @@ public class Hotel<K, T> {
                     }
                     break;
                 default:
-                    System.out.println("Esa opción es incorrecta");
+                    System.out.println("Esa opcion es incorrecta");
                     break;
             }
-            System.out.println("Desea modificar algún otro aspecto de usuario?");
+            System.out.println("Desea modificar algun otro aspecto de usuario?");
             continuar = teclado.next().charAt(0);
         } while (continuar == 's');
         escribirArchivoArrayList("Pasajeros.json", (ArrayList<T>) listaPasajeros);
@@ -771,6 +823,7 @@ public class Hotel<K, T> {
 
     /**
      * Esta función elimina al usuario que solicitó ser eliminado (pasajero).
+     *
      * @param user es el usuario que solicitó ser eliminado.
      */
     public void eliminarUsuario(Usuario user) {
@@ -785,6 +838,9 @@ public class Hotel<K, T> {
 
     /**
      * Esta función permite al recepcionista realizar un CheckIn presencial a un pasajero.
+     *
+     * {@link Hotel#realizarReserva(Usuario)} llama a este metodo en caso de que no encuentre el codigo de reserva.
+     *
      * @param user es el recepcionista que está realiando el CheckIn.
      */
     public void checkInRecepcionista(Usuario user) {
@@ -796,7 +852,15 @@ public class Hotel<K, T> {
 
     /**
      * Esta función permite al usuario realizar su propia reserva a través de internet. Y a su vez permite al recepcionista realizar una reserva de forma presencial.
-     * En ambos casos se piden los datos detallados de la reserva a realizar (fecha - cochera - opción de pago)
+     * En ambos casos se piden los datos detallados de la reserva a realizar (fecha - cochera - opción de pago).
+     * ,{@link Hotel#registrarPasajeros(Usuario)}
+     * ,{@link Hotel#eventoHabNoDisponible()}
+     * ,{@link Hotel#registrarHabitacion(Reserva, LocalDateTime)} ()}
+     * ,{@link Hotel#registrarCochera(Reserva)} ()}
+     * ,{@link Hotel#generarFactura(Factura, Reserva)} ()}
+     * ,{@link Hotel#menuPaynet(int)} ()}
+     * ,{@link Hotel#setearDias(Reserva)}
+     *
      * @param user es el usuario que solicitó realizar una reserva (pasajero o recepcionista)
      */
     public void realizarReserva(Usuario user) {
@@ -890,6 +954,7 @@ public class Hotel<K, T> {
 
     /**
      * Esta función permite al pasajero abonar su estadía en el hotel de la forma en la que desee.
+     *
      * @param opcion es la opción de pago con la que el pasajero decidió abonar su reserva.
      * @return true si la transacción de pago fue exitosa. Sino se retornará false.
      */
@@ -966,6 +1031,10 @@ public class Hotel<K, T> {
 
     /**
      * Esta función permite al pasajero cancelar su reserva hecha anteriormente.
+     * Si la persona cancela la reserva en un plazo menor a 3 días de el checkIn no se le devuelve dinero,
+     * si es mayor a una semana se le devuelve el 75% y
+     * si es mayor a 3 dias pero menor a una semana el 50%
+     *
      * @param user es el usuario del pasajero que solicitó la cancelación.
      */
     public void cancelarReserva(Usuario user) {
@@ -1029,8 +1098,10 @@ public class Hotel<K, T> {
 
     /**
      * Esta función genera una factura automáticamente despues de realizar una reserva.
+     *
      * @param factura es la nueva factura a realizar.
      * @param reserva es la reserva que se llevó a cabo anteriormente.
+     * @throws IOException en caso de que la factura ya se encuentre registrada.
      */
     private void generarFactura(Factura factura, Reserva reserva) {
         factura.setCodigoIdentificador(reserva.getIdentificador());
@@ -1054,6 +1125,7 @@ public class Hotel<K, T> {
 
     /**
      * Esta función setea la cantidad de dias que el pasajero se quedará en el hotel.
+     *
      * @param reserva es la reserva que se está llevando a cabo.
      */
     private void setearDias(Reserva reserva) {
@@ -1067,6 +1139,8 @@ public class Hotel<K, T> {
 
     /**
      * Esta función calcula los días que hay entre la fecha de entrada y la fecha de salida de una reserva.
+     * Utilizamos el metodo truncatedTo para que calcule la diferencia en dias sin tener en cuenta las horas.
+     *
      * @param reserva es la reserva la cual se quieren calcular sus días de duración.
      * @return la cantidad de días de duración de la reserva.
      */
@@ -1079,6 +1153,8 @@ public class Hotel<K, T> {
 
     /**
      * Esta función guarda dentro de una lista todos los pasajeros que vendran al hotel con la reserva que está realizandose.
+     * {@link Hotel#registrarPasajero()} esta funcion se encarga de la carga individual de los datos de los pasajeros
+     *
      * @param user es el usuario que está realizando la reserva
      * @return la lista de pasajeros de la actual reserva.
      */
@@ -1110,6 +1186,7 @@ public class Hotel<K, T> {
 
     /**
      * Permite al pasajero reservar una cochera dentro de su estadía en el hotel.
+     *
      * @param reserva es la reserva que se está llevando a cabo.
      */
     private void registrarCochera(Reserva reserva) {
@@ -1136,7 +1213,10 @@ public class Hotel<K, T> {
 
     /**
      * Pregunta datos del pasajero que se quiere añadir a la reserva.
+     * Verifica que el DNI del pasajero no se encuentre registrado:
+     *
      * @return el pasajero con sus datos completos.
+     * @throws IOException por el DNI ya registrado.
      */
     private Pasajero registrarPasajero() {
         boolean excepcionLanzada = false;
@@ -1172,7 +1252,9 @@ public class Hotel<K, T> {
 
     /**
      * Está función le permite al pasajero elegir su habitación dentro de las disponibles.
-     * @param reserva es la reserva que se está llevando a cabo.
+     * Se utilizan dos funciones para verificar la condicion de la habitacion {@link Hotel#verificarOcupacion(String, LocalDateTime)} y {@link Hotel#verificarEstado(String)}
+     *
+     * @param reserva      es la reserva que se está llevando a cabo.
      * @param fechaEntrada es la fecha de entrada de la reserva que se está realizando.
      */
     private void registrarHabitacion(Reserva reserva, LocalDateTime fechaEntrada) {
@@ -1211,31 +1293,29 @@ public class Hotel<K, T> {
 
     /**
      * Verifica si la habitación elegida no estará ocupada para cuando lleguen los pasajeros.
-     * @param habitacion es el numero de habitación que se quiere reservar.
+     *
+     * @param habitacion   es el numero de habitación que se quiere reservar.
      * @param fechaEntrada es la fecha en la cual llegan los pasajeros.
      * @return true si la habitación estará disponible, false si no lo estará.
      */
     private boolean verificarOcupacion(String habitacion, LocalDateTime fechaEntrada) {
-        try {
-            for (String reserva1 : mapReservas.keySet()) {
-                for (int i = 0; i < mapReservas.get(reserva1).habitaciones.size(); i++) {
-                    if (mapReservas.get(reserva1).habitaciones.get(i).numero.equals(habitacion)) {
-                        if (mapReservas.get(reserva1).fechaSalida.compareTo(fechaEntrada) >= 0) {
-                            return false;  // La habitación está ocupada durante la fecha de entrada
-                        }
+        for (String reserva1 : mapReservas.keySet()) {
+            for (int i = 0; i < mapReservas.get(reserva1).habitaciones.size(); i++) {
+                if (mapReservas.get(reserva1).habitaciones.get(i).numero.equals(habitacion)) {
+                    if (mapReservas.get(reserva1).fechaSalida.compareTo(fechaEntrada) >= 0) {
+                        return false;  // La habitación está ocupada durante la fecha de entrada
                     }
                 }
             }
-        } catch (Exception e) {
-            return false;
         }
         return true;  // La habitación está disponible
     }
 
     /**
      * Verifica el estado de la habitación que se quiere reservar.
+     *
      * @param habitacion es el numero de habitación que se quiere reservar.
-     * @return true si la habitación estará disponible, sino retornará false.
+     * @return true si la habitación se encuentra en estado "Disponible", sino retornará false.
      */
     private boolean verificarEstado(String habitacion) {
         if (mapHabitaciones.get(habitacion).getEstado().equals("Disponible")) {
@@ -1245,9 +1325,24 @@ public class Hotel<K, T> {
         }
     }
 
+
+    private void mostrarServiciosIncluidos() {
+        System.out.println("En cuanto a las instalaciones nuestro hotel cuenta con ascensor,piscina al aire libre y climatizada, calefaccion y bar,");
+        System.out.println(" asi como aire acondicionado en salas comunes y las habitaciones, telefono,television,baño privado, caja fuerte y minibar en la habitacion.");
+        System.out.println("Estacionamiento de pago para los huespedes con Valet Parking");
+        System.out.println("Disponemos de un area de recepcion con servicio de atencion al cliente las 24 horas del dia por personal cualificado");
+        System.out.println("Un espacio separado para guardar el equipaje y un servicio de consigna para equipajes voluminosos o pesados a peticion del huesped.");
+        System.out.println("Acceso gratuito a internet Wi-Fi en las habitaciones y areas comunes.");
+        System.out.println("Limpieza diaria de las habitaciones y el cambio de toallas y sabanas.");
+        System.out.println("Contamos con un restaurant para el desayuno,almuerzo y cena de primer nivel.");
+        System.out.println("Contamos con un sistema de camaras en las salas comunes para garantizar la seguridad de los huespedes y sus pertenencias.");
+        System.out.printf("Nuestro personal se caracteriza por ser amable y servicial, y estar disponible para ayudar a los huespedes con cualquier necesidad o pregunta.");
+    }
+
     /**
      * Este método muestra todas las reservas que se han realizado en el hotel.
      */
+
     public void mostrarReservas() {
         for (String clave : mapReservas.keySet()) {
             System.out.println(mapReservas.get(clave));
@@ -1409,41 +1504,33 @@ public class Hotel<K, T> {
 
     /**
      * Son los estados en el cual puede encontrarse una habitación.
-     * @return el estado de la habitación.
+     *
+     * @return un String como el estado de la habitación.
      */
     private String problemas() {
         Random random = new Random();
         int num = random.nextInt(5 - 1 + 1) + 1;
         String problema = "Disponible";
         if (num == 1) {
-            problema = "En reparación funcional";
+            problema = "En reparacion funcional";
         } else if (num == 2) {
-            problema = "En desinfección";
+            problema = "En desinfeccion";
         } else if (num == 3) {
-            problema = "En reparación eléctrica";
+            problema = "En reparacion electrica";
         } else if (num == 4) {
-            problema = "En reparación estética";
+            problema = "En reparacion estetica";
         } else if (num == 5) {
             problema = "En limpieza";
         }
         return problema;
     }
 
-    @Override
-    public String toString() {
-        return "\nHotel{" +
-                "\nnombre='" + nombre + '\'' +
-                "\n, direccion='" + direccion + '\'' +
-                "\n, ciudad='" + ciudad + '\'' +
-                "\n, cantidadEstrellas=" + cantidadEstrellas +
-                "\n, cochera=" + cochera +
-                "------------------------------------------------";
-    }
 
     /**
      * Este método escribe a los archivos los cuales necesiten leer una colección map.
+     *
      * @param archivo es el archivo a escribir
-     * @param mapa es la colección a leer.
+     * @param mapa    es la colección a leer.
      */
     public void escribirArchivoMap(String archivo, TreeMap<K, T> mapa) {
         try {
@@ -1461,9 +1548,10 @@ public class Hotel<K, T> {
 
     /**
      * Esta función permite a un map ser escrito a través de lo leído en un archivo.
+     *
      * @param archivo es el archivo a leer.
-     * @param clave es el tipo de de clave qie tiene el map.
-     * @param valor es el tipo de clase que contiene el map.
+     * @param clave   es el tipo de de clave qie tiene el map.
+     * @param valor   es el tipo de clase que contiene el map.
      * @return el TreeMap cargado.
      */
     public TreeMap<K, T> leerArchivoMap(String archivo, Class<K> clave, Class<T> valor) {
@@ -1490,7 +1578,8 @@ public class Hotel<K, T> {
 
     /**
      * Esta función permite a un archivo ser escrito a través del contenido de un Arraylist.
-     * @param archivo es el archivo a escribir.
+     *
+     * @param archivo   es el archivo a escribir.
      * @param arrayList es la lista que se va a leer.
      */
     public void escribirArchivoArrayList(String archivo, ArrayList<T> arrayList) {
@@ -1509,8 +1598,9 @@ public class Hotel<K, T> {
 
     /**
      * Está función escribe a un ArrayList con el contenido de un archivo.
+     *
      * @param archivo es el archivo a leer.
-     * @param clazz es el tipo de clase del ArrayList.
+     * @param clazz   es el tipo de clase del ArrayList.
      * @return el ArrayList cargado con los datos del archivo.
      */
     public ArrayList<T> leerArchivoArrayList(String archivo, Class<T> clazz) {
@@ -1536,6 +1626,7 @@ public class Hotel<K, T> {
 
     /**
      * Escribe un archivo auxiliar con el dinero total y las cocheras del hotel.
+     *
      * @param archivo es el archivo escrito con el dinero total y las cocheras del hotel.
      */
     public void escribirAuxiliar(String archivo) {
@@ -1550,6 +1641,7 @@ public class Hotel<K, T> {
 
     /**
      * Perimte cargar a una instancia auxiliar con lo leído de un archivo auxiliar.
+     *
      * @param archivo el archivo auxiliar cargado.
      */
     public void leerAuxiliar(String archivo) {
@@ -1580,6 +1672,17 @@ public class Hotel<K, T> {
         escribirAuxiliar("Hotel.json");
         escribirArchivoArrayList("Pasajeros.json", (ArrayList<T>) listaPasajeros);
         escribirArchivoArrayList("Usuarios.json", (ArrayList<T>) listaUsuarios);
+        escribirArchivoArrayList("Reportes.json", (ArrayList<T>) reportes);
+    }
+
+
+
+    @Override
+    public String toString() {
+        return "\n- " + nombre + '\'' +
+                "\n- Direccion: " + direccion + '\'' +
+                "\n- Ciudad: " + ciudad + '\'' +
+                "\n- Cantidad de estrellas: " + cantidadEstrellas;
     }
 
 }

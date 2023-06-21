@@ -101,7 +101,7 @@ public class Pasajero extends Persona {
                 "\n- Origen: " + origen + '\'' +
                 "\n- Domicilio: " + domicilioOrigen + '\'' +
                 "\n- Historia: " + historia + '\'' +
-                "\n- Cantidad de días: " + cantDias;
+                "\n- Cantidad de dias: " + cantDias;
     }
 
     @Override

@@ -194,7 +194,7 @@ public class Administrador extends Empleado {
                 registrado = true;
                 return servicio;
             } else {
-                System.out.println("Opción incorrecta");
+                System.out.println("Opcion incorrecta");
                 registrado = true;
             }
         } while (!registrado);
@@ -249,7 +249,7 @@ public class Administrador extends Empleado {
             System.out.printf("Que rol desea darle?: ");
             cual = teclado.nextInt();
             while (cual > 8) {
-                System.out.println("Número de rol inválido, vuelva a ingresarlo");
+                System.out.println("Numero de rol invalido, vuelva a ingresarlo");
                 opcionesTrabajador();
                 cual = teclado.nextInt();
             }
@@ -270,7 +270,7 @@ public class Administrador extends Empleado {
             consumible.setNombre(teclado.next());
             System.out.printf("Ingrese el precio: ");
             consumible.setPrecio(teclado.nextDouble());
-            System.out.printf("Ingrese la descripción: ");
+            System.out.printf("Ingrese la descripcion: ");
             consumible.setDescripcion(teclado.next());
             listaConsumibles.add(consumible);
             System.out.println("Desea agregar otro consumible? s/n");
@@ -286,8 +286,8 @@ public class Administrador extends Empleado {
                 "\n- Apellido: " + apellido + '\'' +
                 "\n- DNI: " + DNI + '\''+
                 "\n- Sueldo: " + sueldo +
-                "\n- Días de vacaciones: " + diasVacaciones +
-                "\n- Antigüedad: " + antiguedad +
+                "\n- Dias de vacaciones: " + diasVacaciones +
+                "\n- Antiguedad: " + antiguedad +
                 "\n- Trabajador: " + trabajador;
     }
 }
