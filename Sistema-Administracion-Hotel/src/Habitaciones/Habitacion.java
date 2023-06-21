@@ -6,15 +6,14 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import java.util.ArrayList;
 
+/**
+ * Con esta clase se crean las habitaciones del hotel con sus respectivas características.
+ */
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 @JsonSubTypes({
         @JsonSubTypes.Type(value = Comun.class, name = "Habitaciones.Comun"),
         @JsonSubTypes.Type(value = Suite.class, name = "Habitaciones.Suite")
 })
-
-/**
- * Con esta clase se crean las habitaciones del hotel con sus respectivas características.
- */
 public abstract class Habitacion {
 
     public String numero;

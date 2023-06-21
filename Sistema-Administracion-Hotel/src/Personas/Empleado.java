@@ -1,14 +1,15 @@
 package Personas;
 
-import Controladora.Rol;
-import Habitaciones.Comun;
-import Habitaciones.Suite;
+
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
 import java.time.LocalDateTime;
-
+/**
+ * Empleados del hotel.
+ * Contiene características básicas de una persona y de un empleado (sueldo - dias de vacaciones - antiguedad - tipo de trabajo)
+ */
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 @JsonSubTypes({
         @JsonSubTypes.Type(value = Administrador.class, name = "Personas.Administrador"),
@@ -16,10 +17,6 @@ import java.time.LocalDateTime;
         @JsonSubTypes.Type(value = Recepcionista.class, name = "Personas.Recepcionista")
 
 })
-/**
- * Empleados del hotel.
- * Contiene características básicas de una persona y de un empleado (sueldo - dias de vacaciones - antiguedad - tipo de trabajo)
- */
 @JsonTypeName("Personas.Empleado")
 public  abstract class Empleado extends Persona{
 
