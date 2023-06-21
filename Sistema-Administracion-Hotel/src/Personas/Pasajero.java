@@ -95,12 +95,12 @@ public class Pasajero extends Persona {
     public String toString() {
         return "\n------------------------------------------------"+
                 "\nPasajero: " +
-                "\n- Nombre: " + nombre + '\'' +
-                "\n- Apellido: " + apellido + '\'' +
-                "\n- DNI: " + DNI + '\''+
-                "\n- Origen: " + origen + '\'' +
-                "\n- Domicilio: " + domicilioOrigen + '\'' +
-                "\n- Historia: " + historia + '\'' +
+                "\n- Nombre: " + nombre +
+                "\n- Apellido: " + apellido +
+                "\n- DNI: " + DNI +
+                "\n- Origen: " + origen +
+                "\n- Domicilio: " + domicilioOrigen +
+                "\n- Historia: " + historia +
                 "\n- Cantidad de dias: " + cantDias;
     }
 

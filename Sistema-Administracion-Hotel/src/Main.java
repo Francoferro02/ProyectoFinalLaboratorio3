@@ -5,11 +5,6 @@ import Controladora.Rol;
 import Habitaciones.Habitacion;
 import Personas.*;
 import Servicios.Consumible;
-import com.googlecode.lanterna.graphics.TextGraphics;
-import com.googlecode.lanterna.screen.Screen;
-import com.googlecode.lanterna.screen.TerminalScreen;
-import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
-import com.googlecode.lanterna.terminal.Terminal;
 
 import java.io.IOException;
 import java.util.Random;

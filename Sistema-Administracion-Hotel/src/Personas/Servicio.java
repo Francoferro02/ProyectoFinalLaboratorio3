@@ -223,9 +223,9 @@ public class Servicio extends Empleado implements Mantenimiento {
     public String toString() {
         return "\n------------------------------------------------" +
                 "\nServicio: " +
-                "\n- Nombre: " + nombre + '\'' +
-                "\n- Apellido: " + apellido + '\'' +
-                "\n- DNI: " + DNI + '\'' +
+                "\n- Nombre: " + nombre +
+                "\n- Apellido: " + apellido +
+                "\n- DNI: " + DNI +
                 "\n- Sueldo: " + sueldo +
                 "\n- Dias de vacaciones: " + diasVacaciones +
                 "\n- Antiguedad: " + antiguedad +

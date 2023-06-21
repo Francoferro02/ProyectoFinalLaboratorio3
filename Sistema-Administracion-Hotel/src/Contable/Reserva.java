@@ -135,7 +135,7 @@ public class Reserva {
                 "\n- Fecha de salida: " + fechaSalida +
                 "\n- Pasajero: " + pasajeros +
                 "\n- Habitacion: " + habitaciones +
-                "\n- Codigo de identificacion: " + identificador + '\'';
+                "\n- Codigo de identificacion: " + identificador;
     }
 
     public void marcarReserva() {

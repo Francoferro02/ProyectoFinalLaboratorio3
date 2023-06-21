@@ -65,8 +65,8 @@ public class Usuario {
     public String toString() {
         return "\n------------------------------------------------"+
                 "\n  Usuario: " +
-                "\n- Nombre de usuario: " + nombreDeUsuario + '\'' +
-                "\n- Contraseña: " + contraseña + '\'' +
+                "\n- Nombre de usuario: " + nombreDeUsuario +
+                "\n- Contraseña: " + contraseña +
                 "\n- Rol: " + rol +
                 "\n- Persona: " + persona;
     }

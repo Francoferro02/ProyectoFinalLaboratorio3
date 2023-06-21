@@ -59,7 +59,7 @@ public class Hotel<K, T> {
 
     public ArrayList<String> reportes = new ArrayList<>();
 
-    static final String ruta = "H:\\Laboratorio-3\\ProyectoFinalLabo3\\Sistema-Administracion-Hotel\\src\\Files\\";
+    static final String ruta = "D:\\Documents\\Facultad\\Programación y Laboratorio III\\TP Final\\ProyectoFinalLaboratorio3\\Sistema-Administracion-Hotel\\src\\Files\\";
 
     ObjectMapper mapper = new ObjectMapper();
     Scanner teclado = new Scanner(System.in);
@@ -116,6 +116,8 @@ public class Hotel<K, T> {
         switch (principio) {
             case 1:
                 user = login();
+                System.out.println();
+                System.out.println("Bienvenido " + user.getPersona().getNombre() + " " + user.getPersona().getApellido());
                 break;
             case 2:
                 user = registrarUsuario();
@@ -159,13 +161,10 @@ public class Hotel<K, T> {
      */
     public void menuRecepcionista(Usuario user) {
         Recepcionista recepcionista = (Recepcionista) user.getPersona();
-        System.out.println();
-        System.out.println("Bienvenido " + recepcionista.getNombre() + " " + recepcionista.getApellido());
         int opcion = 0;
         do {
             opcionesRecepcionista();
             System.out.println("Que opcion desea realizar? ");
-            teclado.nextLine();
             opcion = teclado.nextInt();
             switch (opcion) {
                 case 1:
@@ -221,6 +220,10 @@ public class Hotel<K, T> {
      */
     private void opcionesRecepcionista() {
         System.out.println();
+        System.out.println("PRESIONE ENTER PARA CONTINUAR...");
+        String enter = teclado.next();
+        teclado.nextLine();
+        System.out.println("MENU RECEPCIONISTA:");
         System.out.println("1: Check In");
         System.out.println("2: Check Out");
         System.out.println("3: Cantidad de habitaciones totales");
@@ -250,13 +253,10 @@ public class Hotel<K, T> {
      */
     private void menuAdministrador(Usuario user) {
         Administrador administrador = (Administrador) user.getPersona();
-        System.out.println();
-        System.out.println("Bienvenido " + administrador.getNombre() + " " + administrador.getApellido());
         int opcion = 0;
         do {
             opcionesAdministrador();
             System.out.println("Que opcion desea realizar? ");
-            teclado.nextLine();
             opcion = teclado.nextInt();
             switch (opcion) {
                 case 1:
@@ -308,6 +308,10 @@ public class Hotel<K, T> {
      */
     private void opcionesAdministrador() {
         System.out.println();
+        System.out.println("PRESIONE ENTER PARA CONTINUAR...");
+        String enter = teclado.next();
+        teclado.nextLine();
+        System.out.println("MENU ADMINISTRADOR:");
         System.out.println("1: Crear Usuario");
         System.out.println("2: Eliminar Usuario");
         System.out.println("3: Ver empleados");
@@ -343,12 +347,9 @@ public class Hotel<K, T> {
         boolean checkOut;
         boolean checkIn;
         int opcion = 0;
-        System.out.println();
-        System.out.println("Bienvenido " + pasajero.getNombre() + " " + pasajero.getApellido());
         do {
             opcionesPasajero();
             System.out.println("Que desea realizar? ");
-            teclado.nextLine();
             opcion = teclado.nextInt();
             switch (opcion) {
                 case 1:
@@ -398,6 +399,10 @@ public class Hotel<K, T> {
      */
     private void opcionesPasajero() {
         System.out.println();
+        System.out.println("PRESIONE ENTER PARA CONTINUAR...");
+        String enter = teclado.next();
+        teclado.nextLine();
+        System.out.println("MENU:");
         System.out.println("1: Realizar reserva");
         System.out.println("2: Cancelar reserva");
         System.out.println("3: Ver usuario");
@@ -439,12 +444,10 @@ public class Hotel<K, T> {
 
         empleado = (Empleado) clase.cast(user.getPersona());
 
-        System.out.println("Bienvenido " + empleado.getNombre() + " " + empleado.getApellido());
         int opcion = 0;
         do {
             opcionesEmpleado();
-            System.out.println("Que opcion desea realizar?");
-            teclado.nextLine();
+            System.out.println("Que opcion desea realizar? ");
             opcion = teclado.nextInt();
             switch (opcion) {
                 case 1:
@@ -493,6 +496,10 @@ public class Hotel<K, T> {
      */
     private void opcionesEmpleado() {
         System.out.println();
+        System.out.println("PRESIONE ENTER PARA CONTINUAR...");
+        String enter = teclado.next();
+        teclado.nextLine();
+        System.out.println("MENU EMPLEADO:");
         System.out.println("¡Recuerde fichar primero!");
         System.out.println("1: Fichar entrada");
         System.out.println("2: Fichar salida");
@@ -513,7 +520,7 @@ public class Hotel<K, T> {
         teclado.nextLine();
         String codigo;
         int horas;
-        System.out.println("Ingrese su codigo de reserva");
+        System.out.println("Ingrese su codigo de reserva: ");
         codigo = teclado.next();
         Reserva reserva = null;
 
@@ -566,7 +573,7 @@ public class Hotel<K, T> {
         teclado.nextLine();
         String codigo;
         int horas;
-        System.out.println("Ingrese su codigo de reserva");
+        System.out.println("Ingrese su codigo de reserva: ");
         codigo = teclado.next();
         Reserva reserva = null;
         try {
@@ -777,14 +784,6 @@ public class Hotel<K, T> {
                     break;
                 case 6:
                     if (user.getPersona() instanceof Pasajero) {
-                        System.out.println("Ingrese su nuevo pais");
-                        ((Pasajero) user.getPersona()).setOrigen(teclado.next());
-                    } else {
-                        System.out.println("No tiene registrado pais");
-                    }
-                    break;
-                case 7:
-                    if (user.getPersona() instanceof Pasajero) {
                         System.out.println("Ingrese su historia");
                         ((Pasajero) user.getPersona()).setHistoria(teclado.next());
                     } else {
@@ -812,8 +811,7 @@ public class Hotel<K, T> {
         System.out.println("3: Nombre");
         System.out.println("4: Apellido");
         System.out.println("5: Direccion");
-        System.out.println("6: Ciudad");
-        System.out.println("7: Historia");
+        System.out.println("6: Historia");
     }
 
     /**
@@ -1322,16 +1320,16 @@ public class Hotel<K, T> {
 
 
     private void mostrarServiciosIncluidos() {
-        System.out.println("En cuanto a las instalaciones nuestro hotel cuenta con ascensor,piscina al aire libre y climatizada, calefaccion y bar,");
-        System.out.println(" asi como aire acondicionado en salas comunes y las habitaciones, telefono,television,baño privado, caja fuerte y minibar en la habitacion.");
-        System.out.println("Estacionamiento de pago para los huespedes con Valet Parking");
-        System.out.println("Disponemos de un area de recepcion con servicio de atencion al cliente las 24 horas del dia por personal cualificado");
-        System.out.println("Un espacio separado para guardar el equipaje y un servicio de consigna para equipajes voluminosos o pesados a peticion del huesped.");
-        System.out.println("Acceso gratuito a internet Wi-Fi en las habitaciones y areas comunes.");
-        System.out.println("Limpieza diaria de las habitaciones y el cambio de toallas y sabanas.");
-        System.out.println("Contamos con un restaurant para el desayuno,almuerzo y cena de primer nivel.");
-        System.out.println("Contamos con un sistema de camaras en las salas comunes para garantizar la seguridad de los huespedes y sus pertenencias.");
-        System.out.printf("Nuestro personal se caracteriza por ser amable y servicial, y estar disponible para ayudar a los huespedes con cualquier necesidad o pregunta.");
+        System.out.println("En cuanto a las instalaciones, nuestro hotel cuenta con ascensor, piscina al aire libre y climatizada, calefaccion y bar,");
+        System.out.println("asi como aire acondicionado en todos los ambientes. En las habitaciones cuenta con telefono, television, baño privado,");
+        System.out.println("caja fuerte y mini-bar en la habitacion. Posee estacionamiento de pago para los huespedes con Valet Parking incluido. ");
+        System.out.println("Disponemos de un area de recepcion con servicio de atencion al cliente las 24 horas del dia por personal calificado.");
+        System.out.println("Tambien contara con un espacio a parte para guardar el equipaje y un servicio de consigna para equipajes voluminosos ");
+        System.out.println("o pesados a peticion del huesped. Tendra acceso gratuito a internet Wi-Fi en las habitaciones y areas comunes, y limpieza");
+        System.out.println("diaria de las mismas con cambio de toallas y sabanas incluido. Contamos con un restaurant para el desayuno, almuerzo y cena");
+        System.out.println("de primer nivel. En cuanto a la seguridad, el hotel provee un sistema de camaras en las salas comunes para la tranquilidad");
+        System.out.println("de los huespedes. Nuestro personal se caracteriza por ser amable y servicial, y estar disponible para ayudar a los pasajeros");
+        System.out.printf("con cualquier necesidad o consulta.");
     }
 
     /**
@@ -1674,9 +1672,9 @@ public class Hotel<K, T> {
 
     @Override
     public String toString() {
-        return "\n- " + nombre + '\'' +
-                "\n- Direccion: " + direccion + '\'' +
-                "\n- Ciudad: " + ciudad + '\'' +
+        return "\n- " + nombre +
+                "\n- Direccion: " + direccion +
+                "\n- Ciudad: " + ciudad +
                 "\n- Cantidad de estrellas: " + cantidadEstrellas;
     }
 
