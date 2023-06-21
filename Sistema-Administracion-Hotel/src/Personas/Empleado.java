@@ -16,6 +16,10 @@ import java.time.LocalDateTime;
         @JsonSubTypes.Type(value = Recepcionista.class, name = "Personas.Recepcionista")
 
 })
+/**
+ * Empleados del hotel.
+ * Contiene características básicas de una persona y de un empleado (sueldo - dias de vacaciones - antiguedad - tipo de trabajo)
+ */
 @JsonTypeName("Personas.Empleado")
 public  abstract class Empleado extends Persona{
 
@@ -35,17 +39,27 @@ public  abstract class Empleado extends Persona{
         this.trabajador = trabajador;
     }
 
+
     public abstract void calcularSueldo();
 
+    /**
+     * Esta función calcula la cantidad de días de vacaciones que un empleado debe tener, teniendo en cuenta ciertos factores
+     */
     public int calcularDiasVacaciones(){
         int dias = 14 + this.antiguedad;
         return dias;
     }
 
+    /**
+     * Función que se encarga de registrar cuando el empleado entra al hotel
+     */
     public void fichaje(){
         System.out.println("Fecha de entrada: " + LocalDateTime.now());
     }
 
+    /**
+     * Función que se encarga de registrar cuando el empleado termina su turno en el hotel
+     */
     public void desFichaje(){
         System.out.println("Fecha de salida: " + LocalDateTime.now());
     }

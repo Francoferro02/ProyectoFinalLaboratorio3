@@ -11,6 +11,10 @@ import java.util.ArrayList;
         @JsonSubTypes.Type(value = Comun.class, name = "Habitaciones.Comun"),
         @JsonSubTypes.Type(value = Suite.class, name = "Habitaciones.Suite")
 })
+
+/**
+ * Con esta clase se crean las habitaciones del hotel con sus respectivas características.
+ */
 public abstract class Habitacion {
 
     public String numero;

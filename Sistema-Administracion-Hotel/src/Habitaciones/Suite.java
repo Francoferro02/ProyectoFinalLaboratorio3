@@ -5,6 +5,9 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
+/**
+ * Habitaciones suites del hotel, con sus servicios adicionales que las distinguen.
+ */
 @JsonTypeName("Habitaciones.Suite")
 public class Suite extends Habitacion{
 

@@ -6,6 +6,9 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 
+/**
+ * Esta clase trata de la cochera del hotel, su espacio total, espacio disponible y el precio por día.
+ */
 public class Cochera {
 
     private int espacioTotal;

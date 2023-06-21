@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.TreeMap;
 
+
 @JsonTypeName("Personas.Administrador")
 public class Administrador extends Empleado {
     private Scanner teclado = new Scanner(System.in);

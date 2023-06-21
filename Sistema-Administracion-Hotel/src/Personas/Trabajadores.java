@@ -2,6 +2,9 @@ package Personas;
 
 import java.util.Arrays;
 
+/**
+ * Clase enum que contiene los diferentes trabajos disponibles en el hotel.
+ */
 public enum Trabajadores {
     RECEPCIONISTA(new String[]{"RECEPCIONISTA"}),
     ADMINISTRADOR(new String[]{"ADMINISTRADOR"}),

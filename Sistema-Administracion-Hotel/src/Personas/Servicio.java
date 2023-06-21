@@ -7,6 +7,9 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import java.util.ArrayList;
 import java.util.TreeMap;
 
+/**
+ * Clase que contiene ciertas funciones de los empleados del hotel.
+ */
 @JsonTypeName("Personas.Servicio")
 public class Servicio extends Empleado implements Mantenimiento {
 
@@ -19,7 +22,10 @@ public class Servicio extends Empleado implements Mantenimiento {
         calcularSueldo();
     }
 
-
+    /**
+     * Función que permite a los empleados informar que van a realizar determinada acción dentro de una habitación.
+     * @param mapaHabitaciones todas las habitaciones del hotel.
+     */
     private void realizarAccion(TreeMap<String, Habitacion> mapaHabitaciones) {
         for (String num : mapaHabitaciones.keySet()) {
             if (mapaHabitaciones.get(num).getEstado().equals("En reparacion funcional")) {
@@ -69,6 +75,11 @@ public class Servicio extends Empleado implements Mantenimiento {
 
     }
 
+    /**
+     * Método que cuenta cuantas habitaciones hay en cada estado.
+     * @param mapa todas las habitaciones del hotel.
+     * @param listaReportes lista de reportes de cada habitación.
+     */
     public void notificacionesServicio(TreeMap<String, Habitacion> mapa, ArrayList<String> listaReportes) {
         int contador = 0;
         for (int i = 0; i < listaReportes.size(); i++) {
@@ -126,6 +137,10 @@ public class Servicio extends Empleado implements Mantenimiento {
         super.desFichaje();
     }
 
+    /**
+     * Método que muestra todas las habitaciones las cuales no esten disponibles por determinado problema.
+     * @param mapa todas las habitaciones en el hotel.
+     */
     @Override
     public void mostrarHabitacionesConProblemas(TreeMap<String, Habitacion> mapa) {
         for (String num : mapa.keySet()) {
@@ -155,6 +170,11 @@ public class Servicio extends Empleado implements Mantenimiento {
         }
     }
 
+    /**
+     * Función la cual guarda en la lista de reportes, todas las habitaciones con sus respectivos reportes.
+     * @param mapa todas las habitaciones del hotel.
+     * @param listaReportes lista de las habitaciones con sus respectivos reportes.
+     */
     @Override
     public void darReporte(TreeMap<String, Habitacion> mapa, ArrayList<String> listaReportes) {
         for (int i = 0; i < listaReportes.size(); i++) {

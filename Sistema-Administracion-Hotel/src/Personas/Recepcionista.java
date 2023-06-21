@@ -10,6 +10,10 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.TreeMap;
 
+/**
+ * Clase específica se los recepcionistas de un hotel.
+ * Contiene las características y métodos de los empleados, y ademas ciertas funciones específicas del hotel.
+ */
 @JsonTypeName("Personas.Recepcionista")
 public class Recepcionista extends Empleado implements Mantenimiento {
     private Scanner teclado = new Scanner(System.in);
@@ -46,6 +50,11 @@ public class Recepcionista extends Empleado implements Mantenimiento {
         super.desFichaje();
     }
 
+    /**
+     * Función la cual permite al recepcionista realizar el CheckIn de un pasajero.
+     * @param mapReserva es el mapa de reservas del gotel para buscar dentro de está la reserva a relizarle el CheckIn.
+     * @return true si bi tiene reserva el pasajero, y false si ya tiene y la habitación esta lista.
+     */
     public boolean informarCheckIn(TreeMap<String, Reserva> mapReserva) {
         char tiene = 's';
         String codReserva;
@@ -71,6 +80,13 @@ public class Recepcionista extends Empleado implements Mantenimiento {
         }
     }
 
+    /**
+     * Esta función permite al recepcionista realizar un CheckOut de un pasajero, y marca como disponible la habitación y cocheras ocupadas por estos pasajeros.
+     * @param ListaPasajeros lista de pasajeros del hotel.
+     * @param mapReserva mapa de reservas realizadas en el hotel.
+     * @param mapHabitaciones mapa de habitaciones que tiene el hotel.
+     * @param cochera cocheras del hotel.
+     */
     public void informarCheckOut(ArrayList<Pasajero> ListaPasajeros, TreeMap<String, Reserva> mapReserva, TreeMap<String, Habitacion> mapHabitaciones, Cochera cochera) {
         String claveIdentificador;
         System.out.println("Buenos dias, su estadia en Lester Hotel ha finalizado. Porfavor indique su clave de reserva");
@@ -89,11 +105,18 @@ public class Recepcionista extends Empleado implements Mantenimiento {
         mapReserva.remove(claveIdentificador);
     }
 
-
+    /**
+     * Cantidad de habitaciones total del hotel.
+     * @param cantidad cantidad de habitaciones del hotel.
+     */
     public void informarCantHabitaciones(int cantidad) {
         System.out.println("Cantidad de habitaciones total: " + cantidad);
     }
 
+    /**
+     * Filtra todas las habitaciones ocupadas por del hotel.
+     * @param map todas las habitaciones del hotel.
+     */
     public void verOcupaciones(TreeMap<String, Habitacion> map) {
         for (String k : map.keySet()) {
             if (map.get(k).isOcupada() == true) {
@@ -103,6 +126,10 @@ public class Recepcionista extends Empleado implements Mantenimiento {
         }
     }
 
+    /**
+     * Filtra todas las habitaciones desocupadas por del hotel.
+     * @param map todas las habitaciones del hotel.
+     */
     public void verDesocupadas(TreeMap<String, Habitacion> map) {
         for (String k : map.keySet()) {
             if (map.get(k).isOcupada() == false) {
@@ -111,10 +138,19 @@ public class Recepcionista extends Empleado implements Mantenimiento {
         }
     }
 
+    /**
+     * Esta función busca una habitación en específico del hotel a través de su código.
+     * @param map todas las habitaciones del hotel.
+     * @param numero el numero de la habitación a buscar.
+     */
     public void buscarHabitacion(TreeMap<String, Habitacion> map, String numero) {
         System.out.println(map.get(numero));
     }
 
+    /**
+     * Habitaciones las cuales no estan disponibles por distintos problemas.
+     * @param mapa todas las habitaciones del hotel.
+     */
     @Override
     public void mostrarHabitacionesConProblemas(TreeMap<String, Habitacion> mapa) {
         for(String clave : mapa.keySet()){
@@ -124,6 +160,11 @@ public class Recepcionista extends Empleado implements Mantenimiento {
         }
     }
 
+    /**
+     * Función que reporta todas las habitaciones las cuales tienen algún inconveniente.
+     * @param mapa todas las habitaciones del hotel.
+     * @param listaReportes lista de todas las habitaciones con sus respectivos reportes.
+     */
     @Override
     public void darReporte(TreeMap<String, Habitacion> mapa , ArrayList<String> listaReportes) {
         for(String clave : mapa.keySet()){

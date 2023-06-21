@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
+/**
+ * Habitaciones comunes del hotel.
+ */
 @JsonTypeName("Habitaciones.Comun")
 public class Comun extends Habitacion {
 
