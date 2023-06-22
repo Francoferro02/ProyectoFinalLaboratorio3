@@ -67,7 +67,7 @@ public class Recepcionista extends Empleado implements Mantenimiento {
      * @param mapReserva es el mapa de reservas del gotel para buscar dentro de está la reserva a relizarle el CheckIn.
      * @return true si bi tiene reserva el pasajero, y false si ya tiene y la habitación esta lista.
      */
-    public boolean informarCheckIn(TreeMap<String, Reserva> mapReserva) {
+    public boolean informarCheckIn(TreeMap<String, Reserva> mapReserva,TreeMap<String, Habitacion> mapHabitacion) {
         char tiene = 's';
         String codReserva;
         boolean exceptionLaunch = false;
@@ -78,7 +78,10 @@ public class Recepcionista extends Empleado implements Mantenimiento {
                 System.out.println("Indique su codigo de reserva");
                 codReserva = teclado.next();
                 if (mapReserva.containsKey(codReserva)) {
-                    System.out.println("Su habitacion ya se encuentra lista");
+                    for (Habitacion habitacion : mapReserva.get(codReserva).getHabitaciones()) {
+                        mapHabitacion.get(habitacion.getNumero()).setOcupada(true);
+                    }
+                    System.out.println("Su habitacion/es ya se encuentra lista");
                     return false;
                 } else {
                     exceptionLaunch = true;

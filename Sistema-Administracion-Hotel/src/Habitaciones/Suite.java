@@ -11,12 +11,11 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 @JsonTypeName("Habitaciones.Suite")
 public class Suite extends Habitacion{
 
-    public String serviciosAdicionales;
+    public String serviciosAdicionales = "Incluyen  servicios de lavanderia, servicios de transporte,servicios de spa, se notara la buena calidad se extendera a los muebles, las tapicerias, las lamparas y, en general, a todos los elementos decorativos, asi como a la vajilla, la cristaleria, la cuberteria y la ropa blanca. ";
 
 @JsonCreator
     public Suite(@JsonProperty("numero")String numero, @JsonProperty("capacidad")int capacidad, @JsonProperty("terraza")boolean terraza, @JsonProperty("precio")double precio) {
         super(numero, capacidad, terraza, precio);
-        this.serviciosAdicionales = "Incluyen  servicios de lavandería, servicios de transporte,servicios de spa, se notara la buena calidad se extenderá a los muebles, las tapicerías, las lámparas y, en general, a todos los elementos decorativos, así como a la vajilla, la cristalería, la cubertería y la ropa blanca. ";
     }
 
     public double getPrecio() {

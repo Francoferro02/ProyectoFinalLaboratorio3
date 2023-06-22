@@ -10,7 +10,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.Scanner;
 import java.util.TreeMap;
 
@@ -69,15 +68,14 @@ public class Administrador extends Empleado {
      * {@link Administrador#opcionesTrabajador()}.
      * {@link Administrador#menuRegistroTrabajador(int)}.
      * @param listaUsuario la lista de usuarios del hotel, la cual se usa para verificar que no haya ningun usuario con el username nuevo.
-     * @param mapEmpleado mapa de empleados del hotel.
      * @return el nuevo usuario del empleado.
      */
-    public Usuario crearUsuarioEmpleado(ArrayList<Usuario> listaUsuario, TreeMap<String, Empleado> mapEmpleado) {
+    public Usuario crearUsuarioEmpleado(ArrayList<Usuario> listaUsuario) {
         String DNI = null;
         Usuario user = new Usuario();
         boolean verif = true;
         while (verif) {
-            System.out.printf("Ingrese un nombre de usuario (DNI): ");
+            System.out.print("Ingrese un nombre de usuario (DNI): ");
             DNI = teclado.next();
             for (Usuario u : listaUsuario) {
                 if (!(u.getNombreDeUsuario().equals(DNI))) {
@@ -87,9 +85,9 @@ public class Administrador extends Empleado {
             }
         }
         teclado.nextLine();
-        System.out.printf("\nIngrese su contraseña: ");
+        System.out.print("\nIngrese su contraseña: ");
         user.setContraseña(teclado.next());
-        int opcionEmpleado = 0;
+        int opcionEmpleado;
         do {
             System.out.println("Va a registrar recepcionista o servicio? (1 o 2)");
             opcionEmpleado = teclado.nextInt();
@@ -97,7 +95,7 @@ public class Administrador extends Empleado {
         } while (user.getPersona() == null);
         user.setRol(Rol.ROL_EMPLEADO);
         teclado.nextLine();
-        int opcionRol = 0;
+        int opcionRol;
         if (user.getPersona() instanceof Servicio) {
             opcionesTrabajador();
             System.out.println("Que servicio esta registrando?");
@@ -333,7 +331,7 @@ public class Administrador extends Empleado {
             consumible.setDescripcion(teclado.next());
             listaConsumibles.add(consumible);
             System.out.println("Desea agregar otro consumible? s/n");
-            teclado.next().charAt(0);
+            seguir = teclado.next().charAt(0);
         } while (seguir == 's');
     }
 

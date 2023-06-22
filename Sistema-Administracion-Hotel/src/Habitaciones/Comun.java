@@ -15,7 +15,6 @@ public class Comun extends Habitacion {
         super(numero, capacidad, terraza, precio);
     }
 
-
     @Override
     public String toString() {
         return "\n------------------------------------------------"+

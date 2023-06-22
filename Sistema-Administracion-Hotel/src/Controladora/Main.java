@@ -2,12 +2,10 @@ package Controladora;
 
 import Contable.Factura;
 import Contable.Reserva;
-import Controladora.Hotel;
 import Habitaciones.Habitacion;
 import Personas.*;
 import Servicios.Consumible;
 
-import java.io.IOException;
 
 /**
  * Lee todos los archivos y llama al menú principal.
@@ -18,10 +16,10 @@ import java.io.IOException;
  * @author Buixados Tomás.
  * @author Ferro Franco Andres.
  * @author Fazio Galo.
- * @author Escobar Fransisco.
+ * @author Escobar Francisco.
  */
 public class Main {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args){
         Hotel lester = new Hotel();
      /*
        Administrador administrador = new Administrador("Lester","Crest","285435367",3000000,20,"ADMINISTRADOR");

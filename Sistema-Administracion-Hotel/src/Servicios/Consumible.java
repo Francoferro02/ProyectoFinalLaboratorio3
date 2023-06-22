@@ -1,6 +1,5 @@
 package Servicios;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 /**
  * Consumibles los cuales pueden pedir los pasajeros al hospedarse en el hotel.
