@@ -96,12 +96,12 @@ public  abstract class Empleado extends Persona{
     @Override
     public String toString() {
         return "\n------------------------------------------------" +
-                "\nEmpleado{" +
-                "\nsueldo=" + sueldo +
-                "\n, dias de vacaciones=" + diasVacaciones +
-                "\n, antiguedad=" + antiguedad +
-                "\n, nombre='" + nombre + '\'' +
-                "\n, apellido='" + apellido + '\'' +
-                "\n, DNI=" + DNI;
+                "\nEmpleado: " +
+                "\n- Sueldo: " + sueldo +
+                "\n- Dias de vacaciones: " + diasVacaciones +
+                "\n- Antiguedad: " + antiguedad +
+                "\n- Nombre: " + nombre + '\'' +
+                "\n- Apellido: " + apellido + '\'' +
+                "\n- DNI: " + DNI;
     }
 }

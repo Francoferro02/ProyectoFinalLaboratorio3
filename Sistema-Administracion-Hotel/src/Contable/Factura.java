@@ -16,6 +16,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
+/**
+ * Esta clase representa la factura realizada al reservar una habitación en el hotel.
+ * Contiene características como el precio total de la reserva, el pasajero que pagó la reserva, las habitaciones reservadas.
+ */
 public class Factura {
 
     private double precioTotal;
@@ -79,6 +83,12 @@ public class Factura {
         this.codigoIdentificador = codigoIdentificador;
     }
 
+    /**
+     * Función que permite calcular el precio de la factura.
+     * @param dias es la cantidad de días que dura la estadía del pasajero.
+     * @param reserva reserva realizada por el pasajero, a la cual se le está determinando el precio.
+     * @param precioCochera es el precio de la cochera alquilada.
+     */
     public void calcularPrecio(int dias, Reserva reserva, double precioCochera){
 
         for (Habitacion h: reserva.habitaciones) {

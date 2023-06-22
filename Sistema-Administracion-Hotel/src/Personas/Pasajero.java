@@ -9,6 +9,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
+/**
+ * Clase de los pasajeros que desean hospedarse en el hotel.
+ */
 @JsonTypeName("Personas.Pasajero")
 public class Pasajero extends Persona {
 
@@ -62,6 +65,12 @@ public class Pasajero extends Persona {
     }
 
 
+    /**
+     * Clase que le permite a un pasajero pedir un consumible, siempre y cuando hospedado en el hotel.
+     * @param listaConsumibles es la lista de consumibles disponibles para pedir.
+     * @param mapReservas es el mapa de reservas y es necesario para ver si el pasajero tiene una reserva vigente.
+     * @return la cantidad de dinero gastada en consumibles.
+     */
     public double pedirConsumible(ArrayList<Consumible> listaConsumibles, TreeMap<String, Reserva> mapReservas) {
         int opcion = 0;
         Scanner teclado = new Scanner(System.in);
@@ -103,6 +112,7 @@ public class Pasajero extends Persona {
                 "\n- Historia: " + historia +
                 "\n- Cantidad de dias: " + cantDias;
     }
+
 
     @Override
     public boolean equals(Object obj) {

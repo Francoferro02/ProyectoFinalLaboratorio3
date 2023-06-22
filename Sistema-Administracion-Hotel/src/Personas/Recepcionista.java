@@ -27,6 +27,9 @@ public class Recepcionista extends Empleado implements Mantenimiento {
         calcularSueldo();
     }
 
+    /**
+     * Función que se engarga de calcular el sueldo de un empleado teniendo en cuenta ciertas características.
+     */
     @Override
     public void calcularSueldo() {
         double sueldo = this.sueldo;
@@ -34,17 +37,26 @@ public class Recepcionista extends Empleado implements Mantenimiento {
         this.setSueldo(sueldo);
     }
 
+    /**
+     * Esta función calcula la cantidad de días de vacaciones que un empleado debe tener, teniendo en cuenta ciertos factores
+     */
     @Override
     public int calcularDiasVacaciones() {
         super.calcularDiasVacaciones();
         return diasVacaciones;
     }
 
+    /**
+     * Función que se encarga de registrar cuando el empleado entra al hotel
+     */
     @Override
     public void fichaje() {
         super.fichaje();
     }
 
+    /**
+     * Función que se encarga de registrar cuando el empleado termina su turno en el hotel
+     */
     @Override
     public void desFichaje() {
         super.desFichaje();

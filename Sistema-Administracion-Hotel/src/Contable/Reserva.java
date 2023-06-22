@@ -17,6 +17,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
 
+/**
+ * Clase que contiene las habitaciones y cocheras reservadas por el pasajero.
+ * Contiene otras características de la reserva, como si se realizó un early CheckIn o un late CheckOut.
+ */
 public class Reserva {
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)

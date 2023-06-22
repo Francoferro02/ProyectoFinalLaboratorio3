@@ -2,31 +2,22 @@ package Controladora;
 
 import Contable.Factura;
 import Contable.Reserva;
-import Habitaciones.Comun;
 import Habitaciones.Habitacion;
-import Habitaciones.Suite;
 import Personas.*;
 import Servicios.Cochera;
 import Servicios.Consumible;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 
-import com.sun.tools.javac.Main;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
@@ -34,7 +25,10 @@ import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Clase principal del proyecto, funciona como controladora del hotel.
- *
+ * @author Buixados Tomás.
+ * @author Ferro Franco Andres.
+ * @author Fazio Galo.
+ * @author Escobar Fransisco.
  * @param <K>
  * @param <T> Estos parametros permiten que la escritura y lectura de archivos a traves de un map o Arraylist, sea de forma genérica.
  */

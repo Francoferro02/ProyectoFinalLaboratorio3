@@ -172,6 +172,7 @@ public class Servicio extends Empleado implements Mantenimiento {
 
     /**
      * Función la cual guarda en la lista de reportes, todas las habitaciones con sus respectivos reportes.
+     * {@link Servicio#realizarAccion(TreeMap)}
      * @param mapa todas las habitaciones del hotel.
      * @param listaReportes lista de las habitaciones con sus respectivos reportes.
      */

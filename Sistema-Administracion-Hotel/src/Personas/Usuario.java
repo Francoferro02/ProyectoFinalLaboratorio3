@@ -11,7 +11,10 @@ import com.fasterxml.jackson.databind.ser.std.ClassSerializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 
-
+/**
+ * Clase de los usuarios del hotel.
+ * Define ciertas caracteristicas del usuario, como su nombre, contraseña, que tipo de usuario es (pasajero - empleado - administrador) y sus características básicas.
+ */
 public class Usuario {
 
     public String nombreDeUsuario;

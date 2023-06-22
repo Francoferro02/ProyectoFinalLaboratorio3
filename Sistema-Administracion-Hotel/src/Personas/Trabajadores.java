@@ -29,6 +29,12 @@ public enum Trabajadores {
     public void setAbreviatura(String[] abreviatura) {
         this.abreviatura = abreviatura;
     }
+
+    /**
+     * Función para buscar cierta abreviatura dentro de un arreglo.
+     * @param index la posición buscada dentro del arreglo de abreviaturas.
+     * @return la abreviatura de la posición buscada.
+     */
     public String getAbreviaturas(int index) {
         if (index >= 0 && index < abreviatura.length) {
             return abreviatura[index];

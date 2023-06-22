@@ -14,7 +14,10 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.TreeMap;
 
-
+/**
+ * Clase del administrador del hotel.
+ * Contiene ciertos métodos especiales que solo pueden ser utilizados por el.
+ */
 @JsonTypeName("Personas.Administrador")
 public class Administrador extends Empleado {
     private Scanner teclado = new Scanner(System.in);
@@ -25,7 +28,9 @@ public class Administrador extends Empleado {
         calcularSueldo();
     }
 
-
+    /**
+     * Función que se engarga de calcular el sueldo de un empleado teniendo en cuenta ciertas características.
+     */
     @Override
     public void calcularSueldo() {
         double sueldo = this.sueldo;
@@ -33,22 +38,40 @@ public class Administrador extends Empleado {
         this.setSueldo(sueldo);
     }
 
+    /**
+     * Esta función calcula la cantidad de días de vacaciones que un empleado debe tener, teniendo en cuenta ciertos factores
+     */
     @Override
     public int calcularDiasVacaciones() {
         super.calcularDiasVacaciones();
         return diasVacaciones;
     }
 
+    /**
+     * Función que se encarga de registrar cuando el empleado entra al hotel
+     */
     @Override
     public void fichaje() {
         super.fichaje();
     }
 
+    /**
+     * Función que se encarga de registrar cuando el empleado termina su turno en el hotel
+     */
     @Override
     public void desFichaje() {
         super.desFichaje();
     }
 
+    /**
+     * Permite al administrador crear un usuario para un empleado del hotel.
+     * {@link Administrador#registrarEmpleado(String, int)}.
+     * {@link Administrador#opcionesTrabajador()}.
+     * {@link Administrador#menuRegistroTrabajador(int)}.
+     * @param listaUsuario la lista de usuarios del hotel, la cual se usa para verificar que no haya ningun usuario con el username nuevo.
+     * @param mapEmpleado mapa de empleados del hotel.
+     * @return el nuevo usuario del empleado.
+     */
     public Usuario crearUsuarioEmpleado(ArrayList<Usuario> listaUsuario, TreeMap<String, Empleado> mapEmpleado) {
         String DNI = null;
         Usuario user = new Usuario();
@@ -93,6 +116,9 @@ public class Administrador extends Empleado {
         return user;
     }
 
+    /**
+     * Opciones de las cuales puede ejercer un trabajador del hotel.
+     */
     private void opcionesTrabajador() {
         System.out.println("1:ADMINISTRADOR");
         System.out.println("2:MUCAMA");
@@ -104,6 +130,12 @@ public class Administrador extends Empleado {
         System.out.println("8:MANTENIMIENTO");
     }
 
+    /**
+     * Función que retorna el tipo de empleo que ejerce el nuevo empleado.
+     * {@link Trabajadores#getAbreviaturas(int)}.
+     * @param opcion el numero de opción de trabajo que ejercer el nuevo empleado.
+     * @return el tipo de trabajador que el nuevo empleado ejerce.
+     */
     private String menuRegistroTrabajador(int opcion) {
         int tipo;
         do {
@@ -172,6 +204,12 @@ public class Administrador extends Empleado {
         return null;
     }
 
+    /**
+     * Registro de las características básicas del nuevo empleado, define si el empleado es recepcionista o de servicio.
+     * @param DNI el DNI del nuevo empleado.
+     * @param opcion si el nuevo empleado es recepcionista o de servicio.
+     * @return el nuevo empleado con su nombre, apellido y DNI.
+     */
     private Empleado registrarEmpleado(String DNI, int opcion) {
         Servicio servicio = new Servicio();
         Recepcionista recepcionista = new Recepcionista();
@@ -202,6 +240,11 @@ public class Administrador extends Empleado {
         return null;
     }
 
+    /**
+     * Permite al administrador eliminar un usuario de un empleado.
+     * @param listaUsuarios lista de usuarios para eliminar a uno de estos.
+     * @param mapEmpleados mapa de empleados para eliminar uno de estos.
+     */
     public void eliminarUsuario(ArrayList<Usuario> listaUsuarios, TreeMap<String, Empleado> mapEmpleados) {
         teclado.nextLine();
         System.out.println("Lista de empleados:");
@@ -223,6 +266,11 @@ public class Administrador extends Empleado {
 
     }
 
+    /**
+     * Permite al administrador generar un BackUp con toda la información del hotel
+     * @param lester es la variable del hotel que se quiere realizar el BackUp
+     * @param ruta es la ruta del archivo BackUp
+     */
     public void generarBackUp(Hotel lester, String ruta) {
         File backUp = new File(ruta + "BackUp.json");
         try {
@@ -236,6 +284,12 @@ public class Administrador extends Empleado {
         }
     }
 
+    /**
+     * Permite cambiar el tipo de trabajo que ejerce un empleado.
+     * {@link Administrador#opcionesTrabajador()}.
+     * {@link Administrador#menuRegistroTrabajador(int)}.
+     * @param mapEmpleados es el mapa de empleados, en el cual se busca cierto empleado para darle determinado permiso.
+     */
     public void darPermisos(TreeMap<String, Empleado> mapEmpleados) {
         teclado.nextLine();
         int cual;
@@ -261,6 +315,10 @@ public class Administrador extends Empleado {
         }
     }
 
+    /**
+     * Permite al administrador agregar un consumible al hotel.
+     * @param listaConsumibles lista de consumibles, a la cual se le agregará uno nuevo.
+     */
     public void agregarConsumibles(ArrayList<Consumible> listaConsumibles) {
         char seguir = 's';
         teclado.nextLine();
