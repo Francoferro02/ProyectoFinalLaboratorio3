@@ -231,7 +231,6 @@ public class Servicio extends Empleado implements Mantenimiento {
                 "\n- Apellido: " + apellido +
                 "\n- DNI: " + DNI +
                 "\n- Sueldo: " + sueldo +
-                "\n- Dias de vacaciones: " + diasVacaciones +
                 "\n- Antiguedad: " + antiguedad +
                 "\n- Trabajador: " + trabajador;
     }

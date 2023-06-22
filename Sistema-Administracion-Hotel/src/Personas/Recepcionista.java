@@ -148,7 +148,7 @@ public class Recepcionista extends Empleado implements Mantenimiento {
      */
     public void verDesocupadas(TreeMap<String, Habitacion> map) {
         for (String k : map.keySet()) {
-            if (map.get(k).isOcupada() == false) {
+            if (!map.get(k).isOcupada()) {
                 System.out.println(map.get(k));
             }
         }
@@ -198,7 +198,6 @@ public class Recepcionista extends Empleado implements Mantenimiento {
                 "\n- Apellido: " + apellido +
                 "\n- DNI: " + DNI +
                 "\n- Sueldo: " + sueldo +
-                "\n- Dias de vacaciones: " + diasVacaciones +
                 "\n- Antiguedad: " + antiguedad +
                 "\n- Trabajador: " + trabajador;
     }

@@ -98,7 +98,6 @@ public  abstract class Empleado extends Persona{
         return "\n------------------------------------------------" +
                 "\nEmpleado: " +
                 "\n- Sueldo: " + sueldo +
-                "\n- Dias de vacaciones: " + diasVacaciones +
                 "\n- Antiguedad: " + antiguedad +
                 "\n- Nombre: " + nombre + '\'' +
                 "\n- Apellido: " + apellido + '\'' +
