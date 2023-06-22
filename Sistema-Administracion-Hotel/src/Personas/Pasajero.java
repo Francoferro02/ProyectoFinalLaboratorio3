@@ -72,13 +72,13 @@ public class Pasajero extends Persona {
      */
     public double pedirConsumible(ArrayList<Consumible> listaConsumibles, TreeMap<String, Reserva> mapReservas) {
         int opcion = 0;
+        boolean encontrado = false;
         Scanner teclado = new Scanner(System.in);
         for (String k : mapReservas.keySet()) {
             for (Pasajero p : mapReservas.get(k).getPasajeros()) {
                 if (p.equals(this)) {
                     if ((mapReservas.get(k).getFechaEntrada().compareTo(LocalDateTime.now()) <= 0) && (mapReservas.get(k).getFechaSalida().compareTo(LocalDateTime.now())) >= 0) {
                         System.out.println("Se le mostrara la lista de consumibles");
-
                         for (Consumible c : listaConsumibles) {
                             System.out.printf(" " + opcion + ":");
                             System.out.println(c);
@@ -89,13 +89,14 @@ public class Pasajero extends Persona {
                         System.out.println("En minutos te estara llegando tu " + listaConsumibles.get(opcion).getNombre());
                         return listaConsumibles.get(opcion).getPrecio();
                     } else {
-                        System.out.println("Su reserva ya finalizo o todavia no es valida");
+                        encontrado = true;
                     }
                 }
             }
-
         }
-
+        if (encontrado){
+            System.out.println("Su reserva ya finalizo o todavia no es valida");
+        }
         return 0;
     }
 

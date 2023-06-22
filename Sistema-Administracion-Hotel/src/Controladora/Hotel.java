@@ -163,7 +163,10 @@ public class Hotel<K, T> {
             opcion = teclado.nextInt();
             switch (opcion) {
                 case 1 -> checkInRecepcionista(user);
-                case 2 -> recepcionista.informarCheckOut(listaPasajeros, mapReservas, mapHabitaciones, cochera);
+                case 2 -> {
+                    recepcionista.informarCheckOut(listaPasajeros, mapReservas, mapHabitaciones, cochera);
+                    escribirArchivoMap("Reservas.json", (TreeMap<K, T>) mapReservas);
+                }
                 case 3 -> recepcionista.informarCantHabitaciones(mapHabitaciones.size());
                 case 4 -> recepcionista.verOcupaciones(mapHabitaciones);
                 case 5 -> recepcionista.verDesocupadas(mapHabitaciones);
@@ -174,6 +177,7 @@ public class Hotel<K, T> {
                 case 7 -> {
                     eventoHabNoDisponible();
                     recepcionista.mostrarHabitacionesConProblemas(mapHabitaciones);
+                    escribirArchivoMap("Habitaciones.json", (TreeMap<K, T>) mapHabitaciones);
                 }
                 case 8 -> {
                     System.out.println("Creando reporte de todas las habitaciones con problemas");
@@ -209,7 +213,7 @@ public class Hotel<K, T> {
         System.out.println("8: Dar reportes");
         System.out.println("9: Ver historial de reportes");
         System.out.println("10: Ver todas las reservas");
-        System.out.println("11: Ver menú de empleado");
+        System.out.println("11: Ver menu de empleado");
         System.out.println("12: Salir");
 
     }
@@ -325,7 +329,7 @@ public class Hotel<K, T> {
                 case 10 -> modificarUsuario(usuario);
                 case 11 -> {
                     eliminarUsuario(usuario);
-                    menuPrincipal();
+                    escribirArchivoArrayList("Usuarios.json", (ArrayList<T>) listaUsuarios);
                 }
                 case 12 -> System.out.println("Hasta luego");
             }
@@ -360,7 +364,7 @@ public class Hotel<K, T> {
      * Este método es el menú de los empleados del hotel, dentro de el cuentan con distintas opciones para realizar sus tareas diarias.
      * Se selecciona la función que se quiere realizar a través de un switch case.
      * <p>
-     * {@link Hotel#opcionesEmpleado()}
+     * {@link Hotel#opcionesEmpleado(Empleado)}
      * <p>
      * 1- {@link Empleado#fichaje()},
      * 2- {@link Empleado#desFichaje()}, {@link Servicio#notificacionesServicio(TreeMap, ArrayList)},
@@ -385,7 +389,7 @@ public class Hotel<K, T> {
 
         int opcion = 0;
         do {
-            opcionesEmpleado();
+            opcionesEmpleado(empleado);
             System.out.println("Que opcion desea realizar? ");
             opcion = teclado.nextInt();
             switch (opcion) {
@@ -400,19 +404,30 @@ public class Hotel<K, T> {
                     break;
                 case 3:
                     if (empleado instanceof Servicio) {
-                        ((Servicio) empleado).darReporte(mapHabitaciones, reportes);
+                        ((Servicio) empleado).mostrarHabitacionesConProblemas(mapHabitaciones);
+                    } else {
+                        System.out.println("Su cargo no lo habilita para esta accion.");
+                    }
+                    break;
+                case 4:
+                    if (empleado instanceof Servicio) {
+                        if (empleado.getTrabajador().equals(Trabajadores.MANTENIMIENTO) || empleado.getTrabajador().equals("LIMPIEZA")) {
+                            ((Servicio) empleado).darReporte(mapHabitaciones, reportes);
+                        } else {
+                            ((Servicio) empleado).realizarAccion(mapHabitaciones);
+                        }
                     } else {
                         System.out.println("Su cargo no lo habilita para esta accion.");
                     }
                     escribirArchivoArrayList("Reportes.json", (ArrayList<T>) reportes);
                     break;
-                case 4:
+                case 5:
                     System.out.println(empleado);
                     break;
-                case 5:
+                case 6:
                     System.out.println("Tiene " + empleado.calcularDiasVacaciones() + " dias de vacaciones disponibles.");
                     break;
-                case 6:
+                case 7:
                     if (empleado instanceof Recepcionista) {
                         menuRecepcionista(user);
                     } else if (empleado instanceof Administrador) {
@@ -425,7 +440,7 @@ public class Hotel<K, T> {
                     System.out.println("Error, opcion no valida");
                     break;
             }
-        } while (opcion != 6);
+        } while (opcion != 7);
 
         menuPrincipal();
     }
@@ -433,7 +448,7 @@ public class Hotel<K, T> {
     /**
      * Este método muestra las distintas opciones de los empleados.
      */
-    private void opcionesEmpleado() {
+    private void opcionesEmpleado(Empleado empleado) {
         System.out.println();
         System.out.println("PRESIONE ENTER PARA CONTINUAR...");
         teclado.next();
@@ -442,10 +457,15 @@ public class Hotel<K, T> {
         System.out.println("¡Recuerde fichar primero!");
         System.out.println("1: Fichar entrada");
         System.out.println("2: Fichar salida");
-        System.out.println("3: Realizar reporte");
-        System.out.println("4: Ver datos");
-        System.out.println("5: Calcular dias de vacaciones");
-        System.out.println("6: Salir");
+        System.out.println("3: Ver habitaciones con problemas");
+        if (empleado.getTrabajador().equals(Trabajadores.MANTENIMIENTO.getAbreviaturas(0)) || empleado.getTrabajador().equals(Trabajadores.MANTENIMIENTO.getAbreviaturas(1)) || empleado.getTrabajador().equals(Trabajadores.MANTENIMIENTO.getAbreviaturas(2)) || empleado.getTrabajador().equals(Trabajadores.MANTENIMIENTO.getAbreviaturas(3)) || empleado.getTrabajador().equals("LIMPIEZA")) {
+            System.out.println("4: Realizar reporte");
+        } else {
+            System.out.println("4: Realizar accion");
+        }
+        System.out.println("5: Ver datos");
+        System.out.println("6: Calcular dias de vacaciones");
+        System.out.println("7: Salir");
     }
 
     /**
@@ -561,7 +581,7 @@ public class Hotel<K, T> {
                 }
             }
         }
-        if (!encontrado){
+        if (!encontrado) {
             System.out.println("Usted no posee reservas");
         }
     }
@@ -581,7 +601,7 @@ public class Hotel<K, T> {
                 }
             }
         }
-        if (!encontrado){
+        if (!encontrado) {
             System.out.println("Usted no posee facturas");
         }
     }
@@ -608,7 +628,7 @@ public class Hotel<K, T> {
             user.setNombreDeUsuario(teclado.nextLine());
             verif = verificarNombre(user.getNombreDeUsuario());
         }
-        System.out.printf("\nIngrese su contraseña: ");
+        System.out.printf("\nIngrese su contrasenia: ");
         user.setContraseña(teclado.nextLine());
         user.setRol(Rol.ROL_USER);
         user.setPersona(registrarPasajero());
@@ -739,6 +759,9 @@ public class Hotel<K, T> {
                         System.out.println("No tiene registrada una historia");
                     }
                     break;
+                case 7:
+                    menuPasajero(user);
+                    break;
                 default:
                     System.out.println("Esa opcion es incorrecta");
                     break;
@@ -761,6 +784,7 @@ public class Hotel<K, T> {
         System.out.println("4: Apellido");
         System.out.println("5: Direccion");
         System.out.println("6: Historia");
+        System.out.println("7: Salir al menu");
     }
 
     /**
@@ -769,13 +793,23 @@ public class Hotel<K, T> {
      * @param user es el usuario que solicitó ser eliminado.
      */
     public void eliminarUsuario(Usuario user) {
-        for (Usuario usuario : listaUsuarios) {
-            if (usuario.equals(user)) {
-                listaUsuarios.remove(user);
-                listaPasajeros.remove((Pasajero) user.getPersona());
-            }
+        Lock lock = new ReentrantLock();
+        Condition condition = lock.newCondition();
+        lock.lock(); // Bloquear el lock
+        try {
+            listaUsuarios.remove(user);
+            listaPasajeros.remove((Pasajero) user.getPersona());
+            System.out.println("Usuario eliminado");
+            System.out.println("Volviendo al menu principal...");
+            condition.await(6, TimeUnit.SECONDS); // Pausar durante 6 segundos
+        } catch (
+                InterruptedException e) {
+            System.out.println("Error al eliminar el usuario");
+        } finally {
+            lock.unlock(); // Desbloquear el lock
+            menuPrincipal();
         }
-        escribirArchivoArrayList("Usuarios.json", (ArrayList<T>) listaUsuarios);
+
     }
 
     /**
@@ -787,7 +821,7 @@ public class Hotel<K, T> {
      */
     public void checkInRecepcionista(Usuario user) {
         Recepcionista recepcionista = (Recepcionista) user.getPersona();
-        if (recepcionista.informarCheckIn(mapReservas,mapHabitaciones)) {
+        if (recepcionista.informarCheckIn(mapReservas, mapHabitaciones)) {
             realizarReserva(user);
         }
     }
@@ -984,61 +1018,67 @@ public class Hotel<K, T> {
         teclado.useDelimiter("\n");
         char seguir;
         double descontar;
-        System.out.println("Ingrese su numero de reserva.");
-        String numeroR = teclado.next();
-        long dias = ChronoUnit.DAYS.between(LocalDateTime.now(), mapReservas.get(numeroR).fechaEntrada);
-        if (mapReservas.containsKey(numeroR)) {
-            if (dias < 3) {
-                System.out.println("Su plazo para cancelar se ha extendido, y no tendra devolucion de dinero.");
-                System.out.println("Esta seguro que quiere continuar? s/n");
-                seguir = teclado.next().charAt(0);
-                if (seguir == 's') {
-                    for (Habitacion habitacion : mapReservas.get(numeroR).getHabitaciones()) {
-                        mapHabitaciones.get(habitacion.getNumero()).setOcupada(false);
+        try {
+            System.out.println("Ingrese su numero de reserva.");
+            String numeroR = teclado.next();
+            long dias = ChronoUnit.DAYS.between(LocalDateTime.now(), mapReservas.get(numeroR).fechaEntrada);
+            if (mapReservas.containsKey(numeroR)) {
+                if (dias < 3) {
+                    System.out.println("Su plazo para cancelar se ha extendido, y no tendra devolucion de dinero.");
+                    System.out.println("Esta seguro que quiere continuar? s/n");
+                    seguir = teclado.next().charAt(0);
+                    if (seguir == 's') {
+                        for (Habitacion habitacion : mapReservas.get(numeroR).getHabitaciones()) {
+                            mapHabitaciones.get(habitacion.getNumero()).setOcupada(false);
+                        }
+                        mapReservas.remove(numeroR);
+                        mapFacturas.remove(numeroR);
+                        System.out.println("Su reserva ha sido cancelada.");
+                    } else {
+                        System.out.println("Volviendo al menu...");
+                        menuPasajero(user);
                     }
-                    mapReservas.remove(numeroR);
-                    mapFacturas.remove(numeroR);
-                    System.out.println("Su reserva ha sido cancelada.");
-                } else {
-                    menuPasajero(user);
-                }
-            } else if (dias >= 7) {
-                descontar = (75 * mapFacturas.get(numeroR).getPrecioTotal()) / 100;
-                dineroTotal -= descontar;
-                System.out.println("Se le devolvera el 75% del dinero.");
-                System.out.println("Esta seguro que quiere continuar? s/n");
-                seguir = teclado.next().charAt(0);
-                teclado.nextLine();
-                if (seguir == 's') {
-                    for (Habitacion habitacion : mapReservas.get(numeroR).habitaciones) {
-                        mapHabitaciones.get(habitacion.getNumero()).setOcupada(false);
+                } else if (dias >= 7) {
+                    descontar = (75 * mapFacturas.get(numeroR).getPrecioTotal()) / 100;
+                    dineroTotal -= descontar;
+                    System.out.println("Se le devolvera el 75% del dinero.");
+                    System.out.println("Esta seguro que quiere continuar? s/n");
+                    seguir = teclado.next().charAt(0);
+                    teclado.nextLine();
+                    if (seguir == 's') {
+                        for (Habitacion habitacion : mapReservas.get(numeroR).habitaciones) {
+                            mapHabitaciones.get(habitacion.getNumero()).setOcupada(false);
+                        }
+                        mapReservas.remove(numeroR);
+                        mapFacturas.remove(numeroR);
+                        System.out.println("Su reserva ha sido cancelada.");
+                    } else {
+                        System.out.println("Volviendo al menu...");
+                        menuPasajero(user);
                     }
-                    mapReservas.remove(numeroR);
-                    mapFacturas.remove(numeroR);
-                    System.out.println("Su reserva ha sido cancelada.");
                 } else {
-                    menuPasajero(user);
-                }
-            } else {
-                descontar = (50 * mapFacturas.get(numeroR).getPrecioTotal()) / 100;
-                dineroTotal -= descontar;
-                System.out.println("Se le devolvera el 50% del dinero.");
-                System.out.println("Esta seguro que quiere continuar? s/n");
-                seguir = teclado.next().charAt(0);
-                teclado.nextLine();
-                if (seguir == 's') {
-                    for (Habitacion habitacion : mapReservas.get(numeroR).habitaciones) {
-                        mapHabitaciones.get(habitacion.getNumero()).setOcupada(false);
+                    descontar = (50 * mapFacturas.get(numeroR).getPrecioTotal()) / 100;
+                    dineroTotal -= descontar;
+                    System.out.println("Se le devolvera el 50% del dinero.");
+                    System.out.println("Esta seguro que quiere continuar? s/n");
+                    seguir = teclado.next().charAt(0);
+                    teclado.nextLine();
+                    if (seguir == 's') {
+                        for (Habitacion habitacion : mapReservas.get(numeroR).habitaciones) {
+                            mapHabitaciones.get(habitacion.getNumero()).setOcupada(false);
+                        }
+                        mapReservas.remove(numeroR);
+                        mapFacturas.remove(numeroR);
+                        System.out.println("Su reserva ha sido cancelada.");
+                    } else {
+                        System.out.println("Volviendo al menu...");
+                        menuPasajero(user);
                     }
-                    mapReservas.remove(numeroR);
-                    mapFacturas.remove(numeroR);
-                    System.out.println("Su reserva ha sido cancelada.");
-                } else {
-                    menuPasajero(user);
                 }
             }
-        } else {
-            System.out.println("Esa reserva no se encuentra.");
+        } catch (NullPointerException e) {
+            System.out.println("Esa reserva no se encuentra registrada");
+            menuPasajero(user);
         }
         escribirArchivoMap("Reservas.json", (TreeMap<K, T>) mapReservas);
         escribirArchivoMap("Habitaciones.json", (TreeMap<K, T>) mapHabitaciones);
@@ -1050,7 +1090,7 @@ public class Hotel<K, T> {
      *
      * @param factura es la nueva factura a realizar.
      * @param reserva es la reserva que se llevó a cabo anteriormente.
-     * @throw IOException en caso de que la factura ya se encuentre registrada.
+     * @throws IllegalArgumentException en caso de que la factura ya se encuentre registrada.
      */
     private void generarFactura(Factura factura, Reserva reserva) {
         factura.setCodigoIdentificador(reserva.getIdentificador());
@@ -1063,9 +1103,9 @@ public class Hotel<K, T> {
             for (String clave : mapFacturas.keySet()) {
                 try {
                     if (factura.getCodigoIdentificador().equals(mapFacturas.get(clave).getCodigoIdentificador())) {
-                        throw new IOException();
+                        throw new IllegalArgumentException();
                     }
-                } catch (IOException e) {
+                } catch (IllegalArgumentException e) {
                     System.out.println("Esa factura ya se encuentra en la lista,revise correctamente los datos");
                 }
             }
@@ -1088,7 +1128,7 @@ public class Hotel<K, T> {
 
     /**
      * Esta función calcula los días que hay entre la fecha de entrada y la fecha de salida de una reserva.
-     * Utilizamos el metodo truncatedTo para que calcule la diferencia en dias sin tener en cuenta las horas.
+     * Utilizamos el metodo truncatedTo del para que calcule la diferencia en dias sin tener en cuenta las horas.
      *
      * @param reserva es la reserva la cual se quieren calcular sus días de duración.
      * @return la cantidad de días de duración de la reserva.
@@ -1118,7 +1158,6 @@ public class Hotel<K, T> {
         }
         pasajeros.add(nuevo);
         listaPasajeros.add(nuevo);
-
         while (control == 's') {
             System.out.printf("\nQuiere registrar a otro pasajero? s/n: ");
             control = teclado.next().charAt(0);

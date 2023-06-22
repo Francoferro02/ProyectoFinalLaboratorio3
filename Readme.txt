@@ -1,4 +1,23 @@
 
+URL repositorio:https://github.com/Francoferro02/ProyectoFinalLaboratorio3/tree/main
+
+GRUPO 6:
+Integrantes: 
+
+- Tomás Buixados
+
+- Franco Andres Ferro
+
+- Galo Fazio
+
+- Juan Francisco Escobar
+
+Tema: Sistema de administración de un hotel
+
+Para un uso correcto cambiar la propiedad ruta de la clase Hotel por la ruta de su computadora para poder leer y escribir correctamente los archivos.
+
+Abrir el Index.html de la carpeta JavaDoc para visualizar el JavaDoc.
+
 LISTA USUARIOS CON TODOS LOS ROLES PARA PROBAR
 
 Usuario: "contraseña":"Laboratorio3","rol":"ROL_ADMIN","nombreDeUsuario":"LesterCrest",

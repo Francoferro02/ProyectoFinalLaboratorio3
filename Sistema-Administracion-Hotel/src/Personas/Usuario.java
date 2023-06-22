@@ -63,7 +63,7 @@ public class Usuario {
         return "\n------------------------------------------------"+
                 "\n  Usuario: " +
                 "\n- Nombre de usuario: " + nombreDeUsuario +
-                "\n- Contraseña: " + contraseña +
+                "\n- Contrasenia: " + contraseña +
                 "\n- Rol: " + rol +
                 "\n- Persona: " + persona;
     }

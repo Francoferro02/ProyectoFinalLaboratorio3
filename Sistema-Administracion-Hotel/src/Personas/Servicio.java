@@ -26,7 +26,7 @@ public class Servicio extends Empleado implements Mantenimiento {
      * Función que permite a los empleados informar que van a realizar determinada acción dentro de una habitación.
      * @param mapaHabitaciones todas las habitaciones del hotel.
      */
-    private void realizarAccion(TreeMap<String, Habitacion> mapaHabitaciones) {
+    public void realizarAccion(TreeMap<String, Habitacion> mapaHabitaciones) {
         for (String num : mapaHabitaciones.keySet()) {
             if (mapaHabitaciones.get(num).getEstado().equals("En reparacion funcional")) {
                 if (this.trabajador.equals("OBRERO")) {
@@ -87,31 +87,27 @@ public class Servicio extends Empleado implements Mantenimiento {
                 if (mapa.get(numero).getEstado().equals("En reparacion funcional") && listaReportes.get(i).equals("Habitacion " + mapa.get(numero).getNumero() + " en " + "En reparacion funcional informar a mantenimiento")) {
                     if (this.trabajador.equals("OBRERO")) {
                         contador++;
-                        System.out.println("Tienes " + contador + " habitaciones con problemas");
                     }
                 } else if (mapa.get(numero).getEstado().equals("En desinfección") && listaReportes.get(i).equals("Habitacion " + mapa.get(numero).getNumero() + " en " + "En desinfeccion informar a mantenimiento")) {
                     if (this.trabajador.equals("FUMIGADOR")) {
                         contador++;
-                        System.out.println("Tienes " + contador + " habitaciones con problemas");
                     }
                 } else if (mapa.get(numero).getEstado().equals("En reparacion electrica") && listaReportes.get(i).equals("Habitacion " + mapa.get(numero).getNumero() + " en " + "En reparacion electrica informar a mantenimiento")) {
                     if (this.trabajador.equals("ELECTRICISTA")) {
                         contador++;
-                        System.out.println("Tienes " + contador + " habitaciones con problemas");
                     }
                 } else if (mapa.get(numero).getEstado().equals("En reparacion estetica") && listaReportes.get(i).equals("Habitacion " + mapa.get(numero).getNumero() + " en " + "En reparacion estetica informar a mantenimiento")) {
                     if (this.trabajador.equals("PINTOR")) {
                         contador++;
-                        System.out.println("Tienes " + contador + " habitaciones con problemas");
                     }
                 } else if (mapa.get(numero).getEstado().equals("En limpieza") && listaReportes.get(i).equals("Habitacion " + mapa.get(numero).getNumero() + " en " + "En limpieza informar a mantenimiento")) {
                     if (this.trabajador.equals("LIMPIEZA")) {
                         contador++;
-                        System.out.println("Tienes " + contador + " habitaciones con problemas");
                     }
                 }
             }
         }
+        System.out.println("Tienes " + contador + " habitaciones con problemas");
     }
 
     @Override
@@ -123,8 +119,8 @@ public class Servicio extends Empleado implements Mantenimiento {
 
     @Override
     public int calcularDiasVacaciones() {
-        super.calcularDiasVacaciones();
-        return diasVacaciones;
+        this.diasVacaciones = super.calcularDiasVacaciones();
+        return this.diasVacaciones;
     }
 
     @Override
@@ -143,30 +139,37 @@ public class Servicio extends Empleado implements Mantenimiento {
      */
     @Override
     public void mostrarHabitacionesConProblemas(TreeMap<String, Habitacion> mapa) {
+        boolean encontrado = false;
         for (String num : mapa.keySet()) {
             if (mapa.get(num).getEstado().equals("En reparacion funcional")) {
                 if (this.trabajador.equals("OBRERO")) {
                     System.out.println(mapa.get(num));
+                    encontrado = true;
                 }
             } else if (mapa.get(num).getEstado().equals("En desinfeccion")) {
                 if (this.trabajador.equals("FUMIGADOR")) {
                     System.out.println(mapa.get(num));
+                    encontrado = true;
                 }
             } else if (mapa.get(num).getEstado().equals("En reparacion electrica")) {
                 if (this.trabajador.equals("ELECTRICISTA")) {
                     System.out.println(mapa.get(num));
+                    encontrado = true;
                 }
             } else if (mapa.get(num).getEstado().equals("En reparacion estetica")) {
                 if (this.trabajador.equals("PINTOR")) {
                     System.out.println(mapa.get(num));
+                    encontrado = true;
                 }
             } else if (mapa.get(num).getEstado().equals("En limpieza")) {
                 if (this.trabajador.equals("LIMPIEZA")) {
                     System.out.println(mapa.get(num));
+                    encontrado = true;
                 }
-            } else {
-                System.out.println("Esa funcion no se encuentra disponible para su trabajo.");
             }
+        }
+        if (!encontrado){
+            System.out.println("Esa funcion no se encuentra disponible para su trabajo.");
         }
     }
 

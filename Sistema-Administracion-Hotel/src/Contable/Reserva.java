@@ -142,7 +142,4 @@ public class Reserva {
                 "\n- Codigo de identificacion: " + identificador;
     }
 
-    public void marcarReserva() {
-
-    }
 }

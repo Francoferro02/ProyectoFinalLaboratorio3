@@ -42,8 +42,8 @@ public class Recepcionista extends Empleado implements Mantenimiento {
      */
     @Override
     public int calcularDiasVacaciones() {
-        super.calcularDiasVacaciones();
-        return diasVacaciones;
+        this.diasVacaciones = super.calcularDiasVacaciones();
+        return this.diasVacaciones;
     }
 
     /**
@@ -117,6 +117,7 @@ public class Recepcionista extends Empleado implements Mantenimiento {
                 cochera.setEspacioDisponible(cochera.getEspacioDisponible() + mapReserva.get(claveReserva).getEspaciosCochera());
             }
         }
+        System.out.println("Check Out de la reserva " + mapReserva.get(claveIdentificador).getIdentificador() +" realizado correctamente.");
         mapReserva.remove(claveIdentificador);
     }
 

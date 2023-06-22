@@ -3,6 +3,11 @@ package Personas;
 import com.fasterxml.jackson.annotation.*;
 
 
+/**
+ * Clase principal de las personas que se relacionan con el hotel {@link Pasajero} y {@link Empleado}.
+ * Contiene las características básicas de una persona.
+ * Es heredada a todos los tipos de personas que se encuentran en el hotel.
+ */
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 @JsonSubTypes({
         @JsonSubTypes.Type(value = Pasajero.class, name = "Personas.Pasajero"),
@@ -10,11 +15,6 @@ import com.fasterxml.jackson.annotation.*;
         @JsonSubTypes.Type(value = Usuario.class, name = "Usuario")
 
 })
-/**
- * Clase principal de las personas que se relacionan con el hotel (pasajeros - empleados).
- * Contiene las características básicas de una persona.
- * Es heredada a todos los tipos de personas que se encuentran en el hotel.
- */
 @JsonTypeName("Personas.Persona")
 
 public abstract class Persona {
@@ -33,13 +33,6 @@ public abstract class Persona {
     }
 
 
-
-    @Override
-    public String toString() {
-        return  "\n- Nombre: " + nombre +
-                "\n- Apellido: " + apellido +
-                "\n- DNI:" + DNI;
-    }
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
@@ -63,5 +56,12 @@ public abstract class Persona {
 
     public String getDNI() {
         return DNI;
+    }
+
+    @Override
+    public String toString() {
+        return  "\n- Nombre: " + nombre +
+                "\n- Apellido: " + apellido +
+                "\n- DNI:" + DNI;
     }
 }
